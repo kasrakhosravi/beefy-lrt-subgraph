@@ -62,6 +62,9 @@ type BeefyVault @entity {
   "how much underlying asset one vault share represents"
   shareToUnderlyingRate: BigDecimal!
 
+  "vault total underlying balance"
+  underlyingBalance: BigDecimal!
+
   "positions in the vault"
   positions: [InvestorPosition!]! @derivedFrom(field: "vault")
 }
