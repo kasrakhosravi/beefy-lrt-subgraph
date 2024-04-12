@@ -1,36 +1,18 @@
-# Beefy CLM Subgraph
+# Beefy LRT Subgraph
 
-This Subgraph sources events from the Beefy CLM contracts in different networks.
+This Subgraph sources events from the Beefy LRT contracts in different networks.
 
 # Deployments
-
-## Goldsky.com
-
-### GraphiQL Explorer
-
-- Arbitrum: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/clm-arbitrum/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/clm-arbitrum/gn)
-- Base: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/clm-base/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/clm-base/gn)
-- Optimism: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/clm-optimism/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/clm-optimism/gn)
-
-### Api Endpoints
-
-- Arbitrum: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/clm-arbitrum/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/clm-arbitrum/gn)
-- Base: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/clm-base/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/clm-base/gn)
-- Optimism: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/clm-optimism/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/clm-optimism/gn)
 
 ## 0xgraph.xyz
 
 ### GraphiQL Explorer
 
-- Arbitrum: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/clm-arbitrum/graphql](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/clm-arbitrum/graphql)
-- Base: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/clm-base/graphql](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/clm-base/graphql)
-- Optimism: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/clm-optimism/graphql](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/clm-optimism/graphql)
+- Arbitrum: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-arbitrum/graphql](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-arbitrum/graphql)
 
 ### Api Endpoints
 
-- Arbitrum: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/clm-arbitrum](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/clm-arbitrum)
-- Base: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/clm-base](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/clm-base)
-- Optimism: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/clm-optimism](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/clm-optimism)
+- Arbitrum: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-arbitrum](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-arbitrum)
 
 # Contributing
 
@@ -79,8 +61,6 @@ yarn test:lint # run prettier linter
 
 1. Add the network configuration [config/<network>.json](config/).
    - `clockTickBlocks` is the number of blocks between each clock tick, aim for a clock tick every 5 minutes.
-   - Find the uniswap v3, QuoterV2 contract address [on uniswap's documentation](https://docs.uniswap.org/contracts/v3/reference/deployments)
-   - Find the <native>/USD price feed [on chainlink's documentation](https://docs.chain.link/data-feeds/price-feeds/addresses#networks). Verify that it's a ChainLink `AggregatorV3Interface` with the `latestRoundData()` method.
 2. Add dev RPCs in graph-node config [docker/graph-node/config.toml](docker/graph-node/config.toml).
 3. Add a new `prepare:<network>` script in [package.json](package.json).
 4. Add a new `deploy:<network>:<provider>` script in [package.json](package.json).
@@ -119,51 +99,3 @@ yarn test:lint # run prettier linter
 # or both
 ./bin/deploy.sh <network> goldsky 0xgraph
 ```
-
-# Dependecies on the underlying contracts
-
-```text
-- boostFactory: BoostDeployed(indexed address)
-- boost.stakedToken()
-- boost.rewardToken()
-
-- vaultFactory: ProxyCreated(address)
-- vault.balances()
-- vault.totalSupply()
-- vault.previewWithdraw()
-- vault.balanceOf()
-- vault.strategy()
-- vault.wants()
-- vault: Initialized(uint8)
-- vault: OwnershipTransferred(indexed address,indexed address)
-- vault: Deposit(indexed address,uint256,uint256,uint256)
-- vault: Withdraw(indexed address,uint256,uint256,uint256)
-- vault: Transfer(indexed address,indexed address,uint256)
-
-- strategyFactory: GlobalPause(bool)
-- strategy.pool()
-- strategy.vault()
-- strategy.output()
-- strategy.price()
-- strategy.range()
-- strategy.lpToken1ToNativePrice()
-- strategy.lpToken0ToNativePrice()
-- strategy.ouptutToNativePrice()
-- strategy: Initialized(uint8)
-- strategy: OwnershipTransferred(indexed address,indexed address)
-- strategy: Paused(address)
-- strategy: Unpaused(address)
-- strategy: Harvest(uint256,uint256)
-- strategy: ChargedFees(uint256,uint256,uint256)
-- strategy: ClaimedFees(uint256,uint256,uint256,uint256)
-- strategy: ClaimedOutput(uint256)
-```
-
-# TODO list
-
-- feat: add P&L
-- feat: handle zap?
-- feat: fetch vault fees %?
-- feat: interaction counts at the vault level?
-- improve: pyth oracles?
-- improve: add more tests

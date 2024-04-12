@@ -43,7 +43,7 @@ function publish {
     CHAIN=$2
     PROVIDER=$3
     DEPLOY_KEY=$4
-    SUBGRAPH=beefyfinance/clm-$CHAIN
+    SUBGRAPH=beefyfinance/lrt-$CHAIN
     case $PROVIDER in
         "0xgraph")
             publish_0xgraph $SUBGRAPH $VERSION $DEPLOY_KEY

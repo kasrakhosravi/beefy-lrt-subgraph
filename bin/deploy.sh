@@ -41,7 +41,7 @@ function publish_goldsky {
 function publish {
     CHAIN=$1
     PROVIDER=$2
-    SUBGRAPH=beefyfinance/clm-$CHAIN
+    SUBGRAPH=beefyfinance/lrt-$CHAIN
     case $PROVIDER in
         "0xgraph")
             publish_0xgraph $SUBGRAPH

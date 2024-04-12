@@ -799,7 +799,7 @@ asn1js@^3.0.1, asn1js@^3.0.5:
 
 assemblyscript-prettier@^3.0.1:
   version "3.0.1"
-  resolved "https://registry.npmjs.org/assemblyscript-prettier/-/assemblyscript-prettier-3.0.1.tgz"
+  resolved "https://registry.yarnpkg.com/assemblyscript-prettier/-/assemblyscript-prettier-3.0.1.tgz#e0322f680655b96330c1252a966dc368ad9364d9"
   integrity sha512-q5D9rJOr1xG8p2MdcAF3wvIBPrmHaKgenJbmYrwM1T96sHKFeTOfCtgHHmrDnrqoly7wSGfWtbE84omC1IUJEA==
   dependencies:
     assemblyscript "~0.27.0"
@@ -2952,7 +2952,7 @@ prettier@3.0.3:
 
 prettier@^3.2.5:
   version "3.2.5"
-  resolved "https://registry.npmjs.org/prettier/-/prettier-3.2.5.tgz"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-3.2.5.tgz#e52bc3090586e824964a8813b09aba6233b28368"
   integrity sha512-3/GWa9aOC0YeD7LUfvOG2NiDyhOWRvt1k+rcKhOuYnMY24iiCphgneUfJDyFXd6rZCAnuLBv6UeAULtrhT/F4A==
 
 process-nextick-args@~2.0.0:

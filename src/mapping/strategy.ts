@@ -1,12 +1,2 @@
-export {
-  handleStrategyInitialized as handleInitialized,
-  handleStrategyPaused as handlePaused,
-  handleStrategyUnpaused as handleUnpaused,
-} from "../vault-lifecycle"
-export { handleStrategyOwnershipTransferred as handleOwnershipTransferred } from "../ownership"
-export {
-  handleStrategyHarvest as handleHarvest,
-  handleStrategyClaimedFees as handleClaimedFees,
-  handleStrategyClaimedOutput as handleClaimedOutput,
-} from "../vault-compound"
-export { handleStrategyChargedFees as handleChargedFees } from "../vault-fees"
+export { handleStrategyHarvest as handleHarvest } from "../vault-compound"
+export { handleStrategyInitialized as handleInitialized } from "../vault-lifecycle"

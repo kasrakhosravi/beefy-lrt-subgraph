@@ -1,142 +1,47 @@
 specVersion: 1.0.0
-description: Beefy Finance Automated Liquidity Manager Subgraph
-repository: https://github.com/beefyfinance/subgraphs
+description: Beefy Finance LRT Subgraph
+repository: https://github.com/beefyfinance/lrt-subgraph
 schema:
   file: ./schema.graphql
 indexerHints:
-  prune: auto # we have our own snapshotting mechanism
+  # we want to be able to issue time-travel queries for historical data
+  prune: never
 dataSources:
   - kind: ethereum/contract
-    name: BeefyCLVaultFactory
+    name: LrtInitiator
     network: {{network}}
     source:
-      address: "{{vaultFactoryAddress}}"
-      abi: BeefyVaultConcLiqFactory
-      startBlock: {{vaultFactoryStartBlock}}
+      address: "{{firstLrtVaultAddress}}"
+      abi: BeefyVaultV7
+      startBlock: {{firstLrtVaultCreationBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7 # 0xgraph's version
       language: wasm/assemblyscript
-      file: ./src/mapping/factory.ts
+      file: ./src/mapping/initiator.ts
       entities:
         - Investor
-        - Transaction
-        - BeefyCLVault
-        - BeefyCLStrategy
-        - Protocol
-        - ProtocolSnapshot
+        - Token
+        - BeefyVault
+        - BeefyStrategy
+        - InvestorPosition
       abis:
-        - name: BeefyVaultConcLiqFactory
-          file: ./abis/beefy/concliq/BeefyVaultConcLiqFactory.json
-      eventHandlers:
-        - event: ProxyCreated(address)
-          handler: handleVaultCreated
-          receipt: true
-          
-  - kind: ethereum/contract
-    name: BeefyCLStrategyFactory
-    network: {{network}}
-    source:
-      address: "{{strategyFactoryAddress}}"
-      abi: BeefyStrategyFactory
-      startBlock: {{strategyFactoryStartBlock}}
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7 # 0xgraph's version
-      language: wasm/assemblyscript
-      file: ./src/mapping/factory.ts
-      entities:
-        - Investor
-        - Transaction
-        - BeefyCLVault
-        - BeefyCLStrategy
-        - Protocol
-        - ProtocolSnapshot
-      abis:
-        - name: BeefyStrategyFactory
-          file: ./abis/beefy/concliq/BeefyStrategyFactory.json
-      eventHandlers:
-        - event: GlobalPause(bool)
-          handler: handleGlobalStrategyPause
-          receipt: true
-          
-  - kind: ethereum/contract
-    name: ChainlinkClock
-    network: {{network}}
-    source:
-      address: "{{chainlinkNativePriceFeedAddress}}"
-      abi: ChainlinkClock
-      startBlock: {{vaultFactoryStartBlock}} # same as BeefyCLVaultFactory
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7 # 0xgraph's version
-      language: wasm/assemblyscript
-      file: ./src/mapping/clock.ts
-      entities:
-        - Investor
-        - Transaction
-        - BeefyCLVault
-        - BeefyCLStrategy
-        - Protocol
-        - ProtocolSnapshot
-      abis:
-        - name: ChainlinkClock
-          file: ./abis/chainlink/AggregatorV3Interface.json
-        - name: BeefyVaultConcLiq
-          file: ./abis/beefy/concliq/BeefyVaultConcLiq.json
-        - name: BeefyStrategy
-          file: ./abis/beefy/concliq/BeefyStrategy.json
-        - name: ChainLinkPriceFeed
-          file: ./abis/chainlink/AggregatorV3Interface.json
-        - name: IERC20
-          file: ./abis/IERC20/IERC20.json
-      #eventHandlers:
-      #  - event: NewRound(indexed uint256,indexed address,uint256)
-      #    handler: handleClockTick
-      blockHandlers:
-        - handler: handleClockTick
-          filter:
-            kind: polling
-            every: {{clockTickBlocks}}
-  
-  - kind: ethereum/contract
-    name: BeefyBoostFactory
-    network: {{network}}
-    source:
-      address: "{{boostFactoryAddress}}"
-      abi: BeefyBoostFactory
-      startBlock: {{boostFactoryStartBlock}}
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7 # 0xgraph's version
-      language: wasm/assemblyscript
-      file: ./src/mapping/boost.ts
-      entities:
-        - Investor
-        - Transaction
-        - BeefyVaultIncentive
-        - Protocol
-        - ProtocolSnapshot
-      abis:
-        - name: BeefyBoostFactory
-          file: ./abis/beefy/concliq/BeefyBoostFactory.json
-        - name: BeefyBoost
-          file: ./abis/beefy/concliq/BeefyBoost.json
-        - name: ChainLinkPriceFeed
-          file: ./abis/chainlink/AggregatorV3Interface.json
+        - name: BeefyVaultV7
+          file: ./abis/beefy/BeefyVaultV7.json
+        - name: BeefyIStrategyV7
+          file: ./abis/beefy/BeefyIStrategyV7.json
         - name: IERC20
           file: ./abis/IERC20/IERC20.json
       eventHandlers:
-        - event: BoostDeployed(indexed address)
-          handler: handleBoostCreated
-          receipt: true
+        - event: Initialized(uint8)
+          handler: handleInitLrtWatchers
 
 templates:
-  - name: BeefyCLVault
+  - name: BeefyVaultV7
     kind: ethereum/contract
     network: {{network}}
     source:
-      abi: BeefyVaultConcLiq
+      abi: BeefyVaultV7
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7 # 0xgraph's version
@@ -144,41 +49,28 @@ templates:
       file: ./src/mapping/vault.ts
       entities:
         - Investor
-        - Transaction
-        - BeefyCLVault
-        - BeefyCLStrategy
-        - Protocol
-        - ProtocolSnapshot
+        - Token
+        - BeefyVault
+        - BeefyStrategy
+        - InvestorPosition
       abis:
-        - name: BeefyVaultConcLiq
-          file: ./abis/beefy/concliq/BeefyVaultConcLiq.json
-        - name: BeefyBoost
-          file: ./abis/beefy/concliq/BeefyBoost.json
-        - name: BeefyStrategy
-          file: ./abis/beefy/concliq/BeefyStrategy.json
-        - name: ChainLinkPriceFeed
-          file: ./abis/chainlink/AggregatorV3Interface.json
+        - name: BeefyVaultV7
+          file: ./abis/beefy/BeefyVaultV7.json
+        - name: BeefyIStrategyV7
+          file: ./abis/beefy/BeefyIStrategyV7.json
         - name: IERC20
           file: ./abis/IERC20/IERC20.json
       eventHandlers:
         - event: Initialized(uint8)
           handler: handleInitialized
-        - event: OwnershipTransferred(indexed address,indexed address)
-          handler: handleOwnershipTransferred
-        - event: Deposit(indexed address,uint256,uint256,uint256)
-          handler: handleDeposit
-          receipt: true
-        - event: Withdraw(indexed address,uint256,uint256,uint256)
-          handler: handleWithdraw
-          receipt: true
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
 
-  - name: BeefyCLStrategy
+  - name: BeefyIStrategyV7
     kind: ethereum/contract
     network: {{network}}
     source:
-      abi: BeefyStrategy
+      abi: BeefyIStrategyV7
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7 # 0xgraph's version
@@ -186,81 +78,19 @@ templates:
       file: ./src/mapping/strategy.ts
       entities:
         - Investor
-        - Transaction
-        - BeefyCLVault
-        - BeefyCLStrategy
-        - Protocol
-        - ProtocolSnapshot
+        - Token
+        - BeefyVault
+        - BeefyStrategy
+        - InvestorPosition
       abis:
-        - name: BeefyVaultConcLiq
-          file: ./abis/beefy/concliq/BeefyVaultConcLiq.json
-        - name: BeefyBoost
-          file: ./abis/beefy/concliq/BeefyBoost.json
-        - name: BeefyStrategy
-          file: ./abis/beefy/concliq/BeefyStrategy.json
-        - name: ChainLinkPriceFeed
-          file: ./abis/chainlink/AggregatorV3Interface.json
+        - name: BeefyVaultV7
+          file: ./abis/beefy/BeefyVaultV7.json
+        - name: BeefyIStrategyV7
+          file: ./abis/beefy/BeefyIStrategyV7.json
         - name: IERC20
           file: ./abis/IERC20/IERC20.json
       eventHandlers:
         - event: Initialized(uint8)
           handler: handleInitialized
-        - event: OwnershipTransferred(indexed address,indexed address)
-          handler: handleOwnershipTransferred
-        - event: Paused(address)
-          handler: handlePaused
-        - event: Unpaused(address)
-          handler: handleUnpaused
-        - event: Harvest(uint256,uint256)
+        - event: StratHarvest(indexed address,uint256,uint256)
           handler: handleHarvest
-          receipt: true
-        - event: ChargedFees(uint256,uint256,uint256)
-          handler: handleChargedFees
-          receipt: true
-        - event: ClaimedFees(uint256,uint256,uint256,uint256)
-          handler: handleClaimedFees
-          receipt: true
-        - event: ClaimedOutput(uint256)
-          handler: handleClaimedOutput
-          receipt: true
-
-  
-  - name: BeefyBoost
-    kind: ethereum/contract
-    network: {{network}}
-    source:
-      abi: BeefyBoost
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7 # 0xgraph's version
-      language: wasm/assemblyscript
-      file: ./src/mapping/boost.ts
-      entities:
-        - Investor
-        - Transaction
-        - BeefyBoost
-        - Protocol
-        - ProtocolSnapshot
-      abis:
-        - name: BeefyVaultConcLiq
-          file: ./abis/beefy/concliq/BeefyVaultConcLiq.json
-        - name: BeefyBoost
-          file: ./abis/beefy/concliq/BeefyBoost.json
-        - name: BeefyStrategy
-          file: ./abis/beefy/concliq/BeefyStrategy.json
-        - name: ChainLinkPriceFeed
-          file: ./abis/chainlink/AggregatorV3Interface.json
-        - name: IERC20
-          file: ./abis/IERC20/IERC20.json
-      eventHandlers:
-        - event: OwnershipTransferred(indexed address,indexed address)
-          handler: handleOwnershipTransferred
-        - event: Staked(indexed address,uint256)
-          handler: handleStaked
-          receipt: true
-        - event: Withdrawn(indexed address,uint256)
-          handler: handleUnstaked
-          receipt: true
-        - event: RewardPaid(indexed address,uint256)
-          handler: handleRewardPaid
-          receipt: true
