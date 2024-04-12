@@ -34,6 +34,15 @@ enum VaultLifecycle {
   PAUSED
 }
 
+enum VaultUnderlyingPlatform {
+  PENDLE_EQUILIBRIA
+  BALANCER_AURA
+  MENDI
+  AERODROME
+  CURVE
+  LYNEX_GAMMA
+}
+
 """
 A Beefy vault
 """
@@ -55,6 +64,9 @@ type BeefyVault @entity {
 
   "The current lifecycle status of the vault"
   lifecycle: VaultLifecycle!
+
+  "The underlying platform this vault is using"
+  underlyingPlatform: VaultUnderlyingPlatform!
 
   "how much underlying asset one vault share represents as represented in the contract"
   pricePerFullShare: BigInt!

@@ -1,4 +1,4 @@
-import { Address, BigInt } from "@graphprotocol/graph-ts"
+import { Address, BigInt, dataSource } from "@graphprotocol/graph-ts"
 import { BeefyVaultV7 as BeefyVaultV7Contract } from "../generated/templates/BeefyVaultV7/BeefyVaultV7"
 import { BEEFY_VAULT_LIFECYCLE_RUNNING, getBeefyStrategy, getBeefyVault } from "./entity/vault"
 import { Initialized as VaultInitialized } from "../generated/templates/BeefyVaultV7/BeefyVaultV7"
@@ -15,6 +15,7 @@ import {
 import {} from "../generated/templates"
 import { fetchAndSaveTokenData } from "./utils/token"
 import { BeefyVault } from "../generated/schema"
+import { CONTEXT_KEY_UNDERLYING_PLATFORM } from "./bind-contracts"
 
 export function handleVaultInitialized(event: VaultInitialized): void {
   const vaultAddress = event.address
@@ -30,9 +31,13 @@ export function handleVaultInitialized(event: VaultInitialized): void {
   }
   const strategyAddress = strategyAddressRes.value
 
+  let context = dataSource.context()
+  let underlyingPlatform = context.getString(CONTEXT_KEY_UNDERLYING_PLATFORM)
+
   let vault = getBeefyVault(vaultAddress)
   vault.isInitialized = true
   vault.strategy = strategyAddress
+  vault.underlyingPlatform = underlyingPlatform
   vault.save() // needs to be saved before we can use it in the strategy events
 
   // we start watching strategy events
