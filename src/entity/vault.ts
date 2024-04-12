@@ -25,6 +25,7 @@ export function getBeefyVault(vaultAddress: Bytes): BeefyVault {
     vault.isInitialized = false
     vault.lifecycle = BEEFY_VAULT_LIFECYCLE_INITIALIZING
     vault.underlyingPlatform = ""
+    vault.pricePerFullShare = ZERO_BI
     vault.shareToUnderlyingRate = ZERO_BD
     vault.underlyingBalance = ZERO_BD
   }
