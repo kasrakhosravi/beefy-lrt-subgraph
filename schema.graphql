@@ -44,9 +44,6 @@ type Token @entity(immutable: true) {
   name: String
   "The number of decimals the token uses"
   decimals: BigInt!
-
-  "Breakdown of the balance of the token"
-  balanceBreakdown: [BalanceBreakdownItem!]! @derivedFrom(field: "wrapperToken")
 }
 
 enum VaultLifecycle {
@@ -106,6 +103,9 @@ type BeefyVault @entity {
 
   "positions in the vault"
   positions: [InvestorPosition!]! @derivedFrom(field: "vault")
+
+  "breakdown of the vault underlying token balance"
+  underlyingTokenBalanceBreakdown: [VaultBalanceBreakdownItem!]! @derivedFrom(field: "vault")
 }
 
 """
@@ -121,6 +121,32 @@ type BeefyStrategy @entity {
 
   "Technical field to remember if the strategy was already initialized"
   isInitialized: Boolean!
+}
+
+"""
+A breakdown of the balance of a token
+"""
+type VaultBalanceBreakdownItem @entity {
+  "Vault address this breakdown is for + token address of the breakdown item"
+  id: Bytes!
+
+  "vault address this breakdown is for"
+  vault: BeefyVault!
+
+  "Token address of the breakdown item"
+  token: Token!
+
+  "raw balance of the breakdown item as represented in the contract"
+  rawBalance: BigInt!
+
+  "Balance of the breakdown item"
+  balance: BigDecimal!
+
+  "last time the balance was updated"
+  lastUpdateTimestamp: BigInt!
+
+  "last time the balance was updated"
+  lastUpdateBlock: BigInt!
 }
 
 type InvestorPosition @entity {
@@ -152,27 +178,4 @@ type InvestorPosition @entity {
   # timeWeightedUnderlyingBalance + balance * (block.timestamp - timeWeightedUnderlyingBalanceTimestamp)
   # """
   # timeWeightedUnderlyingBalanceTimestamp: BigDecimal!
-}
-
-"""
-A breakdown of the balance of a token
-"""
-type BalanceBreakdownItem @entity {
-  "Token address this breakdown is for + token address of the breakdown item"
-  id: Bytes!
-
-  "Token address this breakdown is for"
-  wrapperToken: Token!
-
-  "Token address of the breakdown item"
-  token: Token!
-
-  "raw balance of the breakdown item as represented in the contract"
-  rawBalance: BigInt!
-
-  "Balance of the breakdown item"
-  balance: BigDecimal!
-
-  "last time the balance was updated"
-  lastUpdate: BigInt!
 }

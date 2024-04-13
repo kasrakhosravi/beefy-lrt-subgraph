@@ -47,14 +47,14 @@ export function handleVaultTransfer(event: TransferEvent): void {
   }
 
   if (!event.params.from.equals(SHARE_TOKEN_MINT_ADDRESS)) {
-    updateVaultData(event.block.timestamp, vault)
+    updateVaultData(event.block, vault)
     const investorAddress = event.params.from
     let investor = getInvestor(investorAddress)
     investor.save()
     updateInvestorVaultData(vault, investor)
   }
   if (!event.params.to.equals(SHARE_TOKEN_MINT_ADDRESS)) {
-    updateVaultData(event.block.timestamp, vault)
+    updateVaultData(event.block, vault)
     const investorAddress = event.params.to
     let investor = getInvestor(investorAddress)
     investor.save()
@@ -70,7 +70,7 @@ export function handleStrategyHarvest(event: ethereum.Event): void {
     return
   }
 
-  updateVaultData(event.block.timestamp, vault)
+  updateVaultData(event.block, vault)
 }
 
 export function handleClockTick(block: ethereum.Block): void {
@@ -91,7 +91,7 @@ export function handleClockTick(block: ethereum.Block): void {
     }
     // only need to update the breakdown as we should cover all other updates
     // with the other event binders
-    updateVaultBreakDown(block.timestamp, vault)
+    updateVaultBreakDown(block, vault)
   }
 }
 
@@ -112,7 +112,7 @@ function updateInvestorVaultData(vault: BeefyVault, investor: Investor): Investo
   return investor
 }
 
-function updateVaultData(timestamp: BigInt, vault: BeefyVault): BeefyVault {
+function updateVaultData(block: ethereum.Block, vault: BeefyVault): BeefyVault {
   const underlyingToken = getTokenAndInitIfNeeded(vault.underlyingToken)
 
   ///////
@@ -136,12 +136,10 @@ function updateVaultData(timestamp: BigInt, vault: BeefyVault): BeefyVault {
   vault.save()
 
   // update breakdown of tokens in the vault
-  return updateVaultBreakDown(timestamp, vault)
+  return updateVaultBreakDown(block, vault)
 }
 
-function updateVaultBreakDown(timestamp: BigInt, vault: BeefyVault): BeefyVault {
-  const underlyingToken = getTokenAndInitIfNeeded(vault.underlyingToken)
-
+function updateVaultBreakDown(block: ethereum.Block, vault: BeefyVault): BeefyVault {
   // update breakdown of tokens in the vault
   const breakdown = getVaultTokenBreakdown(vault)
   for (let i = 0; i < breakdown.length; i++) {
@@ -149,10 +147,11 @@ function updateVaultBreakDown(timestamp: BigInt, vault: BeefyVault): BeefyVault 
     const token = getTokenAndInitIfNeeded(tokenBalance.tokenAddress)
 
     // now the balance breakdown
-    const breakdownItem = getBreakdownItem(underlyingToken, token)
+    const breakdownItem = getBreakdownItem(vault, token)
     breakdownItem.rawBalance = tokenBalance.rawBalance
     breakdownItem.balance = tokenAmountToDecimal(tokenBalance.rawBalance, token.decimals)
-    breakdownItem.lastUpdate = timestamp
+    breakdownItem.lastUpdateTimestamp = block.timestamp
+    breakdownItem.lastUpdateBlock = block.number
     breakdownItem.save()
   }
 
