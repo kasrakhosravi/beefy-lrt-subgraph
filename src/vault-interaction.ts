@@ -1,4 +1,4 @@
-import { Address, BigInt, log } from "@graphprotocol/graph-ts"
+import { Address, BigInt, log, ethereum } from "@graphprotocol/graph-ts"
 import { StratHarvest } from "../generated/templates/BeefyVaultV7/BeefyIStrategyV7"
 import {
   Transfer as TransferEvent,
@@ -8,7 +8,7 @@ import { getBeefyStrategy, getBeefyVault, isVaultRunning } from "./entity/vault"
 import { ZERO_BI, tokenAmountToDecimal } from "./utils/decimal"
 import { getTokenAndInitIfNeeded } from "./entity/token"
 import { SHARE_TOKEN_MINT_ADDRESS } from "./config"
-import { isBoostAddress } from "./vault-config"
+import { getChainVaults, isBoostAddress } from "./vault-config"
 import { getInvestor } from "./entity/investor"
 import { getInvestorPosition } from "./entity/position"
 import { ppfsToShareRate } from "./utils/ppfs"
@@ -61,7 +61,7 @@ export function handleVaultTransfer(event: TransferEvent): void {
   }
 }
 
-export function handleStrategyHarvest(event: StratHarvest): void {
+export function handleStrategyHarvest(event: ethereum.Event): void {
   let strategy = getBeefyStrategy(event.address)
   let vault = getBeefyVault(strategy.vault)
   if (!isVaultRunning(vault)) {
@@ -70,6 +70,22 @@ export function handleStrategyHarvest(event: StratHarvest): void {
   }
 
   updateVaultData(event.block.timestamp, vault)
+}
+
+export function handleClockTick(event: ethereum.Block): void {
+  const vaultConfigs = getChainVaults()
+
+  for (let i = 0; i < vaultConfigs.length; i++) {
+    const vaultConfig = vaultConfigs[i]
+    const vault = getBeefyVault(vaultConfig.address)
+    if (!isVaultRunning(vault)) {
+      log.warning("handleClockTick: vault is not running {}", [vault.id.toHexString()])
+      continue
+    }
+    // only need to update the breakdown as we should cover all other updates
+    // with the other event binders
+    updateVaultBreakDown(event.timestamp, vault)
+  }
 }
 
 function updateInvestorVaultData(vault: BeefyVault, investor: Investor): Investor {
@@ -113,6 +129,13 @@ function updateVaultData(timestamp: BigInt, vault: BeefyVault): BeefyVault {
   vault.save()
 
   // update breakdown of tokens in the vault
+  return updateVaultBreakDown(timestamp, vault)
+}
+
+function updateVaultBreakDown(timestamp: BigInt, vault: BeefyVault): BeefyVault {
+  const underlyingToken = getTokenAndInitIfNeeded(vault.underlyingToken)
+
+  // update breakdown of tokens in the vault
   const breakdown = getVaultTokenBreakdown(vault)
   for (let i = 0; i < breakdown.length; i++) {
     const tokenBalance = breakdown[i]
@@ -125,5 +148,6 @@ function updateVaultData(timestamp: BigInt, vault: BeefyVault): BeefyVault {
     breakdownItem.lastUpdate = timestamp
     breakdownItem.save()
   }
+
   return vault
 }

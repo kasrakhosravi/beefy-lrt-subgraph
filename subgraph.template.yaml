@@ -46,6 +46,11 @@ dataSources:
       eventHandlers:
         - event: {{bindConfigEvent}}
           handler: handleInitLrtWatchers
+      blockHandlers:
+        - handler: handleClockTick
+          filter:
+            kind: polling
+            every: {{clockTickBlocks}}
 
 templates:
   - name: BeefyVaultV7
