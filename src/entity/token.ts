@@ -1,6 +1,10 @@
 import { BigInt, Bytes } from "@graphprotocol/graph-ts"
 import { Token } from "../../generated/schema"
 
+export function isNewToken(token: Token): boolean {
+  return token.symbol == ""
+}
+
 export function getToken(tokenAddress: Bytes): Token {
   let token = Token.load(tokenAddress)
   if (!token) {

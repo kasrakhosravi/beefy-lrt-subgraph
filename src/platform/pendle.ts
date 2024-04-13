@@ -3,12 +3,14 @@ import { TokenBalance } from "./common"
 import { PendleMarket as PendleMarketContract } from "../../generated/templates/BeefyVaultV7/PendleMarket"
 import { PendleSyToken as PendleSyTokenContract } from "../../generated/templates/BeefyVaultV7/PendleSyToken"
 import { Address } from "@graphprotocol/graph-ts"
+import { getToken } from "../entity/token"
 
 export function getVaultTokenBreakdownPendle(vault: BeefyVault): Array<TokenBalance> {
   let balances = new Array<TokenBalance>()
 
   const wantTotalBalance = vault.rawUnderlyingBalance
-  const pendleMarketContract = PendleMarketContract.bind(vault.underlyingToken)
+  const underlyingToken = getToken(vault.underlyingToken)
+  const pendleMarketContract = PendleMarketContract.bind(Address.fromBytes(underlyingToken.id))
   const tokenAddresses = pendleMarketContract.readTokens()
   const pendleState = pendleMarketContract.readState(getRouterAddress())
 

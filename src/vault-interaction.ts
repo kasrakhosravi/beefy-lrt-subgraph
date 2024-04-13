@@ -17,6 +17,9 @@ import { getInvestor } from "./entity/investor"
 import { getInvestorPosition } from "./entity/position"
 import { ppfsToShareRate } from "./utils/ppfs"
 import { BeefyVault, Investor } from "../generated/schema"
+import { getVaultTokenBreakdown } from "./platform"
+import { fetchAndSaveTokenData } from "./utils/token"
+import { getBreakdownItem } from "./entity/breakdown"
 
 export function handleVaultDeposit(event: DepositEvent): void {
   updateUserPosition(event, event.transaction.from)
@@ -115,5 +118,18 @@ function updateVaultData(vault: BeefyVault): BeefyVault {
   vault.rawUnderlyingBalance = vaultBalancesRaw
   vault.underlyingBalance = vaultUnderlyingBalance
   vault.save()
+
+  // update breakdown of tokens in the vault
+  const breakdown = getVaultTokenBreakdown(vault)
+  for (let i = 0; i < breakdown.length; i++) {
+    const tokenBalance = breakdown[i]
+    const token = fetchAndSaveTokenData(tokenBalance.tokenAddress)
+
+    // now the balance breakdown
+    const breakdownItem = getBreakdownItem(underlyingToken, token)
+    breakdownItem.rawBalance = tokenBalance.rawBalance
+    breakdownItem.balance = tokenAmountToDecimal(tokenBalance.rawBalance, token.decimals)
+    breakdownItem.save()
+  }
   return vault
 }

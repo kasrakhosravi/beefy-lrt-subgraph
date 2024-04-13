@@ -146,6 +146,9 @@ type BalanceBreakdownItem @entity {
   "Token address of the breakdown item"
   token: Token!
 
+  "raw balance of the breakdown item as represented in the contract"
+  rawBalance: BigInt!
+
   "Balance of the breakdown item"
   balance: BigDecimal!
 
