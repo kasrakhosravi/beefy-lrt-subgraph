@@ -106,6 +106,9 @@ type BeefyVault @entity {
 
   "breakdown of the vault underlying token balance"
   underlyingTokenBalanceBreakdown: [VaultBalanceBreakdownItem!]! @derivedFrom(field: "vault")
+
+  "breakdown update events"
+  underlyingTokenBalanceBreakdownUpdateEvents: [VaultBalanceBreakdownUpdateEvent!]! @derivedFrom(field: "vault")
 }
 
 """
