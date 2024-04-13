@@ -54,7 +54,7 @@ export function handleVaultTransfer(event: TransferEvent): void {
   }
   if (!event.params.to.equals(SHARE_TOKEN_MINT_ADDRESS)) {
     updateVaultData(event.block.timestamp, vault)
-    const investorAddress = event.params.from
+    const investorAddress = event.params.to
     let investor = getInvestor(investorAddress)
     investor.save()
     updateInvestorVaultData(vault, investor)
