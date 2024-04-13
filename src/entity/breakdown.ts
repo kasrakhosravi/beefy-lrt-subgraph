@@ -17,8 +17,7 @@ export function getBreakdownItem(vault: BeefyVault, token: Token): VaultBalanceB
 }
 
 export function saveUpdateEvent(vault: BeefyVault, block: ethereum.Block): void {
-  const id = vault.id.concat(Bytes.fromHexString(block.number.toHexString()))
-
+  const id = vault.id.concat(Bytes.fromBigInt(block.number))
   let event = VaultBalanceBreakdownUpdateEvent.load(id)
   if (!event) {
     let event = new VaultBalanceBreakdownUpdateEvent(id)
