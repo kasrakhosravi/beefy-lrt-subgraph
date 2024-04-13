@@ -1,4 +1,4 @@
-import { Address, BigInt, log, ethereum } from "@graphprotocol/graph-ts"
+import { Address, log, ethereum } from "@graphprotocol/graph-ts"
 import {
   Transfer as TransferEvent,
   BeefyVaultV7 as BeefyVaultV7Contract,
@@ -13,7 +13,7 @@ import { getInvestorPosition } from "./entity/position"
 import { ppfsToShareRate } from "./utils/ppfs"
 import { BeefyVault, Investor } from "../generated/schema"
 import { getVaultTokenBreakdown } from "./platform"
-import { getBreakdownItem } from "./entity/breakdown"
+import { getBreakdownItem, saveUpdateEvent } from "./entity/breakdown"
 import { getClockTick } from "./entity/clock"
 import { MINUTES_15 } from "./utils/time"
 
@@ -153,6 +153,7 @@ function updateVaultBreakDown(block: ethereum.Block, vault: BeefyVault): BeefyVa
     breakdownItem.lastUpdateTimestamp = block.timestamp
     breakdownItem.lastUpdateBlock = block.number
     breakdownItem.save()
+    saveUpdateEvent(vault, block)
   }
 
   return vault

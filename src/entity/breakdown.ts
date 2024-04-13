@@ -1,5 +1,6 @@
-import { VaultBalanceBreakdownItem, BeefyVault, Token } from "../../generated/schema"
+import { VaultBalanceBreakdownItem, BeefyVault, Token, VaultBalanceBreakdownUpdateEvent } from "../../generated/schema"
 import { ZERO_BD, ZERO_BI } from "../utils/decimal"
+import { Bytes, ethereum } from "@graphprotocol/graph-ts"
 
 export function getBreakdownItem(vault: BeefyVault, token: Token): VaultBalanceBreakdownItem {
   let id = vault.id.concat(token.id)
@@ -13,4 +14,17 @@ export function getBreakdownItem(vault: BeefyVault, token: Token): VaultBalanceB
     breakdown.lastUpdateBlock = ZERO_BI
   }
   return breakdown
+}
+
+export function saveUpdateEvent(vault: BeefyVault, block: ethereum.Block): void {
+  const id = vault.id.concat(Bytes.fromHexString(block.number.toHexString()))
+
+  let event = VaultBalanceBreakdownUpdateEvent.load(id)
+  if (!event) {
+    let event = new VaultBalanceBreakdownUpdateEvent(id)
+    event.vault = vault.id
+    event.blockNumber = block.number
+    event.blockTimestamp = block.timestamp
+    event.save()
+  }
 }

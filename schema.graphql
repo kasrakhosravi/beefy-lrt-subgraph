@@ -149,6 +149,23 @@ type VaultBalanceBreakdownItem @entity {
   lastUpdateBlock: BigInt!
 }
 
+"""
+Remember the last time we updated the balance breakdown
+so we can provide approx and exact balances
+"""
+type VaultBalanceBreakdownUpdateEvent @entity(immutable: true) {
+  "Vault address + block number"
+  id: Bytes!
+
+  "Vault address that was updated"
+  vault: BeefyVault
+
+  "Block timestamp of the update"
+  blockTimestamp: BigInt!
+  "Block number of the update"
+  blockNumber: BigInt!
+}
+
 type InvestorPosition @entity {
   "vault address + investor address"
   id: Bytes!
