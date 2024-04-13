@@ -1,8 +1,8 @@
 import { BeefyVaultV7 as BeefyVaultV7Template } from "../generated/templates"
-import { Initialized as InitializedEvent } from "../generated/templates/BeefyVaultV7/BeefyVaultV7"
 import { getChainVaults, buildVaultDataSourceContext } from "./vault-config"
+import { ethereum } from "@graphprotocol/graph-ts"
 
-export function bindAllContracts(_: InitializedEvent): void {
+export function bindAllContracts(_: ethereum.Event): void {
   const vaults = getChainVaults()
 
   for (let i = 0; i < vaults.length; i++) {

@@ -1,9 +1,9 @@
 {
   "network": "arbitrum-one",
   "shareTokenMintAddress": "0x0000000000000000000000000000000000000000",
-  "firstLrtVaultAddress": "0x245d1c493342464ba568BCfb058C1069dFdc07B5",
-  "firstLrtVaultCreationBlock": 179921508,
-  "clockTickBlocks": 1300,
-  "wrappedNativeAddress": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
-  "wrappedNativeDecimals": 18
+  "bindConfigAddress": "0x245d1c493342464ba568BCfb058C1069dFdc07B5",
+  "bindConfigBlock": 179921508,
+  "bindConfigEvent": "Initialized(uint8)",
+  "vaultInitializedEvent": "Initialized(uint8)",
+  "clockTickBlocks": 1300
 }

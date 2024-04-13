@@ -8,32 +8,43 @@ indexerHints:
   prune: never
 dataSources:
   - kind: ethereum/contract
-    name: LrtInitiator
+    name: ConfigBinder
     network: {{network}}
     source:
-      address: "{{firstLrtVaultAddress}}"
-      abi: BeefyVaultV7
-      startBlock: {{firstLrtVaultCreationBlock}}
+      address: "{{bindConfigAddress}}"
+      abi: ConfigBinder
+      startBlock: {{bindConfigBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7 # 0xgraph's version
       language: wasm/assemblyscript
-      file: ./src/mapping/initiator.ts
+      file: ./src/mapping/config-binder.ts
       entities:
         - Investor
         - Token
         - BeefyVault
         - BeefyStrategy
         - InvestorPosition
+        - BalanceBreakdownItem
       abis:
+        - name: ConfigBinder
+          file: ./abis/beefy/ConfigBinder.json
         - name: BeefyVaultV7
           file: ./abis/beefy/BeefyVaultV7.json
         - name: BeefyIStrategyV7
           file: ./abis/beefy/BeefyIStrategyV7.json
         - name: IERC20
           file: ./abis/IERC20/IERC20.json
+        - name: PendleMarket
+          file: ./abis/platform/PendleMarket.json
+        - name: PendleSyToken
+          file: ./abis/platform/PendleSyToken.json
+        - name: BalancerPool
+          file: ./abis/platform/BalancerPool.json
+        - name: BalancerVault
+          file: ./abis/platform/BalancerVault.json
       eventHandlers:
-        - event: Initialized(uint8)
+        - event: {{bindConfigEvent}}
           handler: handleInitLrtWatchers
 
 templates:
@@ -53,7 +64,10 @@ templates:
         - BeefyVault
         - BeefyStrategy
         - InvestorPosition
+        - BalanceBreakdownItem
       abis:
+        - name: ConfigBinder
+          file: ./abis/beefy/ConfigBinder.json
         - name: BeefyVaultV7
           file: ./abis/beefy/BeefyVaultV7.json
         - name: BeefyIStrategyV7
@@ -64,8 +78,12 @@ templates:
           file: ./abis/platform/PendleMarket.json
         - name: PendleSyToken
           file: ./abis/platform/PendleSyToken.json
+        - name: BalancerPool
+          file: ./abis/platform/BalancerPool.json
+        - name: BalancerVault
+          file: ./abis/platform/BalancerVault.json
       eventHandlers:
-        - event: Initialized(uint8)
+        - event: {{vaultInitializedEvent}}
           handler: handleInitialized
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
@@ -86,7 +104,10 @@ templates:
         - BeefyVault
         - BeefyStrategy
         - InvestorPosition
+        - BalanceBreakdownItem
       abis:
+        - name: ConfigBinder
+          file: ./abis/beefy/ConfigBinder.json
         - name: BeefyVaultV7
           file: ./abis/beefy/BeefyVaultV7.json
         - name: BeefyIStrategyV7
@@ -97,6 +118,10 @@ templates:
           file: ./abis/platform/PendleMarket.json
         - name: PendleSyToken
           file: ./abis/platform/PendleSyToken.json
+        - name: BalancerPool
+          file: ./abis/platform/BalancerPool.json
+        - name: BalancerVault
+          file: ./abis/platform/BalancerVault.json
       eventHandlers:
         - event: Initialized(uint8)
           handler: handleInitialized

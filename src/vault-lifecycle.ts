@@ -1,25 +1,25 @@
-import { Address, BigInt } from "@graphprotocol/graph-ts"
+import { Address, ethereum } from "@graphprotocol/graph-ts"
 import { BeefyVaultV7 as BeefyVaultV7Contract } from "../generated/templates/BeefyVaultV7/BeefyVaultV7"
 import { BEEFY_VAULT_LIFECYCLE_RUNNING, getBeefyStrategy, getBeefyVault } from "./entity/vault"
-import { Initialized as VaultInitialized } from "../generated/templates/BeefyVaultV7/BeefyVaultV7"
 import { BeefyIStrategyV7 as BeefyIStrategyV7Template } from "../generated/templates"
 import { ADDRESS_ZERO } from "./utils/address"
-import {
-  Initialized as StrategyInitializedEvent,
-  BeefyIStrategyV7 as BeefyIStrategyV7Contract,
-} from "../generated/templates/BeefyIStrategyV7/BeefyIStrategyV7"
-import {} from "../generated/templates"
+import { BeefyIStrategyV7 as BeefyIStrategyV7Contract } from "../generated/templates/BeefyIStrategyV7/BeefyIStrategyV7"
 import { BeefyVault } from "../generated/schema"
 import { getContextUnderlyingPlatform } from "./vault-config"
 import { getTokenAndInitIfNeeded } from "./entity/token"
 
-export function handleVaultInitialized(event: VaultInitialized): void {
+export function handleVaultInitialized(event: ethereum.Event): void {
   const vaultAddress = event.address
-  const vaultContract = BeefyVaultV7Contract.bind(vaultAddress)
+  let vault = getBeefyVault(vaultAddress)
+  // some chains don't have a proper initialized event so
+  // we hook into another event that may trigger multiple times
+  if (vault.isInitialized) {
+    return
+  }
 
+  const vaultContract = BeefyVaultV7Contract.bind(vaultAddress)
   const strategyAddress = vaultContract.strategy()
 
-  let vault = getBeefyVault(vaultAddress)
   vault.isInitialized = true
   vault.strategy = strategyAddress
   vault.underlyingPlatform = getContextUnderlyingPlatform()
@@ -41,7 +41,7 @@ export function handleVaultInitialized(event: VaultInitialized): void {
   }
 }
 
-export function handleStrategyInitialized(event: StrategyInitializedEvent): void {
+export function handleStrategyInitialized(event: ethereum.Event): void {
   const strategyAddress = event.address
 
   const strategyContract = BeefyIStrategyV7Contract.bind(strategyAddress)
