@@ -9,10 +9,12 @@ This Subgraph sources events from the Beefy LRT contracts in different networks.
 ### GraphiQL Explorer
 
 - Arbitrum: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-arbitrum/graphql](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-arbitrum/graphql)
+- Ethereum: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-ethereum/graphql](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-ethereum/graphql)
 
 ### Api Endpoints
 
 - Arbitrum: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-arbitrum](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-arbitrum)
+- Ethereum: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-ethereum](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-ethereum)
 
 # Contributing
 

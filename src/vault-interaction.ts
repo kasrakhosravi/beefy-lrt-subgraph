@@ -1,9 +1,5 @@
-import { Address, ethereum, log } from "@graphprotocol/graph-ts"
-import {
-  Deposit as DepositEvent,
-  StratHarvest,
-  Withdraw as WithdrawEvent,
-} from "../generated/templates/BeefyVaultV7/BeefyIStrategyV7"
+import { Address, BigInt, log } from "@graphprotocol/graph-ts"
+import { StratHarvest } from "../generated/templates/BeefyVaultV7/BeefyIStrategyV7"
 import {
   Transfer as TransferEvent,
   BeefyVaultV7 as BeefyVaultV7Contract,
@@ -20,62 +16,60 @@ import { BeefyVault, Investor } from "../generated/schema"
 import { getVaultTokenBreakdown } from "./platform"
 import { getBreakdownItem } from "./entity/breakdown"
 
-export function handleVaultDeposit(event: DepositEvent): void {
-  updateUserPosition(event, event.transaction.from)
-}
-export function handleVaultWithdraw(event: WithdrawEvent): void {
-  updateUserPosition(event, event.transaction.from)
-}
 export function handleVaultTransfer(event: TransferEvent): void {
   // transfer to self
   if (event.params.from.equals(event.params.to)) {
+    log.warning("handleVaultTransfer: transfer to self {}", [event.transaction.hash.toHexString()])
     return
   }
 
   /// value is zero
   if (event.params.value.equals(ZERO_BI)) {
-    return
-  }
-
-  // don't duplicate processing between Transfer and Deposit/Withdraw
-  if (event.params.from.equals(SHARE_TOKEN_MINT_ADDRESS) || event.params.to.equals(SHARE_TOKEN_MINT_ADDRESS)) {
+    log.warning("handleVaultTransfer: zero value transfer {}", [event.transaction.hash.toHexString()])
     return
   }
 
   // ignore transfers from/to boosts
   if (isBoostAddress(event.params.from)) {
+    log.warning("handleVaultTransfer: transfer from boost {}", [event.params.from.toHexString()])
     return
   }
   if (isBoostAddress(event.params.to)) {
+    log.warning("handleVaultTransfer: transfer to boost {}", [event.params.to.toHexString()])
     return
   }
 
-  // update both users
-  updateUserPosition(event, event.params.to)
-  updateUserPosition(event, event.params.from)
+  let vault = getBeefyVault(event.address)
+  if (!isVaultRunning(vault)) {
+    log.warning("handleVaultTransfer: vault is not running {}", [vault.id.toHexString()])
+    return
+  }
+
+  if (!event.params.from.equals(SHARE_TOKEN_MINT_ADDRESS)) {
+    updateVaultData(event.block.timestamp, vault)
+    const investorAddress = event.params.from
+    let investor = getInvestor(investorAddress)
+    investor.save()
+    updateInvestorVaultData(vault, investor)
+  }
+  if (!event.params.to.equals(SHARE_TOKEN_MINT_ADDRESS)) {
+    updateVaultData(event.block.timestamp, vault)
+    const investorAddress = event.params.from
+    let investor = getInvestor(investorAddress)
+    investor.save()
+    updateInvestorVaultData(vault, investor)
+  }
 }
 
 export function handleStrategyHarvest(event: StratHarvest): void {
   let strategy = getBeefyStrategy(event.address)
   let vault = getBeefyVault(strategy.vault)
   if (!isVaultRunning(vault)) {
+    log.warning("handleStrategyHarvest: vault is not running {}", [vault.id.toHexString()])
     return
   }
 
-  updateVaultData(event, vault)
-}
-
-function updateUserPosition(event: ethereum.Event, investorAddress: Address): void {
-  let vault = getBeefyVault(event.address)
-  if (!isVaultRunning(vault)) {
-    return
-  }
-
-  updateVaultData(event, vault)
-
-  let investor = getInvestor(investorAddress)
-  investor.save()
-  updateInvestorVaultData(vault, investor)
+  updateVaultData(event.block.timestamp, vault)
 }
 
 function updateInvestorVaultData(vault: BeefyVault, investor: Investor): Investor {
@@ -95,7 +89,7 @@ function updateInvestorVaultData(vault: BeefyVault, investor: Investor): Investo
   return investor
 }
 
-function updateVaultData(event: ethereum.Event, vault: BeefyVault): BeefyVault {
+function updateVaultData(timestamp: BigInt, vault: BeefyVault): BeefyVault {
   const underlyingToken = getTokenAndInitIfNeeded(vault.underlyingToken)
 
   ///////
@@ -128,7 +122,7 @@ function updateVaultData(event: ethereum.Event, vault: BeefyVault): BeefyVault {
     const breakdownItem = getBreakdownItem(underlyingToken, token)
     breakdownItem.rawBalance = tokenBalance.rawBalance
     breakdownItem.balance = tokenAmountToDecimal(tokenBalance.rawBalance, token.decimals)
-    breakdownItem.lastUpdate = event.block.timestamp
+    breakdownItem.lastUpdate = timestamp
     breakdownItem.save()
   }
   return vault
