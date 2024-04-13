@@ -1,2 +1,2 @@
-export { handleStrategyHarvest as handleHarvest } from "../vault-compound"
+export { handleStrategyHarvest as handleHarvest } from "../vault-interaction"
 export { handleStrategyInitialized as handleInitialized } from "../vault-lifecycle"

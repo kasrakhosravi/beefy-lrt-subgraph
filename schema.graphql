@@ -23,6 +23,9 @@ type Token @entity(immutable: true) {
   name: String
   "The number of decimals the token uses"
   decimals: BigInt!
+
+  "Breakdown of the balance of the token"
+  balanceBreakdown: [BalanceBreakdownItem!]! @derivedFrom(field: "wrapperToken")
 }
 
 enum VaultLifecycle {
@@ -109,8 +112,8 @@ type InvestorPosition @entity {
   "Amount of shares"
   sharesBalance: BigDecimal!
 
-  "Amount of underlying asset the investor is entitled to"
-  underlyingBalance: BigDecimal!
+  # "Amount of underlying asset the investor is entitled to"
+  # underlyingBalance: BigDecimal!
 
   # """
   # Time weighted balance up until the last time we updated the time weighted balance.
@@ -125,4 +128,24 @@ type InvestorPosition @entity {
   # timeWeightedUnderlyingBalance + balance * (block.timestamp - timeWeightedUnderlyingBalanceTimestamp)
   # """
   # timeWeightedUnderlyingBalanceTimestamp: BigDecimal!
+}
+
+"""
+A breakdown of the balance of a token
+"""
+type BalanceBreakdownItem @entity {
+  "Token address this breakdown is for + token address of the breakdown item"
+  id: Bytes!
+
+  "Token address this breakdown is for"
+  wrapperToken: Token!
+
+  "Token address of the breakdown item"
+  token: Token!
+
+  "Balance of the breakdown item"
+  balance: BigDecimal!
+
+  "last time the balance was updated"
+  lastUpdate: BigInt!
 }
