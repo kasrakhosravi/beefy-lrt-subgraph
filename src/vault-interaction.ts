@@ -1,5 +1,4 @@
 import { Address, BigInt, log, ethereum } from "@graphprotocol/graph-ts"
-import { StratHarvest } from "../generated/templates/BeefyVaultV7/BeefyIStrategyV7"
 import {
   Transfer as TransferEvent,
   BeefyVaultV7 as BeefyVaultV7Contract,
@@ -15,6 +14,8 @@ import { ppfsToShareRate } from "./utils/ppfs"
 import { BeefyVault, Investor } from "../generated/schema"
 import { getVaultTokenBreakdown } from "./platform"
 import { getBreakdownItem } from "./entity/breakdown"
+import { getClockTick } from "./entity/clock"
+import { MINUTES_15 } from "./utils/time"
 
 export function handleVaultTransfer(event: TransferEvent): void {
   // transfer to self
@@ -72,19 +73,25 @@ export function handleStrategyHarvest(event: ethereum.Event): void {
   updateVaultData(event.block.timestamp, vault)
 }
 
-export function handleClockTick(event: ethereum.Block): void {
-  const vaultConfigs = getChainVaults()
+export function handleClockTick(block: ethereum.Block): void {
+  let tickRes15min = getClockTick(block.timestamp, MINUTES_15)
+  if (!tickRes15min.isNew) {
+    log.debug("handleClockTick: tick already exists for 15 minutes period", [])
+    return
+  }
+  tickRes15min.tick.save()
 
+  const vaultConfigs = getChainVaults()
   for (let i = 0; i < vaultConfigs.length; i++) {
     const vaultConfig = vaultConfigs[i]
     const vault = getBeefyVault(vaultConfig.address)
     if (!isVaultRunning(vault)) {
-      log.warning("handleClockTick: vault is not running {}", [vault.id.toHexString()])
+      log.debug("handleClockTick: vault is not running {}", [vault.id.toHexString()])
       continue
     }
     // only need to update the breakdown as we should cover all other updates
     // with the other event binders
-    updateVaultBreakDown(event.timestamp, vault)
+    updateVaultBreakDown(block.timestamp, vault)
   }
 }
 

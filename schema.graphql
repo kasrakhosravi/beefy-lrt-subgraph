@@ -1,4 +1,25 @@
 """
+A clock tick is a record of time passing.
+This is used to update the protocol's stats at regular intervals.
+"""
+type ClockTick @entity(immutable: true) {
+  "truncated timestamp + tick period"
+  id: Bytes!
+
+  """
+  Duration of the snapshot period in seconds.
+  Available periods:
+  - 15 minutes: 900
+  - 1 day: 86400
+  """
+  period: BigInt!
+  "Timestamp the tick was initiated at, rounded to period"
+  roundedTimestamp: BigInt!
+  "Actual timestamp tick was initiated at"
+  timestamp: BigInt!
+}
+
+"""
 A investor is an address that interacts with our protocol.
 """
 type Investor @entity {
