@@ -60,6 +60,10 @@ templates:
           file: ./abis/beefy/BeefyIStrategyV7.json
         - name: IERC20
           file: ./abis/IERC20/IERC20.json
+        - name: PendleMarket
+          file: ./abis/platform/PendleMarket.json
+        - name: PendleSyToken
+          file: ./abis/platform/PendleSyToken.json
       eventHandlers:
         - event: Initialized(uint8)
           handler: handleInitialized
@@ -89,6 +93,10 @@ templates:
           file: ./abis/beefy/BeefyIStrategyV7.json
         - name: IERC20
           file: ./abis/IERC20/IERC20.json
+        - name: PendleMarket
+          file: ./abis/platform/PendleMarket.json
+        - name: PendleSyToken
+          file: ./abis/platform/PendleSyToken.json
       eventHandlers:
         - event: Initialized(uint8)
           handler: handleInitialized

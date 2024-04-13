@@ -112,6 +112,7 @@ function updateVaultData(vault: BeefyVault): BeefyVault {
   // update vault entities
   vault.pricePerFullShare = ppfs
   vault.shareToUnderlyingRate = vaultShareToUnderlyingRate
+  vault.rawUnderlyingBalance = vaultBalancesRaw
   vault.underlyingBalance = vaultUnderlyingBalance
   vault.save()
   return vault

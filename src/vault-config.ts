@@ -1,4 +1,4 @@
-import { Address, log } from "@graphprotocol/graph-ts"
+import { Address, DataSourceContext, log, dataSource } from "@graphprotocol/graph-ts"
 import { NETWORK_NAME } from "./config"
 
 export const PLATFORM_PENDLE_EQUILIBRIA = "PENDLE_EQUILIBRIA"
@@ -94,4 +94,17 @@ export function isBoostAddress(address: Address): boolean {
   }
 
   return false
+}
+
+const CONTEXT_KEY_UNDERLYING_PLATFORM = "underlyingPlatform"
+
+export function buildVaultDataSourceContext(vault: VaultConfig): DataSourceContext {
+  let context = new DataSourceContext()
+  context.setString(CONTEXT_KEY_UNDERLYING_PLATFORM, vault.underlyingPlatform)
+  return context
+}
+
+export function getContextUnderlyingPlatform(): string {
+  let context = dataSource.context()
+  return context.getString(CONTEXT_KEY_UNDERLYING_PLATFORM)
 }
