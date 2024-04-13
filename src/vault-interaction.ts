@@ -10,7 +10,7 @@ import {
 } from "../generated/templates/BeefyVaultV7/BeefyVaultV7"
 import { getBeefyStrategy, getBeefyVault, isVaultRunning } from "./entity/vault"
 import { ZERO_BI, tokenAmountToDecimal } from "./utils/decimal"
-import { getToken } from "./entity/token"
+import { getTokenAndInitIfNeeded } from "./entity/token"
 import { SHARE_TOKEN_MINT_ADDRESS } from "./config"
 import { isBoostAddress } from "./vault-config"
 import { getInvestor } from "./entity/investor"
@@ -18,7 +18,6 @@ import { getInvestorPosition } from "./entity/position"
 import { ppfsToShareRate } from "./utils/ppfs"
 import { BeefyVault, Investor } from "../generated/schema"
 import { getVaultTokenBreakdown } from "./platform"
-import { fetchAndSaveTokenData } from "./utils/token"
 import { getBreakdownItem } from "./entity/breakdown"
 
 export function handleVaultDeposit(event: DepositEvent): void {
@@ -63,7 +62,7 @@ export function handleStrategyHarvest(event: StratHarvest): void {
     return
   }
 
-  updateVaultData(vault)
+  updateVaultData(event, vault)
 }
 
 function updateUserPosition(event: ethereum.Event, investorAddress: Address): void {
@@ -72,7 +71,7 @@ function updateUserPosition(event: ethereum.Event, investorAddress: Address): vo
     return
   }
 
-  updateVaultData(vault)
+  updateVaultData(event, vault)
 
   let investor = getInvestor(investorAddress)
   investor.save()
@@ -81,7 +80,7 @@ function updateUserPosition(event: ethereum.Event, investorAddress: Address): vo
 
 function updateInvestorVaultData(vault: BeefyVault, investor: Investor): Investor {
   const vaultContract = BeefyVaultV7Contract.bind(Address.fromBytes(vault.id))
-  const sharesToken = getToken(vault.sharesToken)
+  const sharesToken = getTokenAndInitIfNeeded(vault.sharesToken)
 
   // get the new investor deposit value
   const investorShareTokenBalanceRaw = vaultContract.balanceOf(Address.fromBytes(investor.id))
@@ -96,8 +95,8 @@ function updateInvestorVaultData(vault: BeefyVault, investor: Investor): Investo
   return investor
 }
 
-function updateVaultData(vault: BeefyVault): BeefyVault {
-  const underlyingToken = getToken(vault.underlyingToken)
+function updateVaultData(event: ethereum.Event, vault: BeefyVault): BeefyVault {
+  const underlyingToken = getTokenAndInitIfNeeded(vault.underlyingToken)
 
   ///////
   // fetch data on chain
@@ -123,12 +122,13 @@ function updateVaultData(vault: BeefyVault): BeefyVault {
   const breakdown = getVaultTokenBreakdown(vault)
   for (let i = 0; i < breakdown.length; i++) {
     const tokenBalance = breakdown[i]
-    const token = fetchAndSaveTokenData(tokenBalance.tokenAddress)
+    const token = getTokenAndInitIfNeeded(tokenBalance.tokenAddress)
 
     // now the balance breakdown
     const breakdownItem = getBreakdownItem(underlyingToken, token)
     breakdownItem.rawBalance = tokenBalance.rawBalance
     breakdownItem.balance = tokenAmountToDecimal(tokenBalance.rawBalance, token.decimals)
+    breakdownItem.lastUpdate = event.block.timestamp
     breakdownItem.save()
   }
   return vault

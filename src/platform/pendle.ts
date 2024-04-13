@@ -3,25 +3,25 @@ import { TokenBalance } from "./common"
 import { PendleMarket as PendleMarketContract } from "../../generated/templates/BeefyVaultV7/PendleMarket"
 import { PendleSyToken as PendleSyTokenContract } from "../../generated/templates/BeefyVaultV7/PendleSyToken"
 import { Address } from "@graphprotocol/graph-ts"
-import { getToken } from "../entity/token"
+import { getTokenAndInitIfNeeded } from "../entity/token"
 
 export function getVaultTokenBreakdownPendle(vault: BeefyVault): Array<TokenBalance> {
   let balances = new Array<TokenBalance>()
 
   const wantTotalBalance = vault.rawUnderlyingBalance
-  const underlyingToken = getToken(vault.underlyingToken)
+  const underlyingToken = getTokenAndInitIfNeeded(vault.underlyingToken)
+
+  // fetch on chain data
   const pendleMarketContract = PendleMarketContract.bind(Address.fromBytes(underlyingToken.id))
   const tokenAddresses = pendleMarketContract.readTokens()
   const pendleState = pendleMarketContract.readState(getRouterAddress())
-
-  const syAddress = tokenAddresses.value0
-  const totalSy = pendleState.totalSy
-  const pendleTotalSupply = pendleState.totalLp
-
-  const syTokenContract = PendleSyTokenContract.bind(syAddress)
+  const syTokenContract = PendleSyTokenContract.bind(tokenAddresses.value0)
   const syUnderlyingAddress = syTokenContract.yieldToken()
 
-  balances.push(new TokenBalance(syUnderlyingAddress, totalSy.times(wantTotalBalance).div(pendleTotalSupply)))
+  // compute breakdown
+  balances.push(
+    new TokenBalance(syUnderlyingAddress, pendleState.totalSy.times(wantTotalBalance).div(pendleState.totalLp)),
+  )
 
   return balances
 }

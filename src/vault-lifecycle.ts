@@ -9,9 +9,9 @@ import {
   BeefyIStrategyV7 as BeefyIStrategyV7Contract,
 } from "../generated/templates/BeefyIStrategyV7/BeefyIStrategyV7"
 import {} from "../generated/templates"
-import { fetchAndSaveTokenData } from "./utils/token"
 import { BeefyVault } from "../generated/schema"
 import { getContextUnderlyingPlatform } from "./vault-config"
+import { getTokenAndInitIfNeeded } from "./entity/token"
 
 export function handleVaultInitialized(event: VaultInitialized): void {
   const vaultAddress = event.address
@@ -36,7 +36,7 @@ export function handleVaultInitialized(event: VaultInitialized): void {
   strategy.isInitialized = !strategyVault.equals(ADDRESS_ZERO)
 
   if (strategy.isInitialized) {
-    vault = fetchInitialVaultData(event.block.timestamp, vault)
+    vault = fetchInitialVaultData(vault)
     vault.save()
   }
 }
@@ -54,7 +54,7 @@ export function handleStrategyInitialized(event: StrategyInitializedEvent): void
 
   let vault = getBeefyVault(vaultAddress)
   if (vault.isInitialized) {
-    vault = fetchInitialVaultData(event.block.timestamp, vault)
+    vault = fetchInitialVaultData(vault)
     vault.save()
   }
 }
@@ -63,13 +63,13 @@ export function handleStrategyInitialized(event: StrategyInitializedEvent): void
  * Initialize the vault data.
  * Call this when both the vault and the strategy are initialized.
  */
-function fetchInitialVaultData(timestamp: BigInt, vault: BeefyVault): BeefyVault {
+function fetchInitialVaultData(vault: BeefyVault): BeefyVault {
   const vaultAddress = Address.fromBytes(vault.id)
   const vaultContract = BeefyVaultV7Contract.bind(vaultAddress)
 
   const want = vaultContract.want()
-  const sharesToken = fetchAndSaveTokenData(vaultAddress)
-  const underlyingToken = fetchAndSaveTokenData(want)
+  const sharesToken = getTokenAndInitIfNeeded(vaultAddress)
+  const underlyingToken = getTokenAndInitIfNeeded(want)
 
   vault.sharesToken = sharesToken.id
   vault.underlyingToken = underlyingToken.id
