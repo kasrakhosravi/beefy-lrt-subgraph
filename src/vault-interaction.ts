@@ -10,7 +10,7 @@ import { SHARE_TOKEN_MINT_ADDRESS } from "./config"
 import { getChainVaults, isBoostAddress } from "./vault-config"
 import { getInvestor } from "./entity/investor"
 import { getInvestorPosition } from "./entity/position"
-import { ppfsToShareRate } from "./utils/ppfs"
+import { ppfsToShareRate, rawShareBalanceToRawUnderlyingBalance } from "./utils/ppfs"
 import { BeefyVault, Investor } from "../generated/schema"
 import { getVaultTokenBreakdown } from "./platform"
 import {
@@ -105,6 +105,7 @@ export function handleClockTick(block: ethereum.Block): void {
 function updateInvestorVaultData(vault: BeefyVault, investor: Investor): Investor {
   const vaultContract = BeefyVaultV7Contract.bind(Address.fromBytes(vault.id))
   const sharesToken = getTokenAndInitIfNeeded(vault.sharesToken)
+  const underlyingToken = getTokenAndInitIfNeeded(vault.underlyingToken)
 
   // get the new investor deposit value
   const investorShareTokenBalanceRaw = vaultContract.balanceOf(Address.fromBytes(investor.id))
@@ -116,7 +117,11 @@ function updateInvestorVaultData(vault: BeefyVault, investor: Investor): Investo
   position.rawSharesBalance = investorShareTokenBalanceRaw
   position.sharesBalance = investorShareTokenBalance
   // we assume the vault was updated before this function was called
-  position.rawUnderlyingBalance = position.rawSharesBalance.times(vault.pricePerFullShare).div(ONE_ETH_BI)
+  position.rawUnderlyingBalance = rawShareBalanceToRawUnderlyingBalance(
+    vault.pricePerFullShare,
+    investorShareTokenBalanceRaw,
+    underlyingToken,
+  )
   position.underlyingBalance = position.sharesBalance.times(vault.shareToUnderlyingRate)
   position.save()
 
