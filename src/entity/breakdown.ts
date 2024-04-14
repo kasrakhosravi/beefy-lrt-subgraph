@@ -16,6 +16,7 @@ export function getVaultBalanceBreakdown(vault: BeefyVault, token: Token): Vault
     breakdown = new VaultBalanceBreakdown(id)
     breakdown.vault = vault.id
     breakdown.token = token.id
+    breakdown.rawBalance = ZERO_BI
     breakdown.balance = ZERO_BD
     breakdown.lastUpdateTimestamp = ZERO_BI
     breakdown.lastUpdateBlock = ZERO_BI
@@ -45,6 +46,7 @@ export function getInvestorPositionBalanceBreakdown(
     breakdown = new InvestorPositionBalanceBreakdown(id)
     breakdown.investorPosition = investorPosition.id
     breakdown.token = token.id
+    breakdown.rawBalance = ZERO_BI
     breakdown.balance = ZERO_BD
     breakdown.lastUpdateTimestamp = ZERO_BI
     breakdown.lastUpdateBlock = ZERO_BI

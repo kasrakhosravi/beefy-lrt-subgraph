@@ -228,6 +228,9 @@ type InvestorPositionBalanceBreakdown @entity {
   "Token address of the breakdown item"
   token: Token
 
+  "Balance of the breakdown item. Represented with `token.decimals` decimals"
+  rawBalance: BigInt!
+
   "Balance of the breakdown item"
   balance: BigDecimal!
 

@@ -174,15 +174,22 @@ function updateVaultBreakDown(block: ethereum.Block, vault: BeefyVault): BeefyVa
     // also update the investor positions for that token
     for (let j = 0; j < positions.length; j++) {
       const position = positions[j]
+      let rawInvestorTokenBalance = ZERO_BI
       let investorTokenBalance = ZERO_BD
 
       // vault is empty, set all positions to zero
       if (!vault.rawSharesTokenTotalSupply.equals(ZERO_BI)) {
         const investorPercentOfTotal = position.sharesBalance.div(vault.sharesTokenTotalSupply)
         investorTokenBalance = breakdownItem.balance.times(investorPercentOfTotal)
+
+        rawInvestorTokenBalance = position.rawSharesBalance
+          .times(breakdownItem.rawBalance)
+          .div(vault.rawSharesTokenTotalSupply)
       }
 
       const positionBreakdownItem = getInvestorPositionBalanceBreakdown(position, token)
+
+      positionBreakdownItem.rawBalance = rawInvestorTokenBalance
       positionBreakdownItem.balance = investorTokenBalance
       positionBreakdownItem.lastUpdateTimestamp = block.timestamp
       positionBreakdownItem.lastUpdateBlock = block.number
