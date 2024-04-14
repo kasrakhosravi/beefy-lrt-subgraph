@@ -4,7 +4,7 @@ import {
   BeefyVaultV7 as BeefyVaultV7Contract,
 } from "../generated/templates/BeefyVaultV7/BeefyVaultV7"
 import { getBeefyStrategy, getBeefyVault, isVaultRunning } from "./entity/vault"
-import { ZERO_BD, ZERO_BI, tokenAmountToDecimal } from "./utils/decimal"
+import { ONE_ETH_BI, ZERO_BD, ZERO_BI, tokenAmountToDecimal } from "./utils/decimal"
 import { getTokenAndInitIfNeeded } from "./entity/token"
 import { SHARE_TOKEN_MINT_ADDRESS } from "./config"
 import { getChainVaults, isBoostAddress } from "./vault-config"
@@ -113,8 +113,10 @@ function updateInvestorVaultData(vault: BeefyVault, investor: Investor): Investo
   ///////
   // update investor positions
   const position = getInvestorPosition(vault, investor)
+  position.rawSharesBalance = investorShareTokenBalanceRaw
   position.sharesBalance = investorShareTokenBalance
   // we assume the vault was updated before this function was called
+  position.rawUnderlyingBalance = position.rawSharesBalance.times(vault.pricePerFullShare).div(ONE_ETH_BI)
   position.underlyingBalance = position.sharesBalance.times(vault.shareToUnderlyingRate)
   position.save()
 

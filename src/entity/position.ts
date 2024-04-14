@@ -1,6 +1,6 @@
 import { Bytes } from "@graphprotocol/graph-ts"
 import { BeefyVault, Investor, InvestorPosition } from "../../generated/schema"
-import { ZERO_BD } from "../utils/decimal"
+import { ZERO_BD, ZERO_BI } from "../utils/decimal"
 
 // @ts-ignore
 @inline
@@ -19,7 +19,9 @@ export function getInvestorPosition(vault: BeefyVault, investor: Investor): Inve
     position = new InvestorPosition(id)
     position.vault = vault.id
     position.investor = investor.id
+    position.rawSharesBalance = ZERO_BI
     position.sharesBalance = ZERO_BD
+    position.rawUnderlyingBalance = ZERO_BI
     position.underlyingBalance = ZERO_BD
   }
   return position

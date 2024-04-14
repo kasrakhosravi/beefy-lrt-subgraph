@@ -185,10 +185,16 @@ type InvestorPosition @entity {
   "Vault address"
   vault: BeefyVault!
 
+  "Amount of shares, with maximum precision. Represented with `vault.shareToken.decimals` decimals"
+  rawSharesBalance: BigInt!
+
   "Amount of shares"
   sharesBalance: BigDecimal!
 
-  "Underlying balance"
+  "Amount of underlying asset the investor is entitled to. Represented with `vault.underlyingToken.decimals` decimals"
+  rawUnderlyingBalance: BigInt!
+
+  "Amount of underlying asset the investor is entitled to"
   underlyingBalance: BigDecimal!
 
   "Breakdown of the investor position balance"
