@@ -44,6 +44,18 @@ type Token @entity(immutable: true) {
   name: String
   "The number of decimals the token uses"
   decimals: BigInt!
+
+  "The vaults that has this token as shares token"
+  isSharesTokenOf: [BeefyVault!]! @derivedFrom(field: "sharesToken")
+
+  "The vaults that has this token as underlying token"
+  isUnderlyingTokenOf: [BeefyVault!]! @derivedFrom(field: "underlyingToken")
+
+  "The vaults that hold this token as a sub-balance"
+  vaultBalanceBreakdowns: [VaultBalanceBreakdown!]! @derivedFrom(field: "token")
+
+  "The investor position breakdown that hold this token"
+  investorPositionBalanceBreakdowns: [InvestorPositionBalanceBreakdown!]! @derivedFrom(field: "token")
 }
 
 enum VaultLifecycle {
