@@ -188,6 +188,12 @@ type InvestorPosition @entity {
   "Amount of shares"
   sharesBalance: BigDecimal!
 
+  "Underlying balance"
+  underlyingBalance: BigDecimal!
+
+  "Breakdown of the investor position balance"
+  balanceBreakdown: [InvestorPositionBalanceBreakdown!]! @derivedFrom(field: "investorPosition")
+
   # "Amount of underlying asset the investor is entitled to"
   # underlyingBalance: BigDecimal!
 

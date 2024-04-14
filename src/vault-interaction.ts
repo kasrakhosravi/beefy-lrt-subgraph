@@ -114,6 +114,8 @@ function updateInvestorVaultData(vault: BeefyVault, investor: Investor): Investo
   // update investor positions
   const position = getInvestorPosition(vault, investor)
   position.sharesBalance = investorShareTokenBalance
+  // we assume the vault was updated before this function was called
+  position.underlyingBalance = position.sharesBalance.times(vault.shareToUnderlyingRate)
   position.save()
 
   return investor
