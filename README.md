@@ -9,23 +9,27 @@ This Subgraph sources events from the Beefy LRT contracts in different networks.
 ### GraphiQL Explorer
 
 - Arbitrum: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-arbitrum/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-arbitrum/gn)
+- Base: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-base/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-base/gn)
 - Ethereum: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-ethereum/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-ethereum/gn)
 
 ### Api Endpoints
 
 - Arbitrum: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-arbitrum/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-arbitrum/gn)
-- Ethereum: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-arbitrum/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-arbitrum/gn)
+- Base: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-base/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-base/gn)
+- Ethereum: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-ethereum/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-ethereum/gn)
 
 ## 0xgraph.xyz
 
 ### GraphiQL Explorer
 
 - Arbitrum: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-arbitrum/graphql](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-arbitrum/graphql)
+- Base: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-base/graphql](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-base/graphql)
 - Ethereum: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-ethereum/graphql](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-ethereum/graphql)
 
 ### Api Endpoints
 
 - Arbitrum: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-arbitrum](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-arbitrum)
+- Base: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-base](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-base)
 - Ethereum: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-ethereum](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-ethereum)
 
 # Contributing

@@ -1,0 +1,9 @@
+{
+  "network": "base",
+  "shareTokenMintAddress": "0x0000000000000000000000000000000000000000",
+  "bindConfigAddress": "0xbc4a342b0c057501e081484a2d24e576e854f823",
+  "bindConfigBlock": 12723637,
+  "bindConfigEvent": "ProxyCreated(address)",
+  "vaultInitializedEvent": "Initialized(uint8)",
+  "clockTickBlocks": 150
+}
