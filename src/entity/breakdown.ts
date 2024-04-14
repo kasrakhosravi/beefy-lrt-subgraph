@@ -1,12 +1,19 @@
-import { VaultBalanceBreakdownItem, BeefyVault, Token, VaultBalanceBreakdownUpdateEvent } from "../../generated/schema"
+import {
+  BeefyVault,
+  Token,
+  VaultBalanceBreakdownUpdateEvent,
+  VaultBalanceBreakdown,
+  InvestorPositionBalanceBreakdown,
+  InvestorPosition,
+} from "../../generated/schema"
 import { ZERO_BD, ZERO_BI } from "../utils/decimal"
 import { Bytes, ethereum } from "@graphprotocol/graph-ts"
 
-export function getBreakdownItem(vault: BeefyVault, token: Token): VaultBalanceBreakdownItem {
+export function getVaultBalanceBreakdown(vault: BeefyVault, token: Token): VaultBalanceBreakdown {
   let id = vault.id.concat(token.id)
-  let breakdown = VaultBalanceBreakdownItem.load(id)
+  let breakdown = VaultBalanceBreakdown.load(id)
   if (!breakdown) {
-    breakdown = new VaultBalanceBreakdownItem(id)
+    breakdown = new VaultBalanceBreakdown(id)
     breakdown.vault = vault.id
     breakdown.token = token.id
     breakdown.balance = ZERO_BD
@@ -16,7 +23,7 @@ export function getBreakdownItem(vault: BeefyVault, token: Token): VaultBalanceB
   return breakdown
 }
 
-export function saveUpdateEvent(vault: BeefyVault, block: ethereum.Block): void {
+export function saveVaultBalanceBreakdownUpdateEvent(vault: BeefyVault, block: ethereum.Block): void {
   const id = vault.id.concat(Bytes.fromByteArray(Bytes.fromBigInt(block.number)))
   let event = VaultBalanceBreakdownUpdateEvent.load(id)
   if (!event) {
@@ -26,4 +33,21 @@ export function saveUpdateEvent(vault: BeefyVault, block: ethereum.Block): void 
     event.blockTimestamp = block.timestamp
     event.save()
   }
+}
+
+export function getInvestorPositionBalanceBreakdown(
+  investorPosition: InvestorPosition,
+  token: Token,
+): InvestorPositionBalanceBreakdown {
+  let id = investorPosition.id.concat(token.id)
+  let breakdown = InvestorPositionBalanceBreakdown.load(id)
+  if (!breakdown) {
+    breakdown = new InvestorPositionBalanceBreakdown(id)
+    breakdown.investorPosition = investorPosition.id
+    breakdown.token = token.id
+    breakdown.balance = ZERO_BD
+    breakdown.lastUpdateTimestamp = ZERO_BI
+    breakdown.lastUpdateBlock = ZERO_BI
+  }
+  return breakdown
 }

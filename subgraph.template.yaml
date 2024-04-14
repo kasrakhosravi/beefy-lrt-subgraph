@@ -20,12 +20,15 @@ dataSources:
       language: wasm/assemblyscript
       file: ./src/mapping/config-binder.ts
       entities:
+        - ClockTick
         - Investor
         - Token
         - BeefyVault
         - BeefyStrategy
         - InvestorPosition
-        - BalanceBreakdownItem
+        - VaultBalanceBreakdown
+        - VaultBalanceBreakdownUpdateEvent
+        - InvestorPositionBalanceBreakdown
       abis:
         - name: ConfigBinder
           file: ./abis/beefy/ConfigBinder.json
@@ -64,12 +67,15 @@ templates:
       language: wasm/assemblyscript
       file: ./src/mapping/vault.ts
       entities:
+        - ClockTick
         - Investor
         - Token
         - BeefyVault
         - BeefyStrategy
         - InvestorPosition
-        - BalanceBreakdownItem
+        - VaultBalanceBreakdown
+        - VaultBalanceBreakdownUpdateEvent
+        - InvestorPositionBalanceBreakdown
       abis:
         - name: ConfigBinder
           file: ./abis/beefy/ConfigBinder.json
@@ -104,12 +110,15 @@ templates:
       language: wasm/assemblyscript
       file: ./src/mapping/strategy.ts
       entities:
+        - ClockTick
         - Investor
         - Token
         - BeefyVault
         - BeefyStrategy
         - InvestorPosition
-        - BalanceBreakdownItem
+        - VaultBalanceBreakdown
+        - VaultBalanceBreakdownUpdateEvent
+        - InvestorPositionBalanceBreakdown
       abis:
         - name: ConfigBinder
           file: ./abis/beefy/ConfigBinder.json

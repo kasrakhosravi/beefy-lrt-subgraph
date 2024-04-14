@@ -89,6 +89,12 @@ type BeefyVault @entity {
   "The underlying platform this vault is using"
   underlyingPlatform: VaultUnderlyingPlatform!
 
+  "The vault's total shares supply as represented in the contract"
+  rawSharesTokenTotalSupply: BigInt!
+
+  "The vault's total shares supply"
+  sharesTokenTotalSupply: BigDecimal!
+
   "how much underlying asset one vault share represents as represented in the contract"
   pricePerFullShare: BigInt!
 
@@ -105,7 +111,7 @@ type BeefyVault @entity {
   positions: [InvestorPosition!]! @derivedFrom(field: "vault")
 
   "breakdown of the vault underlying token balance"
-  underlyingTokenBalanceBreakdown: [VaultBalanceBreakdownItem!]! @derivedFrom(field: "vault")
+  underlyingTokenBalanceBreakdown: [VaultBalanceBreakdown!]! @derivedFrom(field: "vault")
 
   "breakdown update events"
   underlyingTokenBalanceBreakdownUpdateEvents: [VaultBalanceBreakdownUpdateEvent!]! @derivedFrom(field: "vault")
@@ -129,7 +135,7 @@ type BeefyStrategy @entity {
 """
 A breakdown of the balance of a token
 """
-type VaultBalanceBreakdownItem @entity {
+type VaultBalanceBreakdown @entity {
   "Vault address this breakdown is for + token address of the breakdown item"
   id: Bytes!
 
@@ -194,8 +200,28 @@ type InvestorPosition @entity {
 
   # """
   # The last time we updated the time weighted balance
-  # this is used to calculate the time weighted balance at any block using:
+  # this can be used to calculate the time weighted balance at any block using:
   # timeWeightedUnderlyingBalance + balance * (block.timestamp - timeWeightedUnderlyingBalanceTimestamp)
   # """
-  # timeWeightedUnderlyingBalanceTimestamp: BigDecimal!
+  # timeWeightedUnderlyingBalanceTimestamp: BigInt!
+}
+
+type InvestorPositionBalanceBreakdown @entity {
+  "Investor position id + token address"
+  id: Bytes!
+
+  "Investor position"
+  investorPosition: InvestorPosition!
+
+  "Token address of the breakdown item"
+  token: Token
+
+  "Balance of the breakdown item"
+  balance: BigDecimal!
+
+  "last time the balance was updated"
+  lastUpdateTimestamp: BigInt!
+
+  "last time the balance was updated"
+  lastUpdateBlock: BigInt!
 }
