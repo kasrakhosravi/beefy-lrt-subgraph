@@ -174,23 +174,38 @@ function updateVaultBreakDown(block: ethereum.Block, vault: BeefyVault): BeefyVa
     // also update the investor positions for that token
     for (let j = 0; j < positions.length; j++) {
       const position = positions[j]
+      const positionBreakdownItem = getInvestorPositionBalanceBreakdown(position, token)
+
+      // compute time weighted balance contribution
+      let rawTimeWeightedBalanceContribution = ZERO_BI
+      let timeWeightedBalanceContribution = ZERO_BD
+      const previousRawBalance = positionBreakdownItem.rawBalance
+      const previousBalance = positionBreakdownItem.balance
+      const secondsSinceLastUpdate = block.timestamp.minus(positionBreakdownItem.lastUpdateTimestamp)
+      if (secondsSinceLastUpdate.gt(ZERO_BI) && previousRawBalance.gt(ZERO_BI)) {
+        rawTimeWeightedBalanceContribution = previousRawBalance.times(secondsSinceLastUpdate)
+        timeWeightedBalanceContribution = previousBalance.times(secondsSinceLastUpdate.toBigDecimal())
+      }
+
+      // compute the position balance breakdown
       let rawInvestorTokenBalance = ZERO_BI
       let investorTokenBalance = ZERO_BD
-
-      // vault is empty, set all positions to zero
       if (!vault.rawSharesTokenTotalSupply.equals(ZERO_BI)) {
         const investorPercentOfTotal = position.sharesBalance.div(vault.sharesTokenTotalSupply)
         investorTokenBalance = breakdownItem.balance.times(investorPercentOfTotal)
-
         rawInvestorTokenBalance = position.rawSharesBalance
           .times(breakdownItem.rawBalance)
           .div(vault.rawSharesTokenTotalSupply)
       }
 
-      const positionBreakdownItem = getInvestorPositionBalanceBreakdown(position, token)
-
       positionBreakdownItem.rawBalance = rawInvestorTokenBalance
       positionBreakdownItem.balance = investorTokenBalance
+      positionBreakdownItem.rawTimeWeightedBalance = positionBreakdownItem.rawTimeWeightedBalance.plus(
+        rawTimeWeightedBalanceContribution,
+      )
+      positionBreakdownItem.timeWeightedBalance = positionBreakdownItem.timeWeightedBalance.plus(
+        timeWeightedBalanceContribution,
+      )
       positionBreakdownItem.lastUpdateTimestamp = block.timestamp
       positionBreakdownItem.lastUpdateBlock = block.number
       positionBreakdownItem.save()

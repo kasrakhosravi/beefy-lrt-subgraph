@@ -199,23 +199,6 @@ type InvestorPosition @entity {
 
   "Breakdown of the investor position balance"
   balanceBreakdown: [InvestorPositionBalanceBreakdown!]! @derivedFrom(field: "investorPosition")
-
-  # "Amount of underlying asset the investor is entitled to"
-  # underlyingBalance: BigDecimal!
-
-  # """
-  # Time weighted balance up until the last time we updated the time weighted balance.
-  # This is the balance times the amount of time the investor has held the token
-  # ex: if the investor has held 100 tokens for 10 seconds, the time weighted balance is 1000
-  # """
-  # timeWeightedUnderlyingBalance: BigDecimal!
-
-  # """
-  # The last time we updated the time weighted balance
-  # this can be used to calculate the time weighted balance at any block using:
-  # timeWeightedUnderlyingBalance + balance * (block.timestamp - timeWeightedUnderlyingBalanceTimestamp)
-  # """
-  # timeWeightedUnderlyingBalanceTimestamp: BigInt!
 }
 
 type InvestorPositionBalanceBreakdown @entity {
@@ -234,7 +217,28 @@ type InvestorPositionBalanceBreakdown @entity {
   "Balance of the breakdown item"
   balance: BigDecimal!
 
-  "last time the balance was updated"
+  """
+  Time weighted balance UP UNTIL the last time we updated the time weighted balance.
+  This is the balance times the amount of time the investor has held the token, in seconds.
+  ex: if the investor has held 100 tokens for 20 seconds, the time weighted balance is 2000
+
+  Represented with `token.decimals` decimals
+  """
+  rawTimeWeightedBalance: BigInt!
+
+  """
+  Time weighted balance UP UNTIL the last time we updated the time weighted balance.
+  This is the balance times the amount of time the investor has held the token, in seconds.
+  ex: if the investor has held 100 tokens for 20 seconds, the time weighted balance is 2000
+  """
+  timeWeightedBalance: BigDecimal!
+
+  """
+  Last time the balance breakdown was updated.
+
+  This can be used to approximate the time weighted balance at any block using:
+  timeWeightedBalance + balance * (block.timestamp - lastUpdateTimestamp)
+  """
   lastUpdateTimestamp: BigInt!
 
   "last time the balance was updated"

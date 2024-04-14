@@ -48,6 +48,8 @@ export function getInvestorPositionBalanceBreakdown(
     breakdown.token = token.id
     breakdown.rawBalance = ZERO_BI
     breakdown.balance = ZERO_BD
+    breakdown.rawTimeWeightedBalance = ZERO_BI
+    breakdown.timeWeightedBalance = ZERO_BD
     breakdown.lastUpdateTimestamp = ZERO_BI
     breakdown.lastUpdateBlock = ZERO_BI
   }
