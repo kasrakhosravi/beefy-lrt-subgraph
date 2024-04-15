@@ -12,9 +12,9 @@ import { TokenBalance } from "./common"
 import { getVaultTokenBreakdownPendle } from "./pendle"
 import { getVaultTokenBreakdownBalancer } from "./balancer"
 import { getVaultTokenBreakdownCurve } from "./curve"
-import { getVaultTokenBreakdownAerodrome } from "./aerodrome"
-import { getVaultTokenBreakdownMendi } from "./mendi"
-import { getVaultTokenBreakdownLynexGamma } from "./lynex"
+import { getVaultTokenBreakdownSolidly } from "./solidly"
+import { getVaultTokenBreakdownAave } from "./aave"
+import { getVaultTokenBreakdownGamma } from "./gamma"
 
 export function getVaultTokenBreakdown(vault: BeefyVault): Array<TokenBalance> {
   if (vault.underlyingPlatform == PLATFORM_PENDLE_EQUILIBRIA) {
@@ -24,11 +24,11 @@ export function getVaultTokenBreakdown(vault: BeefyVault): Array<TokenBalance> {
   } else if (vault.underlyingPlatform == PLATFORM_CURVE) {
     return getVaultTokenBreakdownCurve(vault)
   } else if (vault.underlyingPlatform == PLATFORM_AERODROME) {
-    return getVaultTokenBreakdownAerodrome(vault)
+    return getVaultTokenBreakdownSolidly(vault)
   } else if (vault.underlyingPlatform == PLATFORM_MENDI) {
-    return getVaultTokenBreakdownMendi(vault)
+    return getVaultTokenBreakdownAave(vault)
   } else if (vault.underlyingPlatform == PLATFORM_LYNEX_GAMMA) {
-    return getVaultTokenBreakdownLynexGamma(vault)
+    return getVaultTokenBreakdownGamma(vault)
   }
 
   log.error("Not implemented platform {} for vault {}", [vault.underlyingPlatform, vault.id.toHexString()])
