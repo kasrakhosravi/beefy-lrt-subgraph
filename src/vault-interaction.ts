@@ -1,7 +1,7 @@
 import { Address, log, ethereum } from "@graphprotocol/graph-ts"
 import { Transfer as TransferEvent, BeefyVaultV7 as BeefyVaultV7Contract } from "../generated/templates/BeefyVaultV7/BeefyVaultV7"
 import { getBeefyStrategy, getBeefyVault, isVaultRunning } from "./entity/vault"
-import { ONE_ETH_BI, ZERO_BD, ZERO_BI, tokenAmountToDecimal } from "./utils/decimal"
+import { ZERO_BD, ZERO_BI, tokenAmountToDecimal } from "./utils/decimal"
 import { getTokenAndInitIfNeeded } from "./entity/token"
 import { SHARE_TOKEN_MINT_ADDRESS } from "./config"
 import { getChainVaults, isBoostAddress } from "./vault-config"
@@ -12,7 +12,7 @@ import { BeefyVault, Investor } from "../generated/schema"
 import { getVaultTokenBreakdown } from "./platform"
 import { getInvestorPositionBalanceBreakdown, getVaultBalanceBreakdown, saveVaultBalanceBreakdownUpdateEvent } from "./entity/breakdown"
 import { getClockTick } from "./entity/clock"
-import { MINUTES_15 } from "./utils/time"
+import { HOUR } from "./utils/time"
 import { ADDRESS_ZERO } from "./utils/address"
 
 export function handleVaultTransfer(event: TransferEvent): void {
@@ -75,12 +75,12 @@ export function handleStrategyHarvest(event: ethereum.Event): void {
 }
 
 export function handleClockTick(block: ethereum.Block): void {
-  let tickRes15min = getClockTick(block.timestamp, MINUTES_15)
-  if (!tickRes15min.isNew) {
-    log.debug("handleClockTick: tick already exists for 15 minutes period", [])
+  let tickRes = getClockTick(block.timestamp, HOUR)
+  if (!tickRes.isNew) {
+    log.debug("handleClockTick: tick already exists for 1h period", [])
     return
   }
-  tickRes15min.tick.save()
+  tickRes.tick.save()
 
   const vaultConfigs = getChainVaults()
   for (let i = 0; i < vaultConfigs.length; i++) {
@@ -188,6 +188,11 @@ function updateVaultBreakDown(block: ethereum.Block, vault: BeefyVault): BeefyVa
         const investorPercentOfTotal = position.sharesBalance.div(vault.sharesTokenTotalSupply)
         investorTokenBalance = breakdownItem.balance.times(investorPercentOfTotal)
         rawInvestorTokenBalance = position.rawSharesBalance.times(breakdownItem.rawBalance).div(vault.rawSharesTokenTotalSupply)
+      }
+
+      // only update if something changed
+      if (positionBreakdownItem.rawBalance.equals(rawInvestorTokenBalance) && rawTimeWeightedBalanceContribution.equals(ZERO_BI)) {
+        continue
       }
 
       positionBreakdownItem.rawBalance = rawInvestorTokenBalance

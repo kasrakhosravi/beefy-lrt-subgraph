@@ -5,5 +5,5 @@
   "bindConfigBlock": 12723637,
   "bindConfigEvent": "ProxyCreated(address)",
   "vaultInitializedEvent": "Initialized(uint8)",
-  "clockTickBlocks": 150
+  "clockTickBlocks": 1500
 }

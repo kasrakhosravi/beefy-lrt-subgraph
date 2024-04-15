@@ -5,5 +5,5 @@
   "bindConfigBlock": 3174752,
   "bindConfigEvent": "Initialized(uint8)",
   "vaultInitializedEvent": "Initialized(uint8)",
-  "clockTickBlocks": 300
+  "clockTickBlocks": 1100
 }
