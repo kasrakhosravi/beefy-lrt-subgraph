@@ -5,7 +5,7 @@ import { BeefyIStrategyV7 as BeefyIStrategyV7Template } from "../generated/templ
 import { ADDRESS_ZERO } from "./utils/address"
 import { BeefyIStrategyV7 as BeefyIStrategyV7Contract } from "../generated/templates/BeefyIStrategyV7/BeefyIStrategyV7"
 import { BeefyVault } from "../generated/schema"
-import { getContextUnderlyingPlatform } from "./vault-config"
+import { getContextUnderlyingPlatform, getContextVaultKey } from "./vault-config"
 import { getTokenAndInitIfNeeded } from "./entity/token"
 
 export function handleVaultInitialized(event: ethereum.Event): void {
@@ -22,6 +22,7 @@ export function handleVaultInitialized(event: ethereum.Event): void {
 
   vault.isInitialized = true
   vault.strategy = strategyAddress
+  vault.vaultId = getContextVaultKey()
   vault.underlyingPlatform = getContextUnderlyingPlatform()
   vault.save() // needs to be saved before we can use it in the strategy events
 
