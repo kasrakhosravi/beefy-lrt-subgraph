@@ -102,7 +102,7 @@ type BeefyVault @entity {
   underlyingPlatform: VaultUnderlyingPlatform!
 
   "The vault's human readable key. Used in urls and the UI."
-  vaultId: String
+  vaultId: String!
 
   "The vault's total shares supply as represented in the contract"
   rawSharesTokenTotalSupply: BigInt!
