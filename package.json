@@ -17,6 +17,7 @@
     "prepare:arbitrum": "./bin/prepare.sh arbitrum",
     "prepare:base": "./bin/prepare.sh base",
     "prepare:ethereum": "./bin/prepare.sh ethereum",
+    "prepare:linea": "./bin/prepare.sh linea",
     "prepare:optimism": "./bin/prepare.sh optimism"
   },
   "main": "./bin/index.js",
