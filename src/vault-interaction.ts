@@ -1,8 +1,5 @@
 import { Address, log, ethereum } from "@graphprotocol/graph-ts"
-import {
-  Transfer as TransferEvent,
-  BeefyVaultV7 as BeefyVaultV7Contract,
-} from "../generated/templates/BeefyVaultV7/BeefyVaultV7"
+import { Transfer as TransferEvent, BeefyVaultV7 as BeefyVaultV7Contract } from "../generated/templates/BeefyVaultV7/BeefyVaultV7"
 import { getBeefyStrategy, getBeefyVault, isVaultRunning } from "./entity/vault"
 import { ONE_ETH_BI, ZERO_BD, ZERO_BI, tokenAmountToDecimal } from "./utils/decimal"
 import { getTokenAndInitIfNeeded } from "./entity/token"
@@ -13,11 +10,7 @@ import { getInvestorPosition } from "./entity/position"
 import { ppfsToShareRate, rawShareBalanceToRawUnderlyingBalance } from "./utils/ppfs"
 import { BeefyVault, Investor } from "../generated/schema"
 import { getVaultTokenBreakdown } from "./platform"
-import {
-  getInvestorPositionBalanceBreakdown,
-  getVaultBalanceBreakdown,
-  saveVaultBalanceBreakdownUpdateEvent,
-} from "./entity/breakdown"
+import { getInvestorPositionBalanceBreakdown, getVaultBalanceBreakdown, saveVaultBalanceBreakdownUpdateEvent } from "./entity/breakdown"
 import { getClockTick } from "./entity/clock"
 import { MINUTES_15 } from "./utils/time"
 import { ADDRESS_ZERO } from "./utils/address"
@@ -117,11 +110,7 @@ function updateInvestorVaultData(vault: BeefyVault, investor: Investor): Investo
   position.rawSharesBalance = investorShareTokenBalanceRaw
   position.sharesBalance = investorShareTokenBalance
   // we assume the vault was updated before this function was called
-  position.rawUnderlyingBalance = rawShareBalanceToRawUnderlyingBalance(
-    vault.pricePerFullShare,
-    investorShareTokenBalanceRaw,
-    underlyingToken,
-  )
+  position.rawUnderlyingBalance = rawShareBalanceToRawUnderlyingBalance(vault.pricePerFullShare, investorShareTokenBalanceRaw, underlyingToken)
   position.underlyingBalance = position.sharesBalance.times(vault.shareToUnderlyingRate)
   position.save()
 
@@ -198,19 +187,13 @@ function updateVaultBreakDown(block: ethereum.Block, vault: BeefyVault): BeefyVa
       if (!vault.rawSharesTokenTotalSupply.equals(ZERO_BI)) {
         const investorPercentOfTotal = position.sharesBalance.div(vault.sharesTokenTotalSupply)
         investorTokenBalance = breakdownItem.balance.times(investorPercentOfTotal)
-        rawInvestorTokenBalance = position.rawSharesBalance
-          .times(breakdownItem.rawBalance)
-          .div(vault.rawSharesTokenTotalSupply)
+        rawInvestorTokenBalance = position.rawSharesBalance.times(breakdownItem.rawBalance).div(vault.rawSharesTokenTotalSupply)
       }
 
       positionBreakdownItem.rawBalance = rawInvestorTokenBalance
       positionBreakdownItem.balance = investorTokenBalance
-      positionBreakdownItem.rawTimeWeightedBalance = positionBreakdownItem.rawTimeWeightedBalance.plus(
-        rawTimeWeightedBalanceContribution,
-      )
-      positionBreakdownItem.timeWeightedBalance = positionBreakdownItem.timeWeightedBalance.plus(
-        timeWeightedBalanceContribution,
-      )
+      positionBreakdownItem.rawTimeWeightedBalance = positionBreakdownItem.rawTimeWeightedBalance.plus(rawTimeWeightedBalanceContribution)
+      positionBreakdownItem.timeWeightedBalance = positionBreakdownItem.timeWeightedBalance.plus(timeWeightedBalanceContribution)
       positionBreakdownItem.lastUpdateTimestamp = block.timestamp
       positionBreakdownItem.lastUpdateBlock = block.number
       positionBreakdownItem.save()
