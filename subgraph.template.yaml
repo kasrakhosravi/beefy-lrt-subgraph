@@ -46,6 +46,14 @@ dataSources:
           file: ./abis/platform/BalancerPool.json
         - name: BalancerVault
           file: ./abis/platform/BalancerVault.json
+        - name: SolidlyPool
+          file: ./abis/platform/SolidlyPool.json
+        - name: GammaHypervisor
+          file: ./abis/platform/GammaHypervisor.json
+        - name: CurveToken
+          file: ./abis/platform/CurveToken.json
+        - name: CurvePool
+          file: ./abis/platform/CurvePool.json
       eventHandlers:
         - event: {{bindConfigEvent}}
           handler: handleInitLrtWatchers
@@ -93,6 +101,14 @@ templates:
           file: ./abis/platform/BalancerPool.json
         - name: BalancerVault
           file: ./abis/platform/BalancerVault.json
+        - name: SolidlyPool
+          file: ./abis/platform/SolidlyPool.json
+        - name: GammaHypervisor
+          file: ./abis/platform/GammaHypervisor.json
+        - name: CurveToken
+          file: ./abis/platform/CurveToken.json
+        - name: CurvePool
+          file: ./abis/platform/CurvePool.json
       eventHandlers:
         - event: {{vaultInitializedEvent}}
           handler: handleInitialized
@@ -136,6 +152,14 @@ templates:
           file: ./abis/platform/BalancerPool.json
         - name: BalancerVault
           file: ./abis/platform/BalancerVault.json
+        - name: SolidlyPool
+          file: ./abis/platform/SolidlyPool.json
+        - name: GammaHypervisor
+          file: ./abis/platform/GammaHypervisor.json
+        - name: CurveToken
+          file: ./abis/platform/CurveToken.json
+        - name: CurvePool
+          file: ./abis/platform/CurvePool.json
       eventHandlers:
         - event: Initialized(uint8)
           handler: handleInitialized
