@@ -68,12 +68,12 @@ enum VaultLifecycle {
 }
 
 enum VaultUnderlyingPlatform {
-  PENDLE_EQUILIBRIA
+  AAVE
   BALANCER_AURA
-  MENDI
-  AERODROME
   CURVE
-  LYNEX_GAMMA
+  GAMMA
+  PENDLE_EQUILIBRIA
+  SOLIDLY
 }
 
 """

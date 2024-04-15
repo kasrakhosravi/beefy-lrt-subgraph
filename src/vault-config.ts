@@ -1,12 +1,12 @@
 import { Address, DataSourceContext, log, dataSource } from "@graphprotocol/graph-ts"
 import { NETWORK_NAME } from "./config"
 
-export const PLATFORM_PENDLE_EQUILIBRIA = "PENDLE_EQUILIBRIA"
+export const PLATFORM_AAVE = "AAVE"
 export const PLATFORM_BALANCER_AURA = "BALANCER_AURA"
 export const PLATFORM_CURVE = "CURVE"
-export const PLATFORM_SOLIDLY = "SOLIDLY"
-export const PLATFORM_AAVE = "AAVE"
 export const PLATFORM_GAMMA = "GAMMA"
+export const PLATFORM_PENDLE_EQUILIBRIA = "PENDLE_EQUILIBRIA"
+export const PLATFORM_SOLIDLY = "SOLIDLY"
 
 class VaultConfig {
   public underlyingPlatform: string
