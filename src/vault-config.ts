@@ -4,9 +4,9 @@ import { NETWORK_NAME } from "./config"
 export const PLATFORM_PENDLE_EQUILIBRIA = "PENDLE_EQUILIBRIA"
 export const PLATFORM_BALANCER_AURA = "BALANCER_AURA"
 export const PLATFORM_CURVE = "CURVE"
-export const PLATFORM_AERODROME = "AERODROME"
-export const PLATFORM_MENDI = "MENDI"
-export const PLATFORM_LYNEX_GAMMA = "LYNEX_GAMMA"
+export const PLATFORM_SOLIDLY = "SOLIDLY"
+export const PLATFORM_AAVE = "AAVE"
+export const PLATFORM_GAMMA = "GAMMA"
 
 class VaultConfig {
   public underlyingPlatform: string
@@ -41,9 +41,9 @@ export function getChainVaults(): Array<VaultConfig> {
 
   if (network === "base") {
     // aerodrome-ezeth-weth
-    vaults.push(new VaultConfig(PLATFORM_AERODROME, "0xAB7EeE0a368079D2fBfc83599eD0148a16d0Ea09"))
+    vaults.push(new VaultConfig(PLATFORM_SOLIDLY, "0xAB7EeE0a368079D2fBfc83599eD0148a16d0Ea09"))
     // aerodrome-ezeth-weth-s
-    vaults.push(new VaultConfig(PLATFORM_AERODROME, "0x90A7de0E16CA4521B1E4C3dBBA4edAA2354aB81B"))
+    vaults.push(new VaultConfig(PLATFORM_SOLIDLY, "0x90A7de0E16CA4521B1E4C3dBBA4edAA2354aB81B"))
   }
 
   if (network === "mainnet") {
@@ -63,9 +63,9 @@ export function getChainVaults(): Array<VaultConfig> {
 
   if (network === "linea") {
     // mendi-linea-ezeth
-    vaults.push(new VaultConfig(PLATFORM_MENDI, "0xf711cdcDDa1C5F919c94573cC4E38b4cE2207750"))
+    vaults.push(new VaultConfig(PLATFORM_AAVE, "0xf711cdcDDa1C5F919c94573cC4E38b4cE2207750"))
     // lynex-gamma-ezeth-weth
-    vaults.push(new VaultConfig(PLATFORM_LYNEX_GAMMA, "0x35884E8C569b9f7714A35EDf056A82535A43F5AD"))
+    vaults.push(new VaultConfig(PLATFORM_GAMMA, "0x35884E8C569b9f7714A35EDf056A82535A43F5AD"))
   }
 
   return vaults
