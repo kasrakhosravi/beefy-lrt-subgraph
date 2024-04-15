@@ -41,7 +41,7 @@ export function getVaultTokenBreakdownCurve(vault: BeefyVault): Array<TokenBalan
   }
 
   for(let i = 0; i < coins.length; ++i) {
-    balances.push(coins[i], reserves[i].times(wantTotalBalance).div(totalSupply))
+    balances.push(new TokenBalance(coins[i], reserves[i].times(wantTotalBalance).div(totalSupply)))
   }
 
   return balances
