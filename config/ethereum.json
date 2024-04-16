@@ -5,5 +5,5 @@
   "bindConfigBlock": 19205553,
   "bindConfigEvent": "ProxyCreated(address)",
   "vaultInitializedEvent": "OwnershipTransferred(indexed address,indexed address)",
-  "clockTickBlocks": 300
+  "clockTickBlocks": 30
 }
