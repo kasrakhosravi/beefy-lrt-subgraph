@@ -1,5 +1,5 @@
 {
-  "network": "base",
+  "network": "linea",
   "shareTokenMintAddress": "0x0000000000000000000000000000000000000000",
   "bindConfigAddress": "0x52ea7d9e039b3e3e071890cab2719ba5ec19448c",
   "bindConfigBlock": 3174752,

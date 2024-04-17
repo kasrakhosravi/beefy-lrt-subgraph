@@ -8,12 +8,13 @@ import { getChainVaults, isBoostAddress } from "./vault-config"
 import { getInvestor } from "./entity/investor"
 import { getInvestorPosition } from "./entity/position"
 import { ppfsToShareRate, rawShareBalanceToRawUnderlyingBalance } from "./utils/ppfs"
-import { BeefyVault, Investor } from "../generated/schema"
+import { BeefyVault, Investor, Token } from "../generated/schema"
 import { getVaultTokenBreakdown } from "./platform"
 import { getInvestorPositionBalanceBreakdown, getVaultBalanceBreakdown, saveVaultBalanceBreakdownUpdateEvent } from "./entity/breakdown"
 import { getClockTick } from "./entity/clock"
 import { HOUR } from "./utils/time"
 import { ADDRESS_ZERO } from "./utils/address"
+import { TokenBalance } from "./platform/common"
 
 export function handleVaultTransfer(event: TransferEvent): void {
   // transfer to self
@@ -156,14 +157,8 @@ function updateVaultBreakDown(block: ethereum.Block, vault: BeefyVault): BeefyVa
 
   // also add the share token and underlying token to the breakdown
   // so we are also computing time weighted balance for those
-  breakdown.push({
-    tokenAddress: vault.sharesToken,
-    rawBalance: vault.rawSharesTokenTotalSupply,
-  })
-  breakdown.push({
-    tokenAddress: vault.underlyingToken,
-    rawBalance: vault.rawUnderlyingBalance,
-  })
+  breakdown.push(new TokenBalance(vault.sharesToken, vault.rawSharesTokenTotalSupply))
+  breakdown.push(new TokenBalance(vault.underlyingToken, vault.rawUnderlyingBalance))
 
   for (let i = 0; i < breakdown.length; i++) {
     const tokenBalance = breakdown[i]
