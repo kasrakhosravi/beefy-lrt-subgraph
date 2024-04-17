@@ -1,9 +1,9 @@
 {
   "network": "linea",
   "shareTokenMintAddress": "0x0000000000000000000000000000000000000000",
-  "bindConfigAddress": "0x52ea7d9e039b3e3e071890cab2719ba5ec19448c",
-  "bindConfigBlock": 3174752,
-  "bindConfigEvent": "Initialized(uint8)",
+  "bindConfigAddress": "0xD19ab62F83380908D65E344567378cF104cE46c2",
+  "bindConfigBlock": 3174336,
+  "bindConfigEvent": "ProxyCreated(address)",
   "vaultInitializedEvent": "Initialized(uint8)",
   "clockTickBlocks": 110
 }
