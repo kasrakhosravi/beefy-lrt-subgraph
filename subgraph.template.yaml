@@ -88,6 +88,8 @@ templates:
       eventHandlers:
         - event: {{vaultInitializedEvent}}
           handler: handleInitialized
+        - event: UpgradeStrat(address)
+          handler: handleUpgradeStrat
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
 

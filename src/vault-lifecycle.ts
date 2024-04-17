@@ -1,5 +1,5 @@
 import { Address, ethereum } from "@graphprotocol/graph-ts"
-import { BeefyVaultV7 as BeefyVaultV7Contract } from "../generated/templates/BeefyVaultV7/BeefyVaultV7"
+import { BeefyVaultV7 as BeefyVaultV7Contract, UpgradeStrat } from "../generated/templates/BeefyVaultV7/BeefyVaultV7"
 import { BEEFY_VAULT_LIFECYCLE_RUNNING, getBeefyStrategy, getBeefyVault } from "./entity/vault"
 import { BeefyIStrategyV7 as BeefyIStrategyV7Template } from "../generated/templates"
 import { ADDRESS_ZERO } from "./utils/address"
@@ -79,4 +79,28 @@ function fetchInitialVaultData(vault: BeefyVault): BeefyVault {
   vault.lifecycle = BEEFY_VAULT_LIFECYCLE_RUNNING
 
   return vault
+}
+
+export function handleUpgradeStrat(event: UpgradeStrat): void {
+  const vault = getBeefyVault(event.address)
+  const newStrategyAddress = event.params.implementation
+  const oldStrategyAddress = vault.strategy
+  vault.strategy = newStrategyAddress
+  vault.save()
+
+  // we start watching the new strategy events
+  BeefyIStrategyV7Template.create(newStrategyAddress)
+
+  // create the new strategy entity
+  const newStrategy = getBeefyStrategy(newStrategyAddress)
+  newStrategy.isInitialized = true
+  newStrategy.vault = vault.id
+  newStrategy.save()
+
+  // make sure we deprecated the old strategy
+  // so events are ignored
+  const oldStrategy = getBeefyStrategy(oldStrategyAddress)
+  oldStrategy.isInitialized = false
+  oldStrategy.vault = ADDRESS_ZERO
+  oldStrategy.save()
 }
