@@ -1,13 +1,6 @@
 import { log } from "@graphprotocol/graph-ts"
 import { BeefyVault } from "../../generated/schema"
-import {
-  PLATFORM_SOLIDLY,
-  PLATFORM_BALANCER_AURA,
-  PLATFORM_CURVE,
-  PLATFORM_GAMMA,
-  PLATFORM_AAVE,
-  PLATFORM_PENDLE_EQUILIBRIA,
-} from "../vault-config"
+import { PLATFORM_SOLIDLY, PLATFORM_BALANCER_AURA, PLATFORM_CURVE, PLATFORM_GAMMA, PLATFORM_AAVE, PLATFORM_PENDLE_EQUILIBRIA, PLATFORM_MENDI_LEVERAGE } from "../vault-config"
 import { TokenBalance } from "./common"
 import { getVaultTokenBreakdownPendle } from "./pendle"
 import { getVaultTokenBreakdownBalancer } from "./balancer"
@@ -29,6 +22,10 @@ export function getVaultTokenBreakdown(vault: BeefyVault): Array<TokenBalance> {
     return getVaultTokenBreakdownAave(vault)
   } else if (vault.underlyingPlatform == PLATFORM_GAMMA) {
     return getVaultTokenBreakdownGamma(vault)
+  } else if (vault.underlyingPlatform == PLATFORM_MENDI_LEVERAGE) {
+    // we don't need the break down for mendi leverage atm
+    // we only care about the moo token time weighted balance
+    return new Array<TokenBalance>()
   }
 
   log.error("Not implemented platform {} for vault {}", [vault.underlyingPlatform, vault.id.toHexString()])

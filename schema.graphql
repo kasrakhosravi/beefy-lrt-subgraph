@@ -74,6 +74,7 @@ enum VaultUnderlyingPlatform {
   BALANCER_AURA
   CURVE
   GAMMA
+  MENDI_LEVERAGE
   PENDLE_EQUILIBRIA
   SOLIDLY
 }

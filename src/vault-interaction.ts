@@ -154,6 +154,17 @@ function updateVaultBreakDown(block: ethereum.Block, vault: BeefyVault): BeefyVa
   const positions = vault.positions.load()
   saveVaultBalanceBreakdownUpdateEvent(vault, block)
 
+  // also add the share token and underlying token to the breakdown
+  // so we are also computing time weighted balance for those
+  breakdown.push({
+    tokenAddress: vault.sharesToken,
+    rawBalance: vault.rawSharesTokenTotalSupply,
+  })
+  breakdown.push({
+    tokenAddress: vault.underlyingToken,
+    rawBalance: vault.rawUnderlyingBalance,
+  })
+
   for (let i = 0; i < breakdown.length; i++) {
     const tokenBalance = breakdown[i]
     const token = getTokenAndInitIfNeeded(tokenBalance.tokenAddress)

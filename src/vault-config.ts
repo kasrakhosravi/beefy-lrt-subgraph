@@ -5,6 +5,7 @@ export const PLATFORM_AAVE = "AAVE"
 export const PLATFORM_BALANCER_AURA = "BALANCER_AURA"
 export const PLATFORM_CURVE = "CURVE"
 export const PLATFORM_GAMMA = "GAMMA"
+export const PLATFORM_MENDI_LEVERAGE = "MENDI_LEVERAGE"
 export const PLATFORM_PENDLE_EQUILIBRIA = "PENDLE_EQUILIBRIA"
 export const PLATFORM_SOLIDLY = "SOLIDLY"
 
@@ -54,6 +55,12 @@ export function getChainVaults(): Array<VaultConfig> {
   if (network === "linea") {
     vaults.push(new VaultConfig("mendi-linea-ezeth", PLATFORM_AAVE, "0xf711cdcDDa1C5F919c94573cC4E38b4cE2207750"))
     vaults.push(new VaultConfig("lynex-gamma-ezeth-weth", PLATFORM_GAMMA, "0x35884E8C569b9f7714A35EDf056A82535A43F5AD"))
+
+    vaults.push(new VaultConfig("mendi-linea-lev-wsteth", PLATFORM_MENDI_LEVERAGE, "0xBF71FbCe0d4Fc460D36fa1d13B397a3cd5c45220"))
+    vaults.push(new VaultConfig("mendi-linea-lev-weth", PLATFORM_MENDI_LEVERAGE, "0x23EC7f31a5c74D5Fe21aa386A7519028DBD6bA40"))
+    vaults.push(new VaultConfig("mendi-linea-lev-usdc", PLATFORM_MENDI_LEVERAGE, "0x9ab545Ab024a8Da2302f5b0D016F4f5501e330d1"))
+    vaults.push(new VaultConfig("mendi-linea-lev-usdt", PLATFORM_MENDI_LEVERAGE, "0xC3C757EA1429231C437736746Eb77A2344EAcb81"))
+    vaults.push(new VaultConfig("mendi-linea-lev-wbtc", PLATFORM_MENDI_LEVERAGE, "0x639041dD8cD48B52C12414235d97E1313cbbceff"))
   }
 
   return vaults
