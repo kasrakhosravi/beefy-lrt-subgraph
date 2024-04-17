@@ -24,6 +24,8 @@ export function handleVaultInitialized(event: ethereum.Event): void {
   vault.strategy = strategyAddress
   vault.vaultId = getContextVaultKey()
   vault.underlyingPlatform = getContextUnderlyingPlatform()
+  vault.initializedAtBlockNumber = event.block.number
+  vault.initializedAtTimestamp = event.block.timestamp
   vault.save() // needs to be saved before we can use it in the strategy events
 
   // we start watching strategy events

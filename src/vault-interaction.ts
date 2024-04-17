@@ -75,7 +75,7 @@ export function handleStrategyHarvest(event: ethereum.Event): void {
 }
 
 export function handleClockTick(block: ethereum.Block): void {
-  let tickRes = getClockTick(block.timestamp, HOUR)
+  let tickRes = getClockTick(block, HOUR)
   if (!tickRes.isNew) {
     log.debug("handleClockTick: tick already exists for 1h period", [])
     return
@@ -152,6 +152,8 @@ function updateVaultBreakDown(block: ethereum.Block, vault: BeefyVault): BeefyVa
   // update breakdown of tokens in the vault
   const breakdown = getVaultTokenBreakdown(vault)
   const positions = vault.positions.load()
+  saveVaultBalanceBreakdownUpdateEvent(vault, block)
+
   for (let i = 0; i < breakdown.length; i++) {
     const tokenBalance = breakdown[i]
     const token = getTokenAndInitIfNeeded(tokenBalance.tokenAddress)
@@ -163,7 +165,6 @@ function updateVaultBreakDown(block: ethereum.Block, vault: BeefyVault): BeefyVa
     breakdownItem.lastUpdateTimestamp = block.timestamp
     breakdownItem.lastUpdateBlock = block.number
     breakdownItem.save()
-    saveVaultBalanceBreakdownUpdateEvent(vault, block)
 
     // also update the investor positions for that token
     for (let j = 0; j < positions.length; j++) {

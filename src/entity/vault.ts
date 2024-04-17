@@ -23,6 +23,8 @@ export function getBeefyVault(vaultAddress: Bytes): BeefyVault {
     vault.underlyingToken = ADDRESS_ZERO
     vault.strategy = ADDRESS_ZERO
     vault.isInitialized = false
+    vault.initializedAtBlockNumber = ZERO_BI
+    vault.initializedAtTimestamp = ZERO_BI
     vault.lifecycle = BEEFY_VAULT_LIFECYCLE_INITIALIZING
     vault.underlyingPlatform = ""
     vault.vaultId = ""

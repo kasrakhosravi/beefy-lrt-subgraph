@@ -17,6 +17,8 @@ type ClockTick @entity(immutable: true) {
   roundedTimestamp: BigInt!
   "Actual timestamp tick was initiated at"
   timestamp: BigInt!
+  "The block number of the tick"
+  blockNumber: BigInt!
 }
 
 """
@@ -94,6 +96,12 @@ type BeefyVault @entity {
 
   "Technical field to remember if the vault was already initialized"
   isInitialized: Boolean!
+
+  "The vault first initialized block number"
+  initializedAtBlockNumber: BigInt!
+
+  "The vault first initialized timestamp"
+  initializedAtTimestamp: BigInt!
 
   "The current lifecycle status of the vault"
   lifecycle: VaultLifecycle!

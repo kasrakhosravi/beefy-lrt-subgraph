@@ -1,17 +1,18 @@
-import { BigInt } from "@graphprotocol/graph-ts"
+import { BigInt, ethereum } from "@graphprotocol/graph-ts"
 import { getIntervalFromTimestamp } from "../utils/time"
 import { getSnapshotIdSuffix } from "../utils/snapshot"
 import { ClockTick } from "../../generated/schema"
 
-export function getClockTick(timestamp: BigInt, period: BigInt): ClockRes {
-  let interval = getIntervalFromTimestamp(timestamp, period)
+export function getClockTick(block: ethereum.Block, period: BigInt): ClockRes {
+  let interval = getIntervalFromTimestamp(block.timestamp, period)
   let clockTickId = getSnapshotIdSuffix(period, interval)
   let clockTick = ClockTick.load(clockTickId)
   let isNew = false
   if (!clockTick) {
     isNew = true
     clockTick = new ClockTick(clockTickId)
-    clockTick.timestamp = timestamp
+    clockTick.timestamp = block.timestamp
+    clockTick.blockNumber = block.number
     clockTick.roundedTimestamp = interval
     clockTick.period = period
   }
