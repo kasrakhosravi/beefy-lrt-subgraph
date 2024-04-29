@@ -1,9 +1,9 @@
 {
-  "network": "linea",
+  "network": "optimism",
   "shareTokenMintAddress": "0x0000000000000000000000000000000000000000",
-  "bindConfigAddress": "0xD19ab62F83380908D65E344567378cF104cE46c2",
-  "bindConfigBlock": 3174336,
+  "bindConfigAddress": "0xA6D3769faC465FC0415e7E9F16dcdC96B83C240B",
+  "bindConfigBlock": 119276960,
   "bindConfigEvent": "ProxyCreated(address)",
   "vaultInitializedEvent": "Initialized(uint8)",
-  "clockTickBlocks": 110
+  "clockTickBlocks": 150
 }

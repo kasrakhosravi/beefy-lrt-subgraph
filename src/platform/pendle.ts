@@ -19,9 +19,7 @@ export function getVaultTokenBreakdownPendle(vault: BeefyVault): Array<TokenBala
   const syUnderlyingAddress = syTokenContract.yieldToken()
 
   // compute breakdown
-  balances.push(
-    new TokenBalance(syUnderlyingAddress, pendleState.totalSy.times(wantTotalBalance).div(pendleState.totalLp)),
-  )
+  balances.push(new TokenBalance(syUnderlyingAddress, pendleState.totalSy.times(wantTotalBalance).div(pendleState.totalLp)))
 
   return balances
 }

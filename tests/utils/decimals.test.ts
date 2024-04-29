@@ -1,14 +1,6 @@
 import { assert, clearStore, test, describe, afterAll } from "matchstick-as/assembly/index"
 import { BigDecimal, BigInt, log } from "@graphprotocol/graph-ts"
-import {
-  bigDecMax,
-  bigIntMax,
-  bigDecMin,
-  bigIntMin,
-  decimalToTokenAmount,
-  exponentToBigDecimal,
-  tokenAmountToDecimal,
-} from "../../src/utils/decimal"
+import { bigDecMax, bigIntMax, bigDecMin, bigIntMin, decimalToTokenAmount, exponentToBigDecimal, tokenAmountToDecimal } from "../../src/utils/decimal"
 
 describe("decimals.tokenAmountToDecimal", () => {
   afterAll(() => {

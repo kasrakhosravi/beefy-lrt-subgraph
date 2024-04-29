@@ -1,11 +1,4 @@
-import {
-  BeefyVault,
-  Token,
-  VaultBalanceBreakdownUpdateEvent,
-  VaultBalanceBreakdown,
-  InvestorPositionBalanceBreakdown,
-  InvestorPosition,
-} from "../../generated/schema"
+import { BeefyVault, Token, VaultBalanceBreakdownUpdateEvent, VaultBalanceBreakdown, InvestorPositionBalanceBreakdown, InvestorPosition } from "../../generated/schema"
 import { ZERO_BD, ZERO_BI } from "../utils/decimal"
 import { Bytes, ethereum } from "@graphprotocol/graph-ts"
 
@@ -36,10 +29,7 @@ export function saveVaultBalanceBreakdownUpdateEvent(vault: BeefyVault, block: e
   }
 }
 
-export function getInvestorPositionBalanceBreakdown(
-  investorPosition: InvestorPosition,
-  token: Token,
-): InvestorPositionBalanceBreakdown {
+export function getInvestorPositionBalanceBreakdown(investorPosition: InvestorPosition, token: Token): InvestorPositionBalanceBreakdown {
   let id = investorPosition.id.concat(token.id)
   let breakdown = InvestorPositionBalanceBreakdown.load(id)
   if (!breakdown) {
