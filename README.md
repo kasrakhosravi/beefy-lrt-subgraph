@@ -127,6 +127,8 @@ yarn test:lint # run prettier linter
 
 ### Deploy the subgraph
 
+#### Manually
+
 ```bash
 ./bin/deploy.sh <network> goldsky
 ./bin/deploy.sh <network> 0xgraph
@@ -134,3 +136,10 @@ yarn test:lint # run prettier linter
 # or both
 ./bin/deploy.sh <network> goldsky 0xgraph
 ```
+
+#### Release a new version
+
+- Go to https://github.com/beefyfinance/lrt-subgraph/releases
+- Add a new realease with a tag matching [semver](https://semver.org/) (tag matching X.X.X)
+- Github actions will update all subgraph
+- Monitor the indexing progress in the subgraph explorer
