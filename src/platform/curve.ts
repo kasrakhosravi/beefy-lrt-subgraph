@@ -26,21 +26,21 @@ export function getVaultTokenBreakdownCurve(vault: BeefyVault): Array<TokenBalan
   const coins = new Array<Address>()
   coins.push(curvePoolContract.coins(BigInt.zero()))
   coins.push(curvePoolContract.coins(BigInt.fromI32(1))) // always at least 2 coins
-  for(let i = 2; i < 8; ++i) {
+  for (let i = 2; i < 8; ++i) {
     const nextCoin = curvePoolContract.try_coins(BigInt.fromI32(i))
     if (nextCoin.reverted) {
-      break;
+      break
     }
     coins.push(nextCoin.value)
   }
 
   // Some pools have get_balances() but some don't, so we have to resort to looping
   const reserves = new Array<BigInt>()
-  for(let i = 0; i < coins.length; ++i) {
+  for (let i = 0; i < coins.length; ++i) {
     reserves.push(curvePoolContract.balances(BigInt.fromI32(i)))
   }
 
-  for(let i = 0; i < coins.length; ++i) {
+  for (let i = 0; i < coins.length; ++i) {
     balances.push(new TokenBalance(coins[i], reserves[i].times(wantTotalBalance).div(totalSupply)))
   }
 

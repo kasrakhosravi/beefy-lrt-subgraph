@@ -1,15 +1,6 @@
 import { assert, test, describe } from "matchstick-as/assembly/index"
 import { BigInt } from "@graphprotocol/graph-ts"
-import {
-  DAY,
-  HOUR,
-  MONTH,
-  QUARTER,
-  WEEK,
-  YEAR,
-  getIntervalFromTimestamp,
-  getPreviousIntervalFromTimestamp,
-} from "../../src/utils/time"
+import { DAY, HOUR, MONTH, QUARTER, WEEK, YEAR, getIntervalFromTimestamp, getPreviousIntervalFromTimestamp } from "../../src/utils/time"
 
 describe("time.getIntervalFromTimestamp", () => {
   test("Support all the different periods", () => {
