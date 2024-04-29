@@ -63,6 +63,10 @@ export function getChainVaults(): Array<VaultConfig> {
     vaults.push(new VaultConfig("mendi-linea-lev-wbtc", PLATFORM_MENDI_LEVERAGE, "0x639041dD8cD48B52C12414235d97E1313cbbceff"))
   }
 
+  if (network === "optimism") {
+    vaults.push(new VaultConfig("velodrome-v2-weth-wrseth", PLATFORM_SOLIDLY, "0xDbE946E16c4e0De9a44065B868265Ac05c437fB6"))
+  }
+
   return vaults
 }
 
