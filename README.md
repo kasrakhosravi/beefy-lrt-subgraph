@@ -12,6 +12,7 @@ This Subgraph sources events from the Beefy LRT contracts in different networks.
 - Base: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-base/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-base/gn)
 - Ethereum: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-ethereum/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-ethereum/gn)
 - Linea: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-linea/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-linea/gn)
+- Optimism: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-optimism/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-optimism/gn)
 
 ### Api Endpoints
 
@@ -19,6 +20,7 @@ This Subgraph sources events from the Beefy LRT contracts in different networks.
 - Base: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-base/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-base/gn)
 - Ethereum: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-ethereum/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-ethereum/gn)
 - Linea: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-linea/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-linea/gn)
+- Optimism: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-optimism/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-optimism/gn)
 
 ## 0xgraph.xyz
 
@@ -28,6 +30,7 @@ This Subgraph sources events from the Beefy LRT contracts in different networks.
 - Base: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-base/graphql](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-base/graphql)
 - Ethereum: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-ethereum/graphql](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-ethereum/graphql)
 - Linea: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-linea/graphql](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-linea/graphql)
+- Optimism: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-optimism/graphql](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-optimism/graphql)
 
 ### Api Endpoints
 
@@ -35,6 +38,7 @@ This Subgraph sources events from the Beefy LRT contracts in different networks.
 - Base: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-base](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-base)
 - Ethereum: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-ethereum](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-ethereum)
 - Linea: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-linea](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-linea)
+- Optimism: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-optimism](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-optimism)
 
 # Contributing
 
@@ -85,7 +89,16 @@ yarn test:lint # run prettier linter
    - `clockTickBlocks` is the number of blocks between each clock tick, aim for a clock tick every 5 minutes.
 2. Add dev RPCs in graph-node config [docker/graph-node/config.toml](docker/graph-node/config.toml).
 3. Add a new `prepare:<network>` script in [package.json](package.json).
-4. Add a new `deploy:<network>:<provider>` script in [package.json](package.json).
+4. Add the chain in `.github/workflows/Release.yml` to configure deployments.
+5. Test the build
+   - Apply the configuration: `npm run prepare:<chain>`
+   - Build the application: `npm run build`
+   - Run Tests: `npm run test`
+   - The PROD env is the uncommented url in the [lrt-api .graphqlclient file](https://github.com/beefyfinance/beefy-lrt-api/blob/main/.graphclientrc.yml#L9)
+   - Deploy the new chain in DEV: `./bin/deploy.sh <chain> <dev provider>`
+   - Test the data in the dev provider subgraph explorer
+6. Update the `Deployments` section subgraph URLs in this README
+7. Update the [LRT API](https://github.com/beefyfinance/beefy-lrt-api)
 
 ### How to update the schema
 

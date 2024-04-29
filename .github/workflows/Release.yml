@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         node: ["21.x"]
-        chain: ["arbitrum", "base", "ethereum", "linea"]
+        chain: ["arbitrum", "base", "ethereum", "linea", "optimism"]
         os: [ubuntu-latest]
 
     runs-on: ${{ matrix.os }}
