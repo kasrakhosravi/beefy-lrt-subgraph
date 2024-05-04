@@ -71,6 +71,10 @@ export function getChainVaults(): Array<VaultConfig> {
     vaults.push(new VaultConfig("velodrome-v2-weth-wrseth", PLATFORM_SOLIDLY, "0xDbE946E16c4e0De9a44065B868265Ac05c437fB6"))
   }
 
+  if (network === "bsc") {
+    vaults.push(new VaultConfig("thena-gamma-weeth-eth-narrow", PLATFORM_GAMMA, "0xcCcDB0F6eCcd5f231d4737A00C554322167d814B"))
+  }
+
   return vaults
 }
 
