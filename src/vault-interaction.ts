@@ -1,6 +1,6 @@
 import { Address, log, ethereum } from "@graphprotocol/graph-ts"
 import { Transfer as TransferEvent, BeefyVaultV7 as BeefyVaultV7Contract } from "../generated/templates/BeefyVaultV7/BeefyVaultV7"
-import { getBeefyStrategy, getBeefyVault, isVaultRunning } from "./entity/vault"
+import { getBeefyStrategy, getBeefyVault, isVaultInitialized } from "./entity/vault"
 import { ZERO_BD, ZERO_BI, tokenAmountToDecimal } from "./utils/decimal"
 import { getTokenAndInitIfNeeded } from "./entity/token"
 import { SHARE_TOKEN_MINT_ADDRESS } from "./config"
@@ -40,8 +40,8 @@ export function handleVaultTransfer(event: TransferEvent): void {
   }
 
   let vault = getBeefyVault(event.address)
-  if (!isVaultRunning(vault)) {
-    log.warning("handleVaultTransfer: vault is not running {}", [vault.id.toHexString()])
+  if (!isVaultInitialized(vault)) {
+    log.warning("handleVaultTransfer: vault is not initialized {}", [vault.id.toHexString()])
     return
   }
 
@@ -66,8 +66,8 @@ export function handleVaultTransfer(event: TransferEvent): void {
 export function handleStrategyHarvest(event: ethereum.Event): void {
   let strategy = getBeefyStrategy(event.address)
   let vault = getBeefyVault(strategy.vault)
-  if (!isVaultRunning(vault)) {
-    log.warning("handleStrategyHarvest: vault is not running {}", [vault.id.toHexString()])
+  if (!isVaultInitialized(vault)) {
+    log.warning("handleStrategyHarvest: vault is not initialized {}", [vault.id.toHexString()])
     return
   }
 
@@ -87,8 +87,8 @@ export function handleClockTick(block: ethereum.Block): void {
   for (let i = 0; i < vaultConfigs.length; i++) {
     const vaultConfig = vaultConfigs[i]
     const vault = getBeefyVault(vaultConfig.address)
-    if (!isVaultRunning(vault)) {
-      log.debug("handleClockTick: vault is not running {}", [vault.id.toHexString()])
+    if (!isVaultInitialized(vault)) {
+      log.debug("handleClockTick: vault is not initialized {}", [vault.id.toHexString()])
       continue
     }
     updateVaultData(vault) // we need the latest data before updating the breakdown

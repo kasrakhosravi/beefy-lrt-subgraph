@@ -7,6 +7,10 @@ export const BEEFY_VAULT_LIFECYCLE_INITIALIZING = "INITIALIZING"
 export const BEEFY_VAULT_LIFECYCLE_RUNNING = "RUNNING"
 export const BEEFY_VAULT_LIFECYCLE_PAUSED = "PAUSED"
 
+export function isVaultInitialized(vault: BeefyVault): boolean {
+  return vault.lifecycle != BEEFY_VAULT_LIFECYCLE_INITIALIZING
+}
+
 export function isVaultRunning(vault: BeefyVault): boolean {
   return vault.lifecycle == BEEFY_VAULT_LIFECYCLE_RUNNING
 }
