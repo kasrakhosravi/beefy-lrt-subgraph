@@ -10,6 +10,7 @@ This Subgraph sources events from the Beefy LRT contracts in different networks.
 
 - Arbitrum: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-arbitrum/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-arbitrum/gn)
 - Base: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-base/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-base/gn)
+- BSC: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-bsc/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-bsc/gn)
 - Ethereum: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-ethereum/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-ethereum/gn)
 - Linea: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-linea/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-linea/gn)
 - Optimism: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-optimism/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-optimism/gn)
@@ -18,6 +19,7 @@ This Subgraph sources events from the Beefy LRT contracts in different networks.
 
 - Arbitrum: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-arbitrum/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-arbitrum/gn)
 - Base: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-base/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-base/gn)
+- BSC: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-bsc/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-bsc/gn)
 - Ethereum: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-ethereum/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-ethereum/gn)
 - Linea: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-linea/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-linea/gn)
 - Optimism: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-optimism/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-optimism/gn)
@@ -28,6 +30,7 @@ This Subgraph sources events from the Beefy LRT contracts in different networks.
 
 - Arbitrum: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-arbitrum/graphql](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-arbitrum/graphql)
 - Base: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-base/graphql](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-base/graphql)
+- BSC: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-bsc/graphql](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-bsc/graphql)
 - Ethereum: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-ethereum/graphql](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-ethereum/graphql)
 - Linea: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-linea/graphql](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-linea/graphql)
 - Optimism: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-optimism/graphql](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-optimism/graphql)
@@ -36,6 +39,7 @@ This Subgraph sources events from the Beefy LRT contracts in different networks.
 
 - Arbitrum: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-arbitrum](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-arbitrum)
 - Base: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-base](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-base)
+- BSC: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-bsc](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-bsc)
 - Ethereum: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-ethereum](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-ethereum)
 - Linea: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-linea](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-linea)
 - Optimism: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-optimism](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-optimism)
@@ -86,7 +90,7 @@ yarn test:lint # run prettier linter
 ### How to add a new network
 
 1. Add the network configuration [config/<network>.json](config/).
-   - `clockTickBlocks` is the number of blocks between each clock tick, aim for a clock tick every 5 minutes.
+   - `clockTickBlocks` is the number of blocks between each clock tick, aim for a clock tick every ~5 minutes.
 2. Add dev RPCs in graph-node config [docker/graph-node/config.toml](docker/graph-node/config.toml).
 3. Add a new `prepare:<network>` script in [package.json](package.json).
 4. Add the chain in `.github/workflows/Release.yml` to configure deployments.
@@ -97,6 +101,7 @@ yarn test:lint # run prettier linter
    - The PROD env is the uncommented url in the [lrt-api .graphqlclient file](https://github.com/beefyfinance/beefy-lrt-api/blob/main/.graphclientrc.yml#L9)
    - Deploy the new chain in DEV: `./bin/deploy.sh <chain> <dev provider>`
    - Test the data in the dev provider subgraph explorer
+   - Manually deploy the new chain in PROD for the first version: `./bin/deploy.sh <chain> <dev provider>`
 6. Update the `Deployments` section subgraph URLs in this README
 7. Update the [LRT API](https://github.com/beefyfinance/beefy-lrt-api)
 

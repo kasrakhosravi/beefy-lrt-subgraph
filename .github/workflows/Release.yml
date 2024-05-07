@@ -7,11 +7,11 @@ on:
       - "*.*.*" # Push events to matching x.x.x tags, e.g. 1.0.0, 1.4.5, etc
 
 jobs:
-  test:
+  deploy_to_0xgraph:
     strategy:
       matrix:
         node: ["21.x"]
-        chain: ["arbitrum", "base", "ethereum", "linea", "optimism"]
+        chain: ["arbitrum", "base", "bsc", "ethereum", "linea", "optimism"]
         os: [ubuntu-latest]
 
     runs-on: ${{ matrix.os }}

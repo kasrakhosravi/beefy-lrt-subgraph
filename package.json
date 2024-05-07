@@ -16,6 +16,7 @@
     "remove-local": "graph remove beefyfinance/lrt --node http://127.0.0.1:8020",
     "prepare:arbitrum": "./bin/prepare.sh arbitrum",
     "prepare:base": "./bin/prepare.sh base",
+    "prepare:bsc": "./bin/prepare.sh bsc",
     "prepare:ethereum": "./bin/prepare.sh ethereum",
     "prepare:linea": "./bin/prepare.sh linea",
     "prepare:optimism": "./bin/prepare.sh optimism"
