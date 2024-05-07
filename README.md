@@ -104,6 +104,7 @@ yarn test:lint # run prettier linter
    - Manually deploy the new chain in PROD for the first version: `./bin/deploy.sh <chain> <dev provider>`
 6. Update the `Deployments` section subgraph URLs in this README
 7. Update the [LRT API](https://github.com/beefyfinance/beefy-lrt-api)
+8. Standard formatting with `npm run format`
 
 ### How to update the schema
 
