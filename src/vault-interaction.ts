@@ -45,22 +45,23 @@ export function handleVaultTransfer(event: TransferEvent): void {
     return
   }
 
-  if (!event.params.from.equals(SHARE_TOKEN_MINT_ADDRESS) || !event.params.to.equals(SHARE_TOKEN_MINT_ADDRESS)) {
-    updateVaultData(vault)
+  updateVaultData(vault)
 
-    let investorAddress = ADDRESS_ZERO
-    if (!event.params.from.equals(SHARE_TOKEN_MINT_ADDRESS)) {
-      investorAddress = event.params.from
-    } else if (!event.params.to.equals(SHARE_TOKEN_MINT_ADDRESS)) {
-      investorAddress = event.params.to
-    }
-
-    let investor = getInvestor(investorAddress)
+  if (!event.params.from.equals(SHARE_TOKEN_MINT_ADDRESS)) {
+    const investorAddress = event.params.from
+    const investor = getInvestor(investorAddress)
     investor.save()
-
     updateInvestorVaultData(vault, investor)
-    updateVaultBreakDown(event.block, vault)
   }
+
+  if (!event.params.to.equals(SHARE_TOKEN_MINT_ADDRESS)) {
+    const investorAddress = event.params.to
+    const investor = getInvestor(investorAddress)
+    investor.save()
+    updateInvestorVaultData(vault, investor)
+  }
+
+  updateVaultBreakDown(event.block, vault)
 }
 
 export function handleStrategyHarvest(event: ethereum.Event): void {
