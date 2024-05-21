@@ -14,5 +14,7 @@ export function getPreviousSnapshotIdSuffix(period: BigInt, timestamp: BigInt): 
   if (timestamp.lt(YEAR)) {
     throw new Error("This function, unlike getSnapshotIdSuffix, expects the timestamp instead of the interval")
   }
-  return Bytes.fromByteArray(Bytes.fromBigInt(period)).concat(Bytes.fromByteArray(Bytes.fromBigInt(getPreviousIntervalFromTimestamp(timestamp, period))))
+  return Bytes.fromByteArray(Bytes.fromBigInt(period)).concat(
+    Bytes.fromByteArray(Bytes.fromBigInt(getPreviousIntervalFromTimestamp(timestamp, period))),
+  )
 }

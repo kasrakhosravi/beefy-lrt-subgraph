@@ -1,7 +1,5 @@
 {
-  "plugins": [
-    "assemblyscript-prettier"
-  ],
+  "plugins": ["assemblyscript-prettier"],
   "endOfLine": "lf",
   "printWidth": 150,
   "tabWidth": 2,

@@ -1,4 +1,11 @@
-import { BeefyVault, Token, VaultBalanceBreakdownUpdateEvent, VaultBalanceBreakdown, InvestorPositionBalanceBreakdown, InvestorPosition } from "../../generated/schema"
+import {
+  BeefyVault,
+  Token,
+  VaultBalanceBreakdownUpdateEvent,
+  VaultBalanceBreakdown,
+  InvestorPositionBalanceBreakdown,
+  InvestorPosition,
+} from "../../generated/schema"
 import { ZERO_BD, ZERO_BI } from "../utils/decimal"
 import { Bytes, ethereum } from "@graphprotocol/graph-ts"
 
