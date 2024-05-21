@@ -15,6 +15,7 @@ import { getClockTick } from "./entity/clock"
 import { HOUR } from "./utils/time"
 import { ADDRESS_ZERO } from "./utils/address"
 import { TokenBalance } from "./platform/common"
+import { Multicall3Params, multicall } from "./utils/multicall"
 
 export function handleVaultTransfer(event: TransferEvent): void {
   // transfer to self
@@ -125,15 +126,20 @@ function updateVaultData(vault: BeefyVault): BeefyVault {
 
   ///////
   // fetch data on chain
-  // TODO: use multicall3 to fetch all data in one call
-  const vaultContract = BeefyVaultV7Contract.bind(Address.fromBytes(vault.id))
-  const ppfs = vaultContract.getPricePerFullShare()
-  const vaultBalancesRaw = vaultContract.balance()
-  const vaultSharesTotalSupplyRaw = vaultContract.totalSupply()
-  const vaultUnderlyingBalance = tokenAmountToDecimal(vaultBalancesRaw, underlyingToken.decimals)
+  const signatures = [
+    new Multicall3Params(vault.id, "getPricePerFullShare()", "uint256"),
+    new Multicall3Params(vault.id, "balance()", "uint256"),
+    new Multicall3Params(vault.id, "totalSupply()", "uint256"),
+  ]
+  const results = multicall(signatures)
+
+  const ppfs = results[0].value.toBigInt()
+  const vaultBalancesRaw = results[1].value.toBigInt()
+  const vaultSharesTotalSupplyRaw = results[2].value.toBigInt()
 
   ///////
   // compute derived values
+  const vaultUnderlyingBalance = tokenAmountToDecimal(vaultBalancesRaw, underlyingToken.decimals)
   const vaultShareToUnderlyingRate = ppfsToShareRate(ppfs, underlyingToken)
   const vaultSharesTotalSupply = tokenAmountToDecimal(vaultSharesTotalSupplyRaw, sharesToken.decimals)
 
