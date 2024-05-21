@@ -36,8 +36,8 @@ dataSources:
           file: ./abis/beefy/BeefyVaultV7.json
         - name: BeefyIStrategyV7
           file: ./abis/beefy/BeefyIStrategyV7.json
-        - name: IERC20
-          file: ./abis/IERC20/IERC20.json
+        - name: Multicall3
+          file: ./abis/multicall/Multicall3.json
         - name: PendleMarket
           file: ./abis/platform/PendleMarket.json
         - name: PendleSyToken
@@ -46,10 +46,6 @@ dataSources:
           file: ./abis/platform/BalancerPool.json
         - name: BalancerVault
           file: ./abis/platform/BalancerVault.json
-        - name: SolidlyPool
-          file: ./abis/platform/SolidlyPool.json
-        - name: GammaHypervisor
-          file: ./abis/platform/GammaHypervisor.json
         - name: CurveToken
           file: ./abis/platform/CurveToken.json
         - name: CurvePool

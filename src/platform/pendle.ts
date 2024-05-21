@@ -5,6 +5,8 @@ import { PendleSyToken as PendleSyTokenContract } from "../../generated/template
 import { Address } from "@graphprotocol/graph-ts"
 import { getTokenAndInitIfNeeded } from "../entity/token"
 
+const PENDLE_ROUTER_ADDRESS = Address.fromString("0x00000000005BBB0EF59571E58418F9a4357b68A0")
+
 export function getVaultTokenBreakdownPendle(vault: BeefyVault): Array<TokenBalance> {
   let balances = new Array<TokenBalance>()
 
@@ -14,7 +16,7 @@ export function getVaultTokenBreakdownPendle(vault: BeefyVault): Array<TokenBala
   // fetch on chain data
   const pendleMarketContract = PendleMarketContract.bind(Address.fromBytes(underlyingToken.id))
   const tokenAddresses = pendleMarketContract.readTokens()
-  const pendleState = pendleMarketContract.readState(getRouterAddress())
+  const pendleState = pendleMarketContract.readState(PENDLE_ROUTER_ADDRESS)
   const syTokenContract = PendleSyTokenContract.bind(tokenAddresses.value0)
   const syUnderlyingAddress = syTokenContract.yieldToken()
 
@@ -22,9 +24,4 @@ export function getVaultTokenBreakdownPendle(vault: BeefyVault): Array<TokenBala
   balances.push(new TokenBalance(syUnderlyingAddress, pendleState.totalSy.times(wantTotalBalance).div(pendleState.totalLp)))
 
   return balances
-}
-
-// might change in the future based on the network
-function getRouterAddress(): Address {
-  return Address.fromString("0x00000000005BBB0EF59571E58418F9a4357b68A0")
 }

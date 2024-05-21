@@ -58,6 +58,15 @@ if [ -z "$chain" ]; then
     echo "chain is required"
     exit_help
 fi
+# deploy all chains
+if [ "$chain" == "all" ]; then
+    shift
+    for chain in ${valid_chains[@]}; do
+        echo "==== deploying $chain: $0 $chain $@"
+        $0 $chain $@
+    done
+    exit 0
+fi
 if [[ ! " ${valid_chains[@]} " =~ " ${chain} " ]]; then
     echo "invalid chain"
     exit_help

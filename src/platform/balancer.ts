@@ -3,16 +3,14 @@ import { TokenBalance } from "./common"
 import { BalancerPool as BalancerPoolContract } from "../../generated/templates/BeefyVaultV7/BalancerPool"
 import { BalancerVault as BalancerVaultContract } from "../../generated/templates/BeefyVaultV7/BalancerVault"
 import { Address } from "@graphprotocol/graph-ts"
-import { getTokenAndInitIfNeeded } from "../entity/token"
 
 export function getVaultTokenBreakdownBalancer(vault: BeefyVault): Array<TokenBalance> {
   let balances = new Array<TokenBalance>()
 
   const wantTotalBalance = vault.rawUnderlyingBalance
-  const underlyingToken = getTokenAndInitIfNeeded(vault.underlyingToken)
 
   // fetch on chain data
-  const balancerPoolContract = BalancerPoolContract.bind(Address.fromBytes(underlyingToken.id))
+  const balancerPoolContract = BalancerPoolContract.bind(Address.fromBytes(vault.underlyingToken))
   const balancerVaultAddress = balancerPoolContract.getVault()
   const balancerPoolId = balancerPoolContract.getPoolId()
   const balancerTotalSupply = balancerPoolContract.getActualSupply()

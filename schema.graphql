@@ -69,16 +69,6 @@ enum VaultLifecycle {
   PAUSED
 }
 
-enum VaultUnderlyingPlatform {
-  AAVE
-  BALANCER_AURA
-  CURVE
-  GAMMA
-  MENDI_LEVERAGE
-  PENDLE_EQUILIBRIA
-  SOLIDLY
-}
-
 """
 A Beefy vault
 """
@@ -108,7 +98,7 @@ type BeefyVault @entity {
   lifecycle: VaultLifecycle!
 
   "The underlying platform this vault is using"
-  underlyingPlatform: VaultUnderlyingPlatform!
+  underlyingPlatform: String!
 
   "The vault's human readable key. Used in urls and the UI."
   vaultId: String!

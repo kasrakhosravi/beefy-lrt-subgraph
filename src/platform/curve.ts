@@ -1,7 +1,6 @@
 import { BeefyVault } from "../../generated/schema"
 import { TokenBalance } from "./common"
 import { Address, BigInt } from "@graphprotocol/graph-ts"
-import { getTokenAndInitIfNeeded } from "../entity/token"
 import { CurveToken as CurveTokenContract } from "../../generated/templates/BeefyVaultV7/CurveToken"
 import { CurvePool as CurvePoolContract } from "../../generated/templates/BeefyVaultV7/CurvePool"
 
@@ -15,14 +14,14 @@ export function getVaultTokenBreakdownCurve(vault: BeefyVault): Array<TokenBalan
   let balances = new Array<TokenBalance>()
 
   const wantTotalBalance = vault.rawUnderlyingBalance
-  const underlyingToken = getTokenAndInitIfNeeded(vault.underlyingToken)
+  const underlyingTokenAddress = Address.fromBytes(vault.underlyingToken)
 
   // fetch on chain data
-  const curveTokenContract = CurveTokenContract.bind(Address.fromBytes(underlyingToken.id))
+  const curveTokenContract = CurveTokenContract.bind(underlyingTokenAddress)
   const totalSupply = curveTokenContract.totalSupply()
 
   // Some pools have N_COINS but some don't, so we have to resort to trying until we get a revert
-  const curvePoolContract = CurvePoolContract.bind(Address.fromBytes(underlyingToken.id))
+  const curvePoolContract = CurvePoolContract.bind(underlyingTokenAddress)
   const coins = new Array<Address>()
   coins.push(curvePoolContract.coins(BigInt.zero()))
   coins.push(curvePoolContract.coins(BigInt.fromI32(1))) // always at least 2 coins
