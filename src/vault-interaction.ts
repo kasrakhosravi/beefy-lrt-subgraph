@@ -100,7 +100,7 @@ export function handleClockTick(block: ethereum.Block): void {
 function updateInvestorVaultData(block: ethereum.Block, vault: BeefyVault, investor: Investor): Investor {
   const featureFlags = getVaultFeatureFlags(vault)
   if (!featureFlags.shouldTrackVaultData(block.number)) {
-    return vault
+    return investor
   }
 
   const vaultContract = BeefyVaultV7Contract.bind(Address.fromBytes(vault.id))
