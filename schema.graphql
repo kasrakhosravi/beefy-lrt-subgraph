@@ -314,4 +314,7 @@ type InvestorTokenBalanceSnapshot @entity {
 
   "last block the balance was updated"
   lastUpdateBlock: BigInt!
+
+  "last time the balance was updated"
+  lastUpdateTimestamp: BigInt!
 }
