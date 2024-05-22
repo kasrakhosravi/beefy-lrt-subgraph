@@ -1,11 +1,11 @@
-import { Address, ethereum } from "@graphprotocol/graph-ts"
+import { Address, BigInt, ethereum } from "@graphprotocol/graph-ts"
 import { BeefyVaultV7 as BeefyVaultV7Contract, UpgradeStrat } from "../generated/templates/BeefyVaultV7/BeefyVaultV7"
 import { BEEFY_VAULT_LIFECYCLE_RUNNING, getBeefyStrategy, getBeefyVault } from "./entity/vault"
 import { BeefyIStrategyV7 as BeefyIStrategyV7Template } from "../generated/templates"
 import { ADDRESS_ZERO } from "./utils/address"
 import { BeefyIStrategyV7 as BeefyIStrategyV7Contract } from "../generated/templates/BeefyIStrategyV7/BeefyIStrategyV7"
 import { BeefyVault } from "../generated/schema"
-import { getContextUnderlyingPlatform, getContextVaultKey } from "./vault-config"
+import { getContextFeatureFlags, getContextUnderlyingPlatform, getContextVaultKey } from "./vault-config"
 import { getTokenAndInitIfNeeded } from "./entity/token"
 
 export function handleVaultInitialized(event: ethereum.Event): void {
@@ -19,11 +19,14 @@ export function handleVaultInitialized(event: ethereum.Event): void {
 
   const vaultContract = BeefyVaultV7Contract.bind(vaultAddress)
   const strategyAddress = vaultContract.strategy()
+  const featureFlags = getContextFeatureFlags()
 
   vault.isInitialized = true
   vault.strategy = strategyAddress
   vault.vaultId = getContextVaultKey()
   vault.underlyingPlatform = getContextUnderlyingPlatform()
+  vault.startTrackingInvestorBalanceBreakdownAtBlock = featureFlags.startTrackingInvestorBalanceBreakdownAtBlock
+  vault.startTrackingInvestorTokenBalanceSnapshotsAtBlock = featureFlags.startTrackingInvestorTokenBalanceSnapshotsAtBlock
   vault.initializedAtBlockNumber = event.block.number
   vault.initializedAtTimestamp = event.block.timestamp
   vault.save() // needs to be saved before we can use it in the strategy events

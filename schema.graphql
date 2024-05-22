@@ -97,6 +97,18 @@ type BeefyVault @entity {
   "The current lifecycle status of the vault"
   lifecycle: VaultLifecycle!
 
+  """
+  The block number at which we started tracking the investor balance breakdown.
+  Zero means disabled.
+  """
+  startTrackingInvestorBalanceBreakdownAtBlock: BigInt!
+
+  """
+  The block number at which we started tracking the investor token balance snapshots.
+  Zero means disabled.
+  """
+  startTrackingInvestorTokenBalanceSnapshotsAtBlock: BigInt!
+
   "The underlying platform this vault is using"
   underlyingPlatform: String!
 
@@ -257,4 +269,34 @@ type InvestorPositionBalanceBreakdown @entity {
 
   "last time the balance was updated"
   lastUpdateBlock: BigInt!
+}
+
+type InvestorTokenBalanceSnapshot @entity {
+  "Investor address id + token address"
+  id: Bytes!
+
+  """
+  Duration of the snapshot period in seconds.
+  Available periods:
+  - 1 day: 86400
+  - 1 week: 604800
+  - 1 year: 31536000
+  """
+  period: BigInt!
+  "Timestamp the snapshot was initiated at, rounded to period"
+  roundedTimestamp: BigInt!
+  "Actual timestamp snapshot was initiated at"
+  timestamp: BigInt!
+
+  "Investor"
+  investor: Investor!
+
+  "Token address of the breakdown item"
+  token: Token
+
+  "Balance of the breakdown item. Represented with `token.decimals` decimals"
+  rawBalance: BigInt!
+
+  "Balance of the breakdown item"
+  balance: BigDecimal!
 }

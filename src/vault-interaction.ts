@@ -4,8 +4,8 @@ import { getBeefyStrategy, getBeefyVault, isVaultInitialized } from "./entity/va
 import { ZERO_BD, ZERO_BI, tokenAmountToDecimal } from "./utils/decimal"
 import { getTokenAndInitIfNeeded } from "./entity/token"
 import { SHARE_TOKEN_MINT_ADDRESS } from "./config"
-import { getChainVaults, isBoostAddress } from "./vault-config"
-import { getInvestor } from "./entity/investor"
+import { getChainVaults, getVaultFeatureFlags, isBoostAddress } from "./vault-config"
+import { getInvestor, getInvestorBalanceSnapshot } from "./entity/investor"
 import { getInvestorPosition } from "./entity/position"
 import { ppfsToShareRate, rawShareBalanceToRawUnderlyingBalance } from "./utils/ppfs"
 import { BeefyVault, Investor, Token } from "../generated/schema"
@@ -13,7 +13,6 @@ import { getVaultTokenBreakdown } from "./platform"
 import { getInvestorPositionBalanceBreakdown, getVaultBalanceBreakdown, saveVaultBalanceBreakdownUpdateEvent } from "./entity/breakdown"
 import { getClockTick } from "./entity/clock"
 import { HOUR } from "./utils/time"
-import { ADDRESS_ZERO } from "./utils/address"
 import { TokenBalance } from "./platform/common"
 import { Multicall3Params, multicall } from "./utils/multicall"
 
@@ -159,7 +158,6 @@ function updateVaultData(vault: BeefyVault): BeefyVault {
 function updateVaultBreakDown(block: ethereum.Block, vault: BeefyVault): BeefyVault {
   // update breakdown of tokens in the vault
   const breakdown = getVaultTokenBreakdown(vault)
-  const positions = vault.positions.load()
   saveVaultBalanceBreakdownUpdateEvent(vault, block)
 
   // also add the share token and underlying token to the breakdown
@@ -181,6 +179,9 @@ function updateVaultBreakDown(block: ethereum.Block, vault: BeefyVault): BeefyVa
     breakdown.push(new TokenBalance(vault.underlyingToken, vault.rawUnderlyingBalance))
   }
 
+  const featureFlags = getVaultFeatureFlags(vault)
+
+  // save the vault balance breakdown
   for (let i = 0; i < breakdown.length; i++) {
     const tokenBalance = breakdown[i]
     const token = getTokenAndInitIfNeeded(tokenBalance.tokenAddress)
@@ -192,44 +193,92 @@ function updateVaultBreakDown(block: ethereum.Block, vault: BeefyVault): BeefyVa
     breakdownItem.lastUpdateTimestamp = block.timestamp
     breakdownItem.lastUpdateBlock = block.number
     breakdownItem.save()
+  }
 
-    // also update the investor positions for that token
-    for (let j = 0; j < positions.length; j++) {
-      const position = positions[j]
-      const positionBreakdownItem = getInvestorPositionBalanceBreakdown(position, token)
+  const positions = vault.positions.load()
 
-      // compute time weighted balance contribution
-      let rawTimeWeightedBalanceContribution = ZERO_BI
-      let timeWeightedBalanceContribution = ZERO_BD
-      const previousRawBalance = positionBreakdownItem.rawBalance
-      const previousBalance = positionBreakdownItem.balance
-      const secondsSinceLastUpdate = block.timestamp.minus(positionBreakdownItem.lastUpdateTimestamp)
-      if (secondsSinceLastUpdate.gt(ZERO_BI) && previousRawBalance.gt(ZERO_BI)) {
-        rawTimeWeightedBalanceContribution = previousRawBalance.times(secondsSinceLastUpdate)
-        timeWeightedBalanceContribution = previousBalance.times(secondsSinceLastUpdate.toBigDecimal())
+  // also update the investor positions for that token
+  if (featureFlags.shouldTrackInvestorBalanceBreakdown(block.number)) {
+    for (let i = 0; i < breakdown.length; i++) {
+      const tokenBalance = breakdown[i]
+      const token = getTokenAndInitIfNeeded(tokenBalance.tokenAddress)
+      const breakdownItem = getVaultBalanceBreakdown(vault, token)
+
+      for (let j = 0; j < positions.length; j++) {
+        const position = positions[j]
+        const positionBreakdownItem = getInvestorPositionBalanceBreakdown(position, token)
+
+        // compute time weighted balance contribution
+        let rawTimeWeightedBalanceContribution = ZERO_BI
+        let timeWeightedBalanceContribution = ZERO_BD
+        const previousRawBalance = positionBreakdownItem.rawBalance
+        const previousBalance = positionBreakdownItem.balance
+        const secondsSinceLastUpdate = block.timestamp.minus(positionBreakdownItem.lastUpdateTimestamp)
+        if (secondsSinceLastUpdate.gt(ZERO_BI) && previousRawBalance.gt(ZERO_BI)) {
+          rawTimeWeightedBalanceContribution = previousRawBalance.times(secondsSinceLastUpdate)
+          timeWeightedBalanceContribution = previousBalance.times(secondsSinceLastUpdate.toBigDecimal())
+        }
+
+        // compute the position balance breakdown
+        let rawInvestorTokenBalance = ZERO_BI
+        let investorTokenBalance = ZERO_BD
+        if (!vault.rawSharesTokenTotalSupply.equals(ZERO_BI)) {
+          const investorPercentOfTotal = position.sharesBalance.div(vault.sharesTokenTotalSupply)
+          investorTokenBalance = breakdownItem.balance.times(investorPercentOfTotal)
+          rawInvestorTokenBalance = position.rawSharesBalance.times(breakdownItem.rawBalance).div(vault.rawSharesTokenTotalSupply)
+        }
+
+        // only update if something changed
+        if (positionBreakdownItem.rawBalance.equals(rawInvestorTokenBalance) && rawTimeWeightedBalanceContribution.equals(ZERO_BI)) {
+          continue
+        }
+
+        positionBreakdownItem.rawBalance = rawInvestorTokenBalance
+        positionBreakdownItem.balance = investorTokenBalance
+        positionBreakdownItem.rawTimeWeightedBalance = positionBreakdownItem.rawTimeWeightedBalance.plus(rawTimeWeightedBalanceContribution)
+        positionBreakdownItem.timeWeightedBalance = positionBreakdownItem.timeWeightedBalance.plus(timeWeightedBalanceContribution)
+        positionBreakdownItem.lastUpdateTimestamp = block.timestamp
+        positionBreakdownItem.lastUpdateBlock = block.number
+        positionBreakdownItem.save()
       }
+    }
 
-      // compute the position balance breakdown
-      let rawInvestorTokenBalance = ZERO_BI
-      let investorTokenBalance = ZERO_BD
-      if (!vault.rawSharesTokenTotalSupply.equals(ZERO_BI)) {
-        const investorPercentOfTotal = position.sharesBalance.div(vault.sharesTokenTotalSupply)
-        investorTokenBalance = breakdownItem.balance.times(investorPercentOfTotal)
-        rawInvestorTokenBalance = position.rawSharesBalance.times(breakdownItem.rawBalance).div(vault.rawSharesTokenTotalSupply)
+    // update the investor balance snapshots
+  }
+
+  if (featureFlags.shouldTrackInvestorTokenBalanceSnapshot(block.number)) {
+    const periods = [HOUR]
+
+    for (let i = 0; i < breakdown.length; i++) {
+      const tokenBalance = breakdown[i]
+      const token = getTokenAndInitIfNeeded(tokenBalance.tokenAddress)
+      const breakdownItem = getVaultBalanceBreakdown(vault, token)
+
+      for (let i = 0; i < positions.length; i++) {
+        const position = positions[i]
+        const investor = getInvestor(position.investor)
+
+        // compute the position balance breakdown
+        let rawInvestorTokenBalance = ZERO_BI
+        let investorTokenBalance = ZERO_BD
+        if (!vault.rawSharesTokenTotalSupply.equals(ZERO_BI)) {
+          const investorPercentOfTotal = position.sharesBalance.div(vault.sharesTokenTotalSupply)
+          investorTokenBalance = breakdownItem.balance.times(investorPercentOfTotal)
+          rawInvestorTokenBalance = position.rawSharesBalance.times(breakdownItem.rawBalance).div(vault.rawSharesTokenTotalSupply)
+        }
+
+        for (let j = 0; j < periods.length; j++) {
+          const period = periods[j]
+          const snapshot = getInvestorBalanceSnapshot(investor, token, block.timestamp, period)
+          // only save if something changed
+          if (snapshot.rawBalance.equals(rawInvestorTokenBalance)) {
+            continue
+          }
+          snapshot.balance = investorTokenBalance
+          snapshot.rawBalance = rawInvestorTokenBalance
+          snapshot.save()
+        }
       }
-
-      // only update if something changed
-      if (positionBreakdownItem.rawBalance.equals(rawInvestorTokenBalance) && rawTimeWeightedBalanceContribution.equals(ZERO_BI)) {
-        continue
-      }
-
-      positionBreakdownItem.rawBalance = rawInvestorTokenBalance
-      positionBreakdownItem.balance = investorTokenBalance
-      positionBreakdownItem.rawTimeWeightedBalance = positionBreakdownItem.rawTimeWeightedBalance.plus(rawTimeWeightedBalanceContribution)
-      positionBreakdownItem.timeWeightedBalance = positionBreakdownItem.timeWeightedBalance.plus(timeWeightedBalanceContribution)
-      positionBreakdownItem.lastUpdateTimestamp = block.timestamp
-      positionBreakdownItem.lastUpdateBlock = block.number
-      positionBreakdownItem.save()
     }
   }
 
