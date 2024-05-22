@@ -8,7 +8,7 @@ import { getChainVaults, getVaultFeatureFlags, isBoostAddress } from "./vault-co
 import { getInvestor, getInvestorBalanceSnapshot } from "./entity/investor"
 import { getInvestorPosition } from "./entity/position"
 import { ppfsToShareRate, rawShareBalanceToRawUnderlyingBalance } from "./utils/ppfs"
-import { BeefyVault, Investor, Token } from "../generated/schema"
+import { BeefyVault, Investor } from "../generated/schema"
 import { getVaultTokenBreakdown } from "./platform"
 import { getInvestorPositionBalanceBreakdown, getVaultBalanceBreakdown, saveVaultBalanceBreakdownUpdateEvent } from "./entity/breakdown"
 import { getClockTick } from "./entity/clock"
@@ -45,7 +45,7 @@ export function handleVaultTransfer(event: TransferEvent): void {
     return
   }
 
-  updateVaultData(vault)
+  updateVaultData(event.block, vault)
 
   if (!event.params.from.equals(SHARE_TOKEN_MINT_ADDRESS)) {
     const investorAddress = event.params.from
@@ -72,7 +72,7 @@ export function handleStrategyHarvest(event: ethereum.Event): void {
     return
   }
 
-  updateVaultData(vault)
+  updateVaultData(event.block, vault)
   updateVaultBreakDown(event.block, vault)
 }
 
@@ -92,7 +92,7 @@ export function handleClockTick(block: ethereum.Block): void {
       log.debug("handleClockTick: vault is not initialized {}", [vault.id.toHexString()])
       continue
     }
-    updateVaultData(vault) // we need the latest data before updating the breakdown
+    updateVaultData(block, vault) // we need the latest data before updating the breakdown
     updateVaultBreakDown(block, vault)
   }
 }
@@ -119,7 +119,12 @@ function updateInvestorVaultData(vault: BeefyVault, investor: Investor): Investo
   return investor
 }
 
-function updateVaultData(vault: BeefyVault): BeefyVault {
+function updateVaultData(block: ethereum.Block, vault: BeefyVault): BeefyVault {
+  const featureFlags = getVaultFeatureFlags(vault)
+  if (!featureFlags.shouldTrackVaultData(block.number)) {
+    return vault
+  }
+
   const underlyingToken = getTokenAndInitIfNeeded(vault.underlyingToken)
   const sharesToken = getTokenAndInitIfNeeded(vault.sharesToken)
 
@@ -156,6 +161,17 @@ function updateVaultData(vault: BeefyVault): BeefyVault {
 }
 
 function updateVaultBreakDown(block: ethereum.Block, vault: BeefyVault): BeefyVault {
+  const featureFlags = getVaultFeatureFlags(vault)
+
+  // skip if we are not tracking anything yet
+  if (
+    !featureFlags.shouldTrackVaultBalanceBreakdown(block.number) &&
+    !featureFlags.shouldTrackInvestorBalanceBreakdown(block.number) &&
+    !featureFlags.shouldTrackInvestorTokenBalanceSnapshot(block.number)
+  ) {
+    return vault
+  }
+
   // update breakdown of tokens in the vault
   const breakdown = getVaultTokenBreakdown(vault)
   saveVaultBalanceBreakdownUpdateEvent(vault, block)
@@ -179,26 +195,26 @@ function updateVaultBreakDown(block: ethereum.Block, vault: BeefyVault): BeefyVa
     breakdown.push(new TokenBalance(vault.underlyingToken, vault.rawUnderlyingBalance))
   }
 
-  const featureFlags = getVaultFeatureFlags(vault)
-
   // save the vault balance breakdown
-  for (let i = 0; i < breakdown.length; i++) {
-    const tokenBalance = breakdown[i]
-    const token = getTokenAndInitIfNeeded(tokenBalance.tokenAddress)
+  if (featureFlags.shouldTrackVaultBalanceBreakdown(block.number)) {
+    for (let i = 0; i < breakdown.length; i++) {
+      const tokenBalance = breakdown[i]
+      const token = getTokenAndInitIfNeeded(tokenBalance.tokenAddress)
 
-    // now the balance breakdown
-    const breakdownItem = getVaultBalanceBreakdown(vault, token)
-    breakdownItem.rawBalance = tokenBalance.rawBalance
-    breakdownItem.balance = tokenAmountToDecimal(tokenBalance.rawBalance, token.decimals)
-    breakdownItem.lastUpdateTimestamp = block.timestamp
-    breakdownItem.lastUpdateBlock = block.number
-    breakdownItem.save()
+      // now the balance breakdown
+      const breakdownItem = getVaultBalanceBreakdown(vault, token)
+      breakdownItem.rawBalance = tokenBalance.rawBalance
+      breakdownItem.balance = tokenAmountToDecimal(tokenBalance.rawBalance, token.decimals)
+      breakdownItem.lastUpdateTimestamp = block.timestamp
+      breakdownItem.lastUpdateBlock = block.number
+      breakdownItem.save()
+    }
   }
-
-  const positions = vault.positions.load()
 
   // also update the investor positions for that token
   if (featureFlags.shouldTrackInvestorBalanceBreakdown(block.number)) {
+    const positions = vault.positions.load()
+
     for (let i = 0; i < breakdown.length; i++) {
       const tokenBalance = breakdown[i]
       const token = getTokenAndInitIfNeeded(tokenBalance.tokenAddress)
@@ -242,17 +258,16 @@ function updateVaultBreakDown(block: ethereum.Block, vault: BeefyVault): BeefyVa
         positionBreakdownItem.save()
       }
     }
-
-    // update the investor balance snapshots
   }
 
+  // update the investor balance snapshots
   if (featureFlags.shouldTrackInvestorTokenBalanceSnapshot(block.number)) {
+    const positions = vault.positions.load()
     const periods = [HOUR]
 
     for (let i = 0; i < breakdown.length; i++) {
       const tokenBalance = breakdown[i]
       const token = getTokenAndInitIfNeeded(tokenBalance.tokenAddress)
-      const breakdownItem = getVaultBalanceBreakdown(vault, token)
 
       for (let i = 0; i < positions.length; i++) {
         const position = positions[i]
@@ -263,8 +278,8 @@ function updateVaultBreakDown(block: ethereum.Block, vault: BeefyVault): BeefyVa
         let investorTokenBalance = ZERO_BD
         if (!vault.rawSharesTokenTotalSupply.equals(ZERO_BI)) {
           const investorPercentOfTotal = position.sharesBalance.div(vault.sharesTokenTotalSupply)
-          investorTokenBalance = breakdownItem.balance.times(investorPercentOfTotal)
-          rawInvestorTokenBalance = position.rawSharesBalance.times(breakdownItem.rawBalance).div(vault.rawSharesTokenTotalSupply)
+          investorTokenBalance = tokenAmountToDecimal(tokenBalance.rawBalance, token.decimals).times(investorPercentOfTotal)
+          rawInvestorTokenBalance = position.rawSharesBalance.times(tokenBalance.rawBalance).div(vault.rawSharesTokenTotalSupply)
         }
 
         for (let j = 0; j < periods.length; j++) {

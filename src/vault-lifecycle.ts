@@ -25,6 +25,8 @@ export function handleVaultInitialized(event: ethereum.Event): void {
   vault.strategy = strategyAddress
   vault.vaultId = getContextVaultKey()
   vault.underlyingPlatform = getContextUnderlyingPlatform()
+  vault.startTrackingVaultDataAtBlock = featureFlags.startTrackingVaultDataAtBlock
+  vault.startTrackingVaultBalanceBreakdownAtBlock = featureFlags.startTrackingVaultBalanceBreakdownAtBlock
   vault.startTrackingInvestorBalanceBreakdownAtBlock = featureFlags.startTrackingInvestorBalanceBreakdownAtBlock
   vault.startTrackingInvestorTokenBalanceSnapshotsAtBlock = featureFlags.startTrackingInvestorTokenBalanceSnapshotsAtBlock
   vault.initializedAtBlockNumber = event.block.number

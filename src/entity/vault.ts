@@ -30,6 +30,8 @@ export function getBeefyVault(vaultAddress: Bytes): BeefyVault {
     vault.initializedAtBlockNumber = ZERO_BI
     vault.initializedAtTimestamp = ZERO_BI
     vault.lifecycle = BEEFY_VAULT_LIFECYCLE_INITIALIZING
+    vault.startTrackingVaultDataAtBlock = ZERO_BI
+    vault.startTrackingVaultBalanceBreakdownAtBlock = ZERO_BI
     vault.startTrackingInvestorBalanceBreakdownAtBlock = ZERO_BI
     vault.startTrackingInvestorTokenBalanceSnapshotsAtBlock = ZERO_BI
     vault.underlyingPlatform = ""

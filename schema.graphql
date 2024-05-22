@@ -98,6 +98,18 @@ type BeefyVault @entity {
   lifecycle: VaultLifecycle!
 
   """
+  The block number at which we started tracking the vault data.
+  Zero means disabled.
+  """
+  startTrackingVaultDataAtBlock: BigInt!
+
+  """
+  The block number at which we started tracking the vault balance breakdown.
+  Zero means disabled.
+  """
+  startTrackingVaultBalanceBreakdownAtBlock: BigInt!
+
+  """
   The block number at which we started tracking the investor balance breakdown.
   Zero means disabled.
   """
