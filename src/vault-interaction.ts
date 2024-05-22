@@ -270,13 +270,19 @@ function updateVaultBreakDown(block: ethereum.Block, vault: BeefyVault): BeefyVa
         for (let j = 0; j < periods.length; j++) {
           const period = periods[j]
           const snapshot = getInvestorBalanceSnapshot(investor, token, block.timestamp, period)
-          // only save if something changed
-          if (snapshot.rawBalance.equals(rawInvestorTokenBalance)) {
-            continue
+
+          // we are aggregating the balance for that block over multiple vaults
+          if (snapshot.lastUpdateBlock.equals(block.number)) {
+            snapshot.rawBalance = snapshot.rawBalance.plus(rawInvestorTokenBalance)
+            snapshot.balance = snapshot.balance.plus(investorTokenBalance)
+            snapshot.save()
+          } else {
+            // we are updating balances for a new block
+            snapshot.balance = investorTokenBalance
+            snapshot.rawBalance = rawInvestorTokenBalance
+            snapshot.lastUpdateBlock = block.number
+            snapshot.save()
           }
-          snapshot.balance = investorTokenBalance
-          snapshot.rawBalance = rawInvestorTokenBalance
-          snapshot.save()
         }
       }
     }

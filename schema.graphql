@@ -299,4 +299,7 @@ type InvestorTokenBalanceSnapshot @entity {
 
   "Balance of the breakdown item"
   balance: BigDecimal!
+
+  "last block the balance was updated"
+  lastUpdateBlock: BigInt!
 }

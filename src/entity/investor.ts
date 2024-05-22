@@ -28,6 +28,7 @@ export function getInvestorBalanceSnapshot(investor: Investor, token: Token, tim
 
     snapshot.rawBalance = ZERO_BI
     snapshot.balance = ZERO_BD
+    snapshot.lastUpdateBlock = ZERO_BI
 
     // copy non-reseting values from the previous snapshot to the new snapshot
     const previousSnapshotId = investor.id.concat(token.id).concat(getPreviousSnapshotIdSuffix(period, interval))
@@ -35,6 +36,7 @@ export function getInvestorBalanceSnapshot(investor: Investor, token: Token, tim
     if (previousSnapshot) {
       snapshot.rawBalance = previousSnapshot.rawBalance
       snapshot.balance = previousSnapshot.balance
+      snapshot.lastUpdateBlock = previousSnapshot.lastUpdateBlock
     }
   }
 
