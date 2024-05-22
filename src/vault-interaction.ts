@@ -51,14 +51,14 @@ export function handleVaultTransfer(event: TransferEvent): void {
     const investorAddress = event.params.from
     const investor = getInvestor(investorAddress)
     investor.save()
-    updateInvestorVaultData(vault, investor)
+    updateInvestorVaultData(event.block, vault, investor)
   }
 
   if (!event.params.to.equals(SHARE_TOKEN_MINT_ADDRESS)) {
     const investorAddress = event.params.to
     const investor = getInvestor(investorAddress)
     investor.save()
-    updateInvestorVaultData(vault, investor)
+    updateInvestorVaultData(event.block, vault, investor)
   }
 
   updateVaultBreakDown(event.block, vault)
@@ -97,7 +97,12 @@ export function handleClockTick(block: ethereum.Block): void {
   }
 }
 
-function updateInvestorVaultData(vault: BeefyVault, investor: Investor): Investor {
+function updateInvestorVaultData(block: ethereum.Block, vault: BeefyVault, investor: Investor): Investor {
+  const featureFlags = getVaultFeatureFlags(vault)
+  if (!featureFlags.shouldTrackVaultData(block.number)) {
+    return vault
+  }
+
   const vaultContract = BeefyVaultV7Contract.bind(Address.fromBytes(vault.id))
   const sharesToken = getTokenAndInitIfNeeded(vault.sharesToken)
   const underlyingToken = getTokenAndInitIfNeeded(vault.underlyingToken)
