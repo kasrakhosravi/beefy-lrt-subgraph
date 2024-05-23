@@ -47,9 +47,7 @@ export function getVaultTokenBreakdown(vault: BeefyVault): Array<TokenBalance> {
   } else if (vault.underlyingPlatform == PLATFORM_MENDI_LENDING) {
     return getVaultTokenBreakdownMendiLending(vault)
   } else if (vault.underlyingPlatform == PLATFORM_MENDI_LEVERAGE) {
-    // we don't need the break down for mendi leverage atm
-    // we only care about the moo token time weighted balance
-    return new Array<TokenBalance>()
+    return getVaultTokenBreakdownMendiLending(vault)
   }
 
   log.error("Not implemented platform {} for vault {}", [vault.underlyingPlatform, vault.id.toHexString()])
