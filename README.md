@@ -12,6 +12,7 @@ This Subgraph sources events from the Beefy LRT contracts in different networks.
 - Base: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-base/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-base/gn)
 - BSC: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-bsc/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-bsc/gn)
 - Ethereum: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-ethereum/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-ethereum/gn)
+- Mode: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-mode/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-mode/gn)
 - Linea: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-linea/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-linea/gn)
 - Optimism: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-optimism/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-optimism/gn)
 
@@ -22,6 +23,7 @@ This Subgraph sources events from the Beefy LRT contracts in different networks.
 - BSC: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-bsc/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-bsc/gn)
 - Ethereum: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-ethereum/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-ethereum/gn)
 - Linea: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-linea/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-linea/gn)
+- Mode: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-mode/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-mode/gn)
 - Optimism: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-optimism/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-optimism/gn)
 
 ## 0xgraph.xyz
@@ -33,6 +35,7 @@ This Subgraph sources events from the Beefy LRT contracts in different networks.
 - BSC: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-bsc/graphql](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-bsc/graphql)
 - Ethereum: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-ethereum/graphql](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-ethereum/graphql)
 - Linea: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-linea/graphql](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-linea/graphql)
+- Mode: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-mode/graphql](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-mode/graphql)
 - Optimism: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-optimism/graphql](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-optimism/graphql)
 
 ### Api Endpoints
@@ -42,6 +45,7 @@ This Subgraph sources events from the Beefy LRT contracts in different networks.
 - BSC: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-bsc](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-bsc)
 - Ethereum: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-ethereum](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-ethereum)
 - Linea: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-linea](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-linea)
+- Mode: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-mode](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-mode)
 - Optimism: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-optimism](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-optimism)
 
 # Contributing
