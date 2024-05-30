@@ -6,47 +6,15 @@ This Subgraph sources events from the Beefy LRT contracts in different networks.
 
 ## Goldsky.com
 
-### GraphiQL Explorer
+### Latest endpoints
 
-- Arbitrum: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-arbitrum/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-arbitrum/gn)
-- Base: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-base/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-base/gn)
-- BSC: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-bsc/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-bsc/gn)
-- Ethereum: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-ethereum/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-ethereum/gn)
-- Mode: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-mode/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-mode/gn)
-- Linea: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-linea/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-linea/gn)
-- Optimism: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-optimism/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-optimism/gn)
-
-### Api Endpoints
-
-- Arbitrum: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-arbitrum/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-arbitrum/gn)
-- Base: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-base/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-base/gn)
-- BSC: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-bsc/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-bsc/gn)
-- Ethereum: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-ethereum/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-ethereum/gn)
-- Linea: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-linea/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-linea/gn)
-- Mode: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-mode/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-mode/gn)
-- Optimism: [https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-optimism/gn](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefyfinance/lrt-optimism/gn)
-
-## 0xgraph.xyz
-
-### GraphiQL Explorer
-
-- Arbitrum: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-arbitrum/graphql](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-arbitrum/graphql)
-- Base: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-base/graphql](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-base/graphql)
-- BSC: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-bsc/graphql](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-bsc/graphql)
-- Ethereum: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-ethereum/graphql](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-ethereum/graphql)
-- Linea: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-linea/graphql](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-linea/graphql)
-- Mode: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-mode/graphql](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-mode/graphql)
-- Optimism: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-optimism/graphql](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-optimism/graphql)
-
-### Api Endpoints
-
-- Arbitrum: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-arbitrum](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-arbitrum)
-- Base: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-base](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-base)
-- BSC: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-bsc](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-bsc)
-- Ethereum: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-ethereum](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-ethereum)
-- Linea: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-linea](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-linea)
-- Mode: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-mode](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-mode)
-- Optimism: [https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-optimism](https://api.0xgraph.xyz/subgraphs/name/beefyfinance/lrt-optimism)
+- [Arbitrum](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefy-lrt-arbitrum/latest/gn)
+- [Base](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefy-lrt-base/latest/gn)
+- [BSC](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefy-lrt-bsc/latest/gn)
+- [Ethereum](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefy-lrt-ethereum/latest/gn)
+- [Mode](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefy-lrt-mode/latest/gn)
+- [Linea](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefy-lrt-linea/latest/gn)
+- [Optimism](https://api.goldsky.com/api/public/project_clu2walwem1qm01w40v3yhw1f/subgraphs/beefy-lrt-optimism/latest/gn)
 
 # Contributing
 
