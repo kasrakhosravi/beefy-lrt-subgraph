@@ -1,6 +1,5 @@
 import { Address, DataSourceContext, log, dataSource } from "@graphprotocol/graph-ts"
 import { NETWORK_NAME } from "./config"
-import { BeefyVault } from "../generated/schema"
 
 export const PLATFORM_AAVE = "AAVE"
 export const PLATFORM_BALANCER_AURA = "BALANCER_AURA"
@@ -86,7 +85,7 @@ export function getBoostAddresses(vaultAddress: Address): Array<Address> {
     }
   }
 
-  log.error("getBoostAddresses: Vault not found {}", [vaultAddress.toHexString()])
+  log.error("getBoostAddresses: Vault not found for address {}", [vaultAddress.toHexString()])
   throw new Error("Vault not found")
 }
 
