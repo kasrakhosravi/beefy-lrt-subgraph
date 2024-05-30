@@ -41,13 +41,12 @@ function publish_goldsky {
 function publish {
     CHAIN=$1
     PROVIDER=$2
-    SUBGRAPH=beefyfinance/lrt-$CHAIN
     case $PROVIDER in
         "0xgraph")
-            publish_0xgraph $SUBGRAPH
+            publish_0xgraph beefyfinance/lrt-$CHAIN
             ;;
         "goldsky")
-            publish_goldsky $SUBGRAPH
+            publish_goldsky beefy-lrt-$CHAIN-dev
             ;;
     esac
 }
@@ -57,15 +56,6 @@ chain=$1
 if [ -z "$chain" ]; then
     echo "chain is required"
     exit_help
-fi
-# deploy all chains
-if [ "$chain" == "all" ]; then
-    shift
-    for chain in ${valid_chains[@]}; do
-        echo "==== deploying $chain: $0 $chain $@"
-        $0 $chain $@
-    done
-    exit 0
 fi
 if [[ ! " ${valid_chains[@]} " =~ " ${chain} " ]]; then
     echo "invalid chain"
