@@ -37,6 +37,7 @@ export function getChainVaults(): Array<VaultConfig> {
     vaults.push(new VaultConfig("aerodrome-weth-wrseth", PLATFORM_SOLIDLY, "0xC5cD1A6d4918820201B8E4eeB6d2AdFD1CDF783d"))
     vaults.push(new VaultConfig("aerodrome-weeth-weth", PLATFORM_SOLIDLY, "0x47579C50c7AeDeA788D18927aed4c827Fe34996A"))
     vaults.push(new VaultConfig("aura-base-weeth-weth", PLATFORM_BALANCER_AURA, "0xc52393b27FeE4355Fe6a5DC92D25BC2Ed1B418Cb"))
+    vaults.push(new VaultConfig("aerodrome-usdz-usdc", PLATFORM_SOLIDLY, "0x3b5F990364fa9BF1Db34d9d24B0Bdca6eE4bD4B1"))
   }
 
   if (network === "mainnet") {
