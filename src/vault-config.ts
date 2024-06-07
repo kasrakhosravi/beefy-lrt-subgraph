@@ -64,6 +64,7 @@ export function getChainVaults(): Array<VaultConfig> {
 
   if (network === "optimism") {
     vaults.push(new VaultConfig("velodrome-v2-weth-wrseth", PLATFORM_SOLIDLY, "0xDbE946E16c4e0De9a44065B868265Ac05c437fB6"))
+    vaults.push(new VaultConfig("aura-op-weth-wrseth", PLATFORM_BALANCER_AURA, "0x2160BEDE9d5559bA559Eaf88052b46b8364eE245"))
   }
 
   if (network === "bsc") {
