@@ -86,7 +86,7 @@ export function getBoostAddresses(vaultAddress: Address): Array<Address> {
     }
   }
 
-  log.error("getBoostAddresses: Vault not found for address {}", [vaultAddress.toHexString()])
+  log.error("getBoostAddresses: Vault not found {}", [vaultAddress.toHexString()])
   throw new Error("Vault not found")
 }
 
