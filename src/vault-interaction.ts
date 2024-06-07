@@ -79,7 +79,7 @@ export function handleStrategyHarvest(event: ethereum.Event): void {
 export function handleClockTick(block: ethereum.Block): void {
   let tickRes = getClockTick(block, HOUR)
   if (!tickRes.isNew) {
-    log.debug("handleClockTick: tick already exists", [])
+    log.debug("handleClockTick: tick already exists for that hour block", [])
     return
   }
   tickRes.tick.save()
