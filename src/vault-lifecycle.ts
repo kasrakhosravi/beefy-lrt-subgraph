@@ -4,9 +4,9 @@ import { BEEFY_VAULT_LIFECYCLE_RUNNING, getBeefyStrategy, getBeefyVault } from "
 import { BeefyIStrategyV7 as BeefyIStrategyV7Template } from "../generated/templates"
 import { ADDRESS_ZERO } from "./utils/address"
 import { BeefyIStrategyV7 as BeefyIStrategyV7Contract } from "../generated/templates/BeefyIStrategyV7/BeefyIStrategyV7"
-import { BeefyVault } from "../generated/schema"
-import { getContextUnderlyingPlatform, getContextVaultKey } from "./vault-config"
-import { getTokenAndInitIfNeeded } from "./entity/token"
+import { BeefyVault, Token } from "../generated/schema"
+import { PLATFORM_BEEFY_CLM, getContextUnderlyingPlatform, getContextVaultKey } from "./vault-config"
+import { getToken, getTokenAndInitIfNeeded } from "./entity/token"
 
 export function handleVaultInitialized(event: ethereum.Event): void {
   const vaultAddress = event.address
@@ -70,9 +70,21 @@ function fetchInitialVaultData(vault: BeefyVault): BeefyVault {
   const vaultAddress = Address.fromBytes(vault.id)
   const vaultContract = BeefyVaultV7Contract.bind(vaultAddress)
 
-  const want = vaultContract.want()
   const sharesToken = getTokenAndInitIfNeeded(vaultAddress)
-  const underlyingToken = getTokenAndInitIfNeeded(want)
+
+  // for CLM, vault.want is not an ERC20 token
+  const want = vaultContract.want()
+  let underlyingToken: Token | null = null
+  if (vault.underlyingPlatform == PLATFORM_BEEFY_CLM) {
+    const mockToken = getToken(want)
+    mockToken.name = "CLMMockUnderlying " + vault.vaultId
+    mockToken.symbol = "CLMMockUnderlying-" + vault.vaultId
+    mockToken.decimals = BigInt.fromI32(18)
+    mockToken.save()
+    underlyingToken = mockToken
+  } else {
+    underlyingToken = getTokenAndInitIfNeeded(want)
+  }
 
   vault.sharesToken = sharesToken.id
   vault.underlyingToken = underlyingToken.id

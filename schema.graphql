@@ -109,18 +109,6 @@ type BeefyVault @entity {
   "The vault's total shares supply"
   sharesTokenTotalSupply: BigDecimal!
 
-  "how much underlying asset one vault share represents as represented in the contract"
-  pricePerFullShare: BigInt!
-
-  "how much underlying asset one vault share represents"
-  shareToUnderlyingRate: BigDecimal!
-
-  "vault total underlying balance as its represented in the contract"
-  rawUnderlyingBalance: BigInt!
-
-  "vault total underlying balance"
-  underlyingBalance: BigDecimal!
-
   "positions in the vault"
   positions: [InvestorPosition!]! @derivedFrom(field: "vault")
 
@@ -204,12 +192,6 @@ type InvestorPosition @entity {
 
   "Amount of shares"
   sharesBalance: BigDecimal!
-
-  "Amount of underlying asset the investor is entitled to. Represented with `vault.underlyingToken.decimals` decimals"
-  rawUnderlyingBalance: BigInt!
-
-  "Amount of underlying asset the investor is entitled to"
-  underlyingBalance: BigDecimal!
 
   "Breakdown of the investor position balance"
   balanceBreakdown: [InvestorPositionBalanceBreakdown!]! @derivedFrom(field: "investorPosition")

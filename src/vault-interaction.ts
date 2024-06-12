@@ -7,7 +7,6 @@ import { SHARE_TOKEN_MINT_ADDRESS } from "./config"
 import { getChainVaults, isBoostAddress } from "./vault-config"
 import { getInvestor } from "./entity/investor"
 import { getInvestorPosition } from "./entity/position"
-import { ppfsToShareRate, rawShareBalanceToRawUnderlyingBalance } from "./utils/ppfs"
 import { BeefyVault, Investor } from "../generated/schema"
 import { getVaultTokenBreakdown } from "./platform"
 import { getInvestorPositionBalanceBreakdown, getVaultBalanceBreakdown, saveVaultBalanceBreakdownUpdateEvent } from "./entity/breakdown"
@@ -100,7 +99,6 @@ export function handleClockTick(block: ethereum.Block): void {
 function updateInvestorVaultData(vault: BeefyVault, investor: Investor): Investor {
   const vaultContract = BeefyVaultV7Contract.bind(Address.fromBytes(vault.id))
   const sharesToken = getTokenAndInitIfNeeded(vault.sharesToken)
-  const underlyingToken = getTokenAndInitIfNeeded(vault.underlyingToken)
 
   // get the new investor deposit value
   const investorShareTokenBalanceRaw = vaultContract.balanceOf(Address.fromBytes(investor.id))
@@ -111,9 +109,6 @@ function updateInvestorVaultData(vault: BeefyVault, investor: Investor): Investo
   const position = getInvestorPosition(vault, investor)
   position.rawSharesBalance = investorShareTokenBalanceRaw
   position.sharesBalance = investorShareTokenBalance
-  // we assume the vault was updated before this function was called
-  position.rawUnderlyingBalance = rawShareBalanceToRawUnderlyingBalance(vault.pricePerFullShare, investorShareTokenBalanceRaw, underlyingToken)
-  position.underlyingBalance = position.sharesBalance.times(vault.shareToUnderlyingRate)
   position.save()
 
   return investor
@@ -125,31 +120,19 @@ function updateVaultData(vault: BeefyVault): BeefyVault {
 
   ///////
   // fetch data on chain
-  const signatures = [
-    new Multicall3Params(vault.id, "getPricePerFullShare()", "uint256"),
-    new Multicall3Params(vault.id, "balance()", "uint256"),
-    new Multicall3Params(vault.id, "totalSupply()", "uint256"),
-  ]
+  const signatures = [new Multicall3Params(vault.id, "totalSupply()", "uint256")]
   const results = multicall(signatures)
 
-  const ppfs = results[0].value.toBigInt()
-  const vaultBalancesRaw = results[1].value.toBigInt()
-  const vaultSharesTotalSupplyRaw = results[2].value.toBigInt()
+  const vaultSharesTotalSupplyRaw = results[0].value.toBigInt()
 
   ///////
   // compute derived values
-  const vaultUnderlyingBalance = tokenAmountToDecimal(vaultBalancesRaw, underlyingToken.decimals)
-  const vaultShareToUnderlyingRate = ppfsToShareRate(ppfs, underlyingToken)
   const vaultSharesTotalSupply = tokenAmountToDecimal(vaultSharesTotalSupplyRaw, sharesToken.decimals)
 
   ///////
   // update vault entities
   vault.rawSharesTokenTotalSupply = vaultSharesTotalSupplyRaw
   vault.sharesTokenTotalSupply = vaultSharesTotalSupply
-  vault.pricePerFullShare = ppfs
-  vault.shareToUnderlyingRate = vaultShareToUnderlyingRate
-  vault.rawUnderlyingBalance = vaultBalancesRaw
-  vault.underlyingBalance = vaultUnderlyingBalance
   vault.save()
 
   return vault
@@ -163,20 +146,13 @@ function updateVaultBreakDown(block: ethereum.Block, vault: BeefyVault): BeefyVa
   // also add the share token and underlying token to the breakdown
   // so we are also computing time weighted balance for those
   let foundSharesToken = false
-  let foundUnderlyingToken = false
   for (let i = 0; i < breakdown.length; i++) {
     if (breakdown[i].tokenAddress.equals(vault.sharesToken)) {
       foundSharesToken = true
     }
-    if (breakdown[i].tokenAddress.equals(vault.underlyingToken)) {
-      foundUnderlyingToken = true
-    }
   }
   if (!foundSharesToken) {
     breakdown.push(new TokenBalance(vault.sharesToken, vault.rawSharesTokenTotalSupply))
-  }
-  if (!foundUnderlyingToken) {
-    breakdown.push(new TokenBalance(vault.underlyingToken, vault.rawUnderlyingBalance))
   }
   // save the vault balance breakdown
   for (let i = 0; i < breakdown.length; i++) {
