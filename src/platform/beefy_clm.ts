@@ -6,7 +6,7 @@ export function getVaultTokenBreakdownBeefyCLM(vault: BeefyVault): Array<TokenBa
   let balances = new Array<TokenBalance>()
 
   const signatures = [
-    new Multicall3Params(vault.id, "wants()", "(uint256,uint256)"),
+    new Multicall3Params(vault.id, "wants()", "(address,address)"),
     new Multicall3Params(vault.id, "balances()", "(uint256,uint256)"),
   ]
 
