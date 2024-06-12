@@ -21,8 +21,6 @@ export function getInvestorPosition(vault: BeefyVault, investor: Investor): Inve
     position.investor = investor.id
     position.rawSharesBalance = ZERO_BI
     position.sharesBalance = ZERO_BD
-    position.rawUnderlyingBalance = ZERO_BI
-    position.underlyingBalance = ZERO_BD
   }
   return position
 }

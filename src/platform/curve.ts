@@ -1,6 +1,7 @@
 import { BeefyVault } from "../../generated/schema"
 import { TokenBalance } from "./common"
 import { Address, BigInt } from "@graphprotocol/graph-ts"
+import { BeefyVaultV7 as BeefyVaultV7Contract } from "../../generated/templates/BeefyVaultV7/BeefyVaultV7"
 import { CurveToken as CurveTokenContract } from "../../generated/templates/BeefyVaultV7/CurveToken"
 import { CurvePool as CurvePoolContract } from "../../generated/templates/BeefyVaultV7/CurvePool"
 
@@ -13,7 +14,9 @@ import { CurvePool as CurvePoolContract } from "../../generated/templates/BeefyV
 export function getVaultTokenBreakdownCurve(vault: BeefyVault): Array<TokenBalance> {
   let balances = new Array<TokenBalance>()
 
-  const wantTotalBalance = vault.rawUnderlyingBalance
+  const vaultContract = BeefyVaultV7Contract.bind(Address.fromBytes(vault.sharesToken))
+  const wantTotalBalance = vaultContract.balance()
+
   const underlyingTokenAddress = Address.fromBytes(vault.underlyingToken)
 
   // fetch on chain data

@@ -22,3 +22,14 @@ export function getTokenAndInitIfNeeded(tokenAddress: Bytes): Token {
   }
   return token
 }
+
+export function getToken(tokenAddress: Bytes): Token {
+  let token = Token.load(tokenAddress)
+  if (!token) {
+    token = new Token(tokenAddress)
+    token.name = ""
+    token.symbol = ""
+    token.decimals = BigInt.fromI32(18)
+  }
+  return token
+}

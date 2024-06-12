@@ -12,6 +12,7 @@ export const PLATFORM_MENDI_LEVERAGE = "MENDI_LEVERAGE"
 export const PLATFORM_NILE = "NILE"
 export const PLATFORM_PENDLE_EQUILIBRIA = "PENDLE_EQUILIBRIA"
 export const PLATFORM_SOLIDLY = "SOLIDLY"
+export const PLATFORM_BEEFY_CLM = "BEEFY_CLM"
 
 export function getChainVaults(): Array<VaultConfig> {
   const vaults = new Array<VaultConfig>()
@@ -28,6 +29,8 @@ export function getChainVaults(): Array<VaultConfig> {
     vaults.push(new VaultConfig("equilibria-arb-rseth-27jun24", PLATFORM_PENDLE_EQUILIBRIA, "0x59D0C3f25cB3bD86E03D827C773892d247452227"))
     vaults.push(new VaultConfig("equilibria-arb-eeth-27jun24", PLATFORM_PENDLE_EQUILIBRIA, "0xDDf00Bb25A13e3ECd35a343B9165448cDd2228B6"))
     vaults.push(new VaultConfig("aura-arb-ezeth-wsteth", PLATFORM_BALANCER_AURA, "0xEFAd727469e7e4e410376986AB0af8B6F9559fDc"))
+    vaults.push(new VaultConfig("uniswap-cow-arb-ezeth-wsteth", PLATFORM_BEEFY_CLM, "0x83368b5e04d8A2C990ef9b5FE41509FafCfBa499"))
+    vaults.push(new VaultConfig("uniswap-cow-arb-rseth-wsteth", PLATFORM_BEEFY_CLM, "0x15cfBd3Db5D24360eeac802b3dde4423eb5C3C70"))
   }
 
   if (network === "base") {
@@ -66,6 +69,7 @@ export function getChainVaults(): Array<VaultConfig> {
   if (network === "optimism") {
     vaults.push(new VaultConfig("velodrome-v2-weth-wrseth", PLATFORM_SOLIDLY, "0xDbE946E16c4e0De9a44065B868265Ac05c437fB6"))
     vaults.push(new VaultConfig("aura-op-weth-wrseth", PLATFORM_BALANCER_AURA, "0x2160BEDE9d5559bA559Eaf88052b46b8364eE245"))
+    vaults.push(new VaultConfig("uniswap-cow-op-rseth-wsteth", PLATFORM_BEEFY_CLM, "0x0F46A74B01708E78c27DEF7160A5C5222f9dD157"))
   }
 
   if (network === "bsc") {

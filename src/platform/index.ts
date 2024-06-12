@@ -3,6 +3,7 @@ import { BeefyVault } from "../../generated/schema"
 import {
   PLATFORM_AAVE,
   PLATFORM_BALANCER_AURA,
+  PLATFORM_BEEFY_CLM,
   PLATFORM_CURVE,
   PLATFORM_GAMMA,
   PLATFORM_ICHI_LYNEX,
@@ -24,6 +25,7 @@ import { getVaultTokenBreakdownIchiLynex } from "./ichi"
 import { getVaultTokenBreakdownLynex } from "./lynex"
 import { getVaultTokenBreakdownNile } from "./nile"
 import { getVaultTokenBreakdownMendiLending, getVaultTokenBreakdownMendiLeverage } from "./mendi"
+import { getVaultTokenBreakdownBeefyCLM } from "./beefy_clm"
 
 export function getVaultTokenBreakdown(vault: BeefyVault): Array<TokenBalance> {
   if (vault.underlyingPlatform == PLATFORM_PENDLE_EQUILIBRIA) {
@@ -48,6 +50,8 @@ export function getVaultTokenBreakdown(vault: BeefyVault): Array<TokenBalance> {
     return getVaultTokenBreakdownMendiLending(vault)
   } else if (vault.underlyingPlatform == PLATFORM_MENDI_LEVERAGE) {
     return getVaultTokenBreakdownMendiLeverage(vault)
+  } else if (vault.underlyingPlatform == PLATFORM_BEEFY_CLM) {
+    return getVaultTokenBreakdownBeefyCLM(vault)
   }
 
   log.error("Not implemented platform {} for vault {}", [vault.underlyingPlatform, vault.id.toHexString()])

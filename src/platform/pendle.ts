@@ -1,5 +1,6 @@
 import { BeefyVault } from "../../generated/schema"
 import { TokenBalance } from "./common"
+import { BeefyVaultV7 as BeefyVaultV7Contract } from "../../generated/templates/BeefyVaultV7/BeefyVaultV7"
 import { PendleMarket as PendleMarketContract } from "../../generated/templates/BeefyVaultV7/PendleMarket"
 import { PendleSyToken as PendleSyTokenContract } from "../../generated/templates/BeefyVaultV7/PendleSyToken"
 import { Address } from "@graphprotocol/graph-ts"
@@ -9,7 +10,8 @@ const PENDLE_ROUTER_ADDRESS = Address.fromString("0x00000000005BBB0EF59571E58418
 export function getVaultTokenBreakdownPendle(vault: BeefyVault): Array<TokenBalance> {
   let balances = new Array<TokenBalance>()
 
-  const wantTotalBalance = vault.rawUnderlyingBalance
+  const vaultContract = BeefyVaultV7Contract.bind(Address.fromBytes(vault.sharesToken))
+  const wantTotalBalance = vaultContract.balance()
 
   // fetch on chain data
   const pendleMarketContract = PendleMarketContract.bind(Address.fromBytes(vault.underlyingToken))
