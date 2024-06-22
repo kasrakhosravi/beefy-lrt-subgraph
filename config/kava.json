@@ -1,0 +1,9 @@
+{
+  "network": "kava",
+  "shareTokenMintAddress": "0x0000000000000000000000000000000000000000",
+  "bindConfigAddress": "0xCD9b038F012Ecd6b2739934426dDe3D4577e1d3C",
+  "bindConfigBlock": 3676191,
+  "bindConfigEvent": "ProxyCreated(address)",
+  "vaultInitializedEvent": "Initialized(uint8)",
+  "clockTickBlocks": 100
+}

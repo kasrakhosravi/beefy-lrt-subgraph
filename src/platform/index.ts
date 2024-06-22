@@ -13,6 +13,7 @@ import {
   PLATFORM_NILE,
   PLATFORM_PENDLE_EQUILIBRIA,
   PLATFORM_SOLIDLY,
+  TRACK_ONLY_SHARE_TOKEN_BALANCE,
 } from "../vault-config"
 import { TokenBalance } from "./common"
 import { getVaultTokenBreakdownPendle } from "./pendle"
@@ -52,6 +53,8 @@ export function getVaultTokenBreakdown(vault: BeefyVault): Array<TokenBalance> {
     return getVaultTokenBreakdownMendiLeverage(vault)
   } else if (vault.underlyingPlatform == PLATFORM_BEEFY_CLM) {
     return getVaultTokenBreakdownBeefyCLM(vault)
+  } else if (vault.underlyingPlatform == TRACK_ONLY_SHARE_TOKEN_BALANCE) {
+    return []
   }
 
   log.error("Not implemented platform {} for vault {}", [vault.underlyingPlatform, vault.id.toHexString()])
