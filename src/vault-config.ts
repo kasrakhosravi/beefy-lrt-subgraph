@@ -14,6 +14,7 @@ export const PLATFORM_PENDLE_EQUILIBRIA = "PENDLE_EQUILIBRIA"
 export const PLATFORM_SOLIDLY = "SOLIDLY"
 export const PLATFORM_BEEFY_CLM = "BEEFY_CLM"
 export const TRACK_ONLY_SHARE_TOKEN_BALANCE = "TRACK_ONLY_SHARE_TOKEN_BALANCE"
+export const TRACK_ONLY_SHARE_AND_UNDERLYING_TOKEN_BALANCE = "TRACK_ONLY_SHARE_AND_UNDERLYING_TOKEN_BALANCE"
 
 export function getChainVaults(): Array<VaultConfig> {
   const vaults = new Array<VaultConfig>()
@@ -80,7 +81,7 @@ export function getChainVaults(): Array<VaultConfig> {
   }
 
   if (network === "kava") {
-    vaults.push(new VaultConfig("kinetix-klp", TRACK_ONLY_SHARE_TOKEN_BALANCE, "0x9a207D4D2ee8175995C69c0Fb1F117Bf7CcC93cd"))
+    vaults.push(new VaultConfig("kinetix-klp", TRACK_ONLY_SHARE_AND_UNDERLYING_TOKEN_BALANCE, "0x9a207D4D2ee8175995C69c0Fb1F117Bf7CcC93cd"))
   }
 
   if (network === "mode-mainnet") {

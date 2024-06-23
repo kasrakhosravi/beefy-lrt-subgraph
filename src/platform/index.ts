@@ -13,6 +13,7 @@ import {
   PLATFORM_NILE,
   PLATFORM_PENDLE_EQUILIBRIA,
   PLATFORM_SOLIDLY,
+  TRACK_ONLY_SHARE_AND_UNDERLYING_TOKEN_BALANCE,
   TRACK_ONLY_SHARE_TOKEN_BALANCE,
 } from "../vault-config"
 import { TokenBalance } from "./common"
@@ -27,6 +28,7 @@ import { getVaultTokenBreakdownLynex } from "./lynex"
 import { getVaultTokenBreakdownNile } from "./nile"
 import { getVaultTokenBreakdownMendiLending, getVaultTokenBreakdownMendiLeverage } from "./mendi"
 import { getVaultTokenBreakdownBeefyCLM } from "./beefy_clm"
+import { getUnderlyingTokenBalance } from "./underlying_only"
 
 export function getVaultTokenBreakdown(vault: BeefyVault): Array<TokenBalance> {
   if (vault.underlyingPlatform == PLATFORM_PENDLE_EQUILIBRIA) {
@@ -53,7 +55,10 @@ export function getVaultTokenBreakdown(vault: BeefyVault): Array<TokenBalance> {
     return getVaultTokenBreakdownMendiLeverage(vault)
   } else if (vault.underlyingPlatform == PLATFORM_BEEFY_CLM) {
     return getVaultTokenBreakdownBeefyCLM(vault)
+  } else if (vault.underlyingPlatform == TRACK_ONLY_SHARE_AND_UNDERLYING_TOKEN_BALANCE) {
+    return getUnderlyingTokenBalance(vault)
   } else if (vault.underlyingPlatform == TRACK_ONLY_SHARE_TOKEN_BALANCE) {
+    // share token is automatically added for all vaults in vault-interaction.ts
     return []
   }
 
