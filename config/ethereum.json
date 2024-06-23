@@ -1,5 +1,6 @@
 {
   "network": "mainnet",
+  "indexerHintPrune": 400000,
   "shareTokenMintAddress": "0x0000000000000000000000000000000000000000",
   "bindConfigAddress": "0xC551dDCE8e5E657503Cd67A39713c06F2c0d2e97",
   "bindConfigBlock": 19205553,

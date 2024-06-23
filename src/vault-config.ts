@@ -19,6 +19,7 @@ export const TRACK_ONLY_SHARE_AND_UNDERLYING_TOKEN_BALANCE = "TRACK_ONLY_SHARE_A
 export function getChainVaults(): Array<VaultConfig> {
   const vaults = new Array<VaultConfig>()
   const network = NETWORK_NAME as string
+  log.debug("getChainVaults: network={}", [network])
 
   if (network === "arbitrum-one") {
     // retired

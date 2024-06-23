@@ -5,7 +5,7 @@ schema:
   file: ./schema.graphql
 indexerHints:
   # we want to be able to issue time-travel queries for historical data
-  prune: never
+  prune: {{indexerHintPrune}}
 dataSources:
   - kind: ethereum/contract
     name: ConfigBinder
