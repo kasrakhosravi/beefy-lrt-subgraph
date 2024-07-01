@@ -28,6 +28,17 @@ export function getChainVaults(): Array<VaultConfig> {
     vaults.push(new VaultConfig("equilibria-arb-ezeth", PLATFORM_PENDLE_EQUILIBRIA, "0x8b479C22c5B33eA4E42395dC7360231B19AF8300"))
 
     // live
+    vaults.push(new VaultConfig("pendle-arb-usde-29aug24", PLATFORM_PENDLE_EQUILIBRIA, "0x631d5C4bA949418D7D856Acc4e33EC2FFF96b590"))
+    vaults.push(new VaultConfig("pendle-arb-eeth-26sep24", PLATFORM_PENDLE_EQUILIBRIA, "0xfc0DAB708493b080BAe05cb7a6D6516b53B71dCb"))
+    vaults.push(new VaultConfig("pendle-arb-rseth-26sep24", PLATFORM_PENDLE_EQUILIBRIA, "0xcf4D88E8d3496aaEC03A53A05a5cf3da93c2394D"))
+    vaults.push(new VaultConfig("pendle-arb-ezeth-26sep24", PLATFORM_PENDLE_EQUILIBRIA, "0xeA4317300Cd4F856B63d8Fc964B3a3Aa64ce712F"))
+    vaults.push(new VaultConfig("pendle-arb-dusdc-26sep24", PLATFORM_PENDLE_EQUILIBRIA, "0xf8934BDFe5424D3e8101A73dBAb30f73335106Ea"))
+    vaults.push(new VaultConfig("pendle-arb-seth-rseth-26sep24", PLATFORM_PENDLE_EQUILIBRIA, "0xa47D338061c499DBF8dd93a857828762b594d543"))
+    vaults.push(new VaultConfig("pendle-arb-seth-eeth-26sep24", PLATFORM_PENDLE_EQUILIBRIA, "0x188E9DF1E12BF43d7d848b2ed5Fe9FED9AAa5155"))
+    vaults.push(new VaultConfig("pendle-arb-seth-ezeth-26sep24", PLATFORM_PENDLE_EQUILIBRIA, "0xaD2cd300E6fFd20f620255C2C13251FB1D76F660"))
+    vaults.push(new VaultConfig("equilibria-arb-rseth-26sep24-new", PLATFORM_PENDLE_EQUILIBRIA, "0x4897679a3E506F0bedC118250369D782F6CCA03e"))
+    vaults.push(new VaultConfig("equilibria-arb-eeth-26sep24", PLATFORM_PENDLE_EQUILIBRIA, "0x4d01a46Fc5F20cA2544204EDD376BdB619BD2D2F"))
+    vaults.push(new VaultConfig("equilibria-arb-ezeth-26sep24", PLATFORM_PENDLE_EQUILIBRIA, "0x218337d7DAe070e219c44783A64cA107dffc533e"))
     vaults.push(new VaultConfig("equilibria-arb-ezeth-27jun24", PLATFORM_PENDLE_EQUILIBRIA, "0xdccb85017a996faF5242648B46940E80DE0A36a5"))
     vaults.push(new VaultConfig("equilibria-arb-rseth-27jun24", PLATFORM_PENDLE_EQUILIBRIA, "0x59D0C3f25cB3bD86E03D827C773892d247452227"))
     vaults.push(new VaultConfig("equilibria-arb-eeth-27jun24", PLATFORM_PENDLE_EQUILIBRIA, "0xDDf00Bb25A13e3ECd35a343B9165448cDd2228B6"))
