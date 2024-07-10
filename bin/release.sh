@@ -28,9 +28,6 @@ function publish_0xgraph {
     DEPLOY_KEY=$3
     echo "publishing $SUBGRAPH to 0xgraph"
     yarn run graph deploy $SUBGRAPH --node https://api.0xgraph.xyz/deploy --ipfs https://api.0xgraph.xyz/ipfs --version-label="v$VERSION" --deploy-key=$DEPLOY_KEY
-
-    sleep 5 # wait for the subgraph to propagate
-    goldsky subgraph tag create $SUBGRAPH/$VERSION --token $DEPLOY_KEY --tag next
 }
 
 function publish_goldsky {
@@ -39,6 +36,9 @@ function publish_goldsky {
     DEPLOY_KEY=$3
     echo "publishing $SUBGRAPH to goldsky"
     goldsky subgraph deploy $SUBGRAPH/$VERSION --path . --token $DEPLOY_KEY
+    
+    sleep 5 # wait for the subgraph to propagate
+    goldsky subgraph tag create $SUBGRAPH/$VERSION --token $DEPLOY_KEY --tag next
 }
 
 function publish {
