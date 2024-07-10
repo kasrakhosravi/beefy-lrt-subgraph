@@ -1,5 +1,6 @@
-import { Address, BigInt, ethereum } from "@graphprotocol/graph-ts"
+import { Address, BigInt, ethereum, log } from "@graphprotocol/graph-ts"
 import { BeefyVaultV7 as BeefyVaultV7Contract, UpgradeStrat } from "../generated/templates/BeefyVaultV7/BeefyVaultV7"
+import { BeefyRewardPool as BeefyRewardPoolContract } from "../generated/templates/BeefyVaultV7/BeefyRewardPool"
 import { BEEFY_VAULT_LIFECYCLE_RUNNING, getBeefyStrategy, getBeefyVault } from "./entity/vault"
 import { BeefyIStrategyV7 as BeefyIStrategyV7Template } from "../generated/templates"
 import { ADDRESS_ZERO } from "./utils/address"
@@ -7,6 +8,7 @@ import { BeefyIStrategyV7 as BeefyIStrategyV7Contract } from "../generated/templ
 import { BeefyVault, Token } from "../generated/schema"
 import { PLATFORM_BEEFY_CLM, getContextUnderlyingPlatform, getContextVaultKey } from "./vault-config"
 import { getToken, getTokenAndInitIfNeeded } from "./entity/token"
+import { getBeefyRewardPool } from "./entity/reward-pool"
 
 export function handleVaultInitialized(event: ethereum.Event): void {
   const vaultAddress = event.address
@@ -42,6 +44,27 @@ export function handleVaultInitialized(event: ethereum.Event): void {
     vault = fetchInitialVaultData(vault)
     vault.save()
   }
+}
+
+export function handleRewardPoolInitialized(event: ethereum.Event): void {
+  const rpAddress = event.address
+
+  const rp = getBeefyRewardPool(rpAddress)
+
+  const rpContract = BeefyRewardPoolContract.bind(rpAddress)
+
+  const stakedTokenAddress = rpContract.stakedToken()
+  const stakedVault = BeefyVault.load(stakedTokenAddress)
+  if (stakedVault == null) {
+    log.error("handleRewardPoolInitialized: stakedTokenAddress is not a vault: {}. Ignoring", [stakedTokenAddress.toHexString()])
+    return
+  }
+
+  const rcowToken = getTokenAndInitIfNeeded(rpAddress)
+
+  rp.vault = stakedVault.id
+  rp.rcowToken = rcowToken.id
+  rp.save()
 }
 
 export function handleStrategyInitialized(event: ethereum.Event): void {

@@ -13,7 +13,6 @@ export const PLATFORM_NILE = "NILE"
 export const PLATFORM_PENDLE_EQUILIBRIA = "PENDLE_EQUILIBRIA"
 export const PLATFORM_SOLIDLY = "SOLIDLY"
 export const PLATFORM_BEEFY_CLM = "BEEFY_CLM"
-export const PLATFORM_BEEFY_CLM_REWARD_POOL = "BEEFY_CLM_REWARD_POOL"
 export const TRACK_ONLY_SHARE_TOKEN_BALANCE = "TRACK_ONLY_SHARE_TOKEN_BALANCE"
 export const TRACK_ONLY_SHARE_AND_UNDERLYING_TOKEN_BALANCE = "TRACK_ONLY_SHARE_AND_UNDERLYING_TOKEN_BALANCE"
 
@@ -44,10 +43,16 @@ export function getChainVaults(): Array<VaultConfig> {
     vaults.push(new VaultConfig("equilibria-arb-rseth-27jun24", PLATFORM_PENDLE_EQUILIBRIA, "0x59D0C3f25cB3bD86E03D827C773892d247452227"))
     vaults.push(new VaultConfig("equilibria-arb-eeth-27jun24", PLATFORM_PENDLE_EQUILIBRIA, "0xDDf00Bb25A13e3ECd35a343B9165448cDd2228B6"))
     vaults.push(new VaultConfig("aura-arb-ezeth-wsteth", PLATFORM_BALANCER_AURA, "0xEFAd727469e7e4e410376986AB0af8B6F9559fDc"))
-    vaults.push(new VaultConfig("uniswap-cow-arb-ezeth-wsteth", PLATFORM_BEEFY_CLM, "0x83368b5e04d8a2c990ef9b5fe41509fafcfba499"))
-    vaults.push(new VaultConfig("uniswap-cow-arb-ezeth-wsteth-rp", PLATFORM_BEEFY_CLM_REWARD_POOL, "0xe4c1fc47aDB25506E664Af9748a4c3ee98828318"))
-    vaults.push(new VaultConfig("uniswap-cow-arb-rseth-wsteth", PLATFORM_BEEFY_CLM, "0x15cfBd3Db5D24360eeac802b3dde4423eb5C3C70", []))
-    vaults.push(new VaultConfig("uniswap-cow-arb-rseth-wsteth-rp", PLATFORM_BEEFY_CLM_REWARD_POOL, "0x8B0345E218B84274154071614641a501821374A6"))
+    vaults.push(
+      new VaultConfig("uniswap-cow-arb-ezeth-wsteth", PLATFORM_BEEFY_CLM, "0x83368b5e04d8a2c990ef9b5fe41509fafcfba499", [
+        "0xe4c1fc47aDB25506E664Af9748a4c3ee98828318",
+      ]),
+    )
+    vaults.push(
+      new VaultConfig("uniswap-cow-arb-rseth-wsteth", PLATFORM_BEEFY_CLM, "0x15cfBd3Db5D24360eeac802b3dde4423eb5C3C70", [
+        "0x8B0345E218B84274154071614641a501821374A6",
+      ]),
+    )
     vaults.push(new VaultConfig("aura-arb-rseth-weth", PLATFORM_BALANCER_AURA, "0x764e4e75e3738615CDBFAeaE0C8527b1616e1123"))
   }
 
@@ -89,8 +94,11 @@ export function getChainVaults(): Array<VaultConfig> {
   if (network === "optimism") {
     vaults.push(new VaultConfig("velodrome-v2-weth-wrseth", PLATFORM_SOLIDLY, "0xDbE946E16c4e0De9a44065B868265Ac05c437fB6"))
     vaults.push(new VaultConfig("aura-op-weth-wrseth", PLATFORM_BALANCER_AURA, "0x2160BEDE9d5559bA559Eaf88052b46b8364eE245"))
-    vaults.push(new VaultConfig("uniswap-cow-op-rseth-wsteth", PLATFORM_BEEFY_CLM, "0x0f46a74b01708e78c27def7160a5c5222f9dd157"))
-    vaults.push(new VaultConfig("uniswap-cow-op-rseth-wsteth-rp", PLATFORM_BEEFY_CLM_REWARD_POOL, "0xF1748128a1b5c0c45728D09F6f1f60748bC03FE1"))
+    vaults.push(
+      new VaultConfig("uniswap-cow-op-rseth-wsteth", PLATFORM_BEEFY_CLM, "0x0f46a74b01708e78c27def7160a5c5222f9dd157", [
+        "0xF1748128a1b5c0c45728D09F6f1f60748bC03FE1",
+      ]),
+    )
   }
 
   if (network === "bsc") {
@@ -113,23 +121,23 @@ export function getChainVaults(): Array<VaultConfig> {
   return vaults
 }
 
-export function getBoostAddresses(vaultAddress: Address): Array<Address> {
-  const vaults = getChainVaults()
-  for (let i = 0; i < vaults.length; i++) {
-    if (vaults[i].address.equals(vaultAddress)) {
-      return vaults[i].boostAddresses
-    }
-  }
-
-  log.error("getBoostAddresses: Vault not found {}", [vaultAddress.toHexString()])
-  throw new Error("Vault not found")
-}
-
 export function isBoostAddress(address: Address): boolean {
   const vaults = getChainVaults()
   for (let i = 0; i < vaults.length; i++) {
     for (let j = 0; j < vaults[i].boostAddresses.length; j++) {
       if (vaults[i].boostAddresses[j].equals(address)) {
+        return true
+      }
+    }
+  }
+
+  return false
+}
+export function isRewardPoolAddress(address: Address): boolean {
+  const vaults = getChainVaults()
+  for (let i = 0; i < vaults.length; i++) {
+    for (let j = 0; j < vaults[i].rewardPoolsAddresses.length; j++) {
+      if (vaults[i].rewardPoolsAddresses[j].equals(address)) {
         return true
       }
     }
@@ -163,13 +171,23 @@ class VaultConfig {
   public underlyingPlatform: string
   public address: Address
   public boostAddresses: Array<Address>
-  constructor(vaultKey: string, underlyingPlatform: string, vault: string, boosts: Array<string> = []) {
+  public rewardPoolsAddresses: Array<Address>
+
+  constructor(vaultKey: string, underlyingPlatform: string, vault: string, boostsOrRewardPools: Array<string> = []) {
     this.vaultKey = vaultKey
     this.underlyingPlatform = underlyingPlatform
     this.address = Address.fromString(vault)
     this.boostAddresses = new Array<Address>()
-    for (let i = 0; i < boosts.length; i++) {
-      this.boostAddresses.push(Address.fromString(boosts[i]))
+    this.rewardPoolsAddresses = new Array<Address>()
+
+    if (underlyingPlatform === PLATFORM_BEEFY_CLM) {
+      for (let i = 0; i < boostsOrRewardPools.length; i++) {
+        this.rewardPoolsAddresses.push(Address.fromString(boostsOrRewardPools[i]))
+      }
+    } else {
+      for (let i = 0; i < boostsOrRewardPools.length; i++) {
+        this.boostAddresses.push(Address.fromString(boostsOrRewardPools[i]))
+      }
     }
   }
 }

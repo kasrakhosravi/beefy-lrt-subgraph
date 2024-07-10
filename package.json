@@ -42,5 +42,6 @@
   "dependencies": {},
   "lint-staged": {
     "*.--check": "prettier --write"
-  }
+  },
+  "packageManager": "yarn@1.22.22"
 }

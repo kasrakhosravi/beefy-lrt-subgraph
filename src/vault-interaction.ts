@@ -1,5 +1,5 @@
 import { Address, log, ethereum } from "@graphprotocol/graph-ts"
-import { Transfer as TransferEvent, BeefyVaultV7 as BeefyVaultV7Contract } from "../generated/templates/BeefyVaultV7/BeefyVaultV7"
+import { Transfer as TransferEvent, IERC20 as IERC20Contract } from "../generated/templates/BeefyVaultV7/IERC20"
 import { getBeefyStrategy, getBeefyVault, isVaultInitialized } from "./entity/vault"
 import { ZERO_BD, ZERO_BI, tokenAmountToDecimal } from "./utils/decimal"
 import { getTokenAndInitIfNeeded } from "./entity/token"
@@ -14,6 +14,12 @@ import { getClockTick } from "./entity/clock"
 import { HOUR } from "./utils/time"
 import { TokenBalance } from "./platform/common"
 import { Multicall3Params, multicall } from "./utils/multicall"
+
+export function handleRewardPoolTransfer(event: TransferEvent): void {
+  // a transfer of a reward pool token is equivalent to a transfer of the vault token
+  // from the investor's perspective
+  handleVaultTransfer(event)
+}
 
 export function handleVaultTransfer(event: TransferEvent): void {
   // transfer to self
@@ -97,17 +103,28 @@ export function handleClockTick(block: ethereum.Block): void {
 }
 
 function updateInvestorVaultData(vault: BeefyVault, investor: Investor): Investor {
-  const vaultContract = BeefyVaultV7Contract.bind(Address.fromBytes(vault.id))
-  const sharesToken = getTokenAndInitIfNeeded(vault.sharesToken)
+  const investorAddress = Address.fromBytes(investor.id)
+  const rewardPools = vault.rewardPools.load()
+
+  let rawSharesBalance = ZERO_BI
+
+  const vaultContract = IERC20Contract.bind(Address.fromBytes(vault.id))
+  rawSharesBalance = rawSharesBalance.plus(vaultContract.balanceOf(investorAddress))
+
+  for (let i = 0; i < rewardPools.length; i++) {
+    const rewardPool = rewardPools[i]
+    const rewardPoolContract = IERC20Contract.bind(Address.fromBytes(rewardPool.id))
+    rawSharesBalance = rawSharesBalance.plus(rewardPoolContract.balanceOf(investorAddress))
+  }
 
   // get the new investor deposit value
-  const investorShareTokenBalanceRaw = vaultContract.balanceOf(Address.fromBytes(investor.id))
-  const investorShareTokenBalance = tokenAmountToDecimal(investorShareTokenBalanceRaw, sharesToken.decimals)
+  const sharesToken = getTokenAndInitIfNeeded(vault.sharesToken)
+  const investorShareTokenBalance = tokenAmountToDecimal(rawSharesBalance, sharesToken.decimals)
 
   ///////
   // update investor positions
   const position = getInvestorPosition(vault, investor)
-  position.rawSharesBalance = investorShareTokenBalanceRaw
+  position.rawSharesBalance = rawSharesBalance
   position.sharesBalance = investorShareTokenBalance
   position.save()
 
@@ -122,7 +139,6 @@ function updateVaultData(vault: BeefyVault): BeefyVault {
   // fetch data on chain
   const signatures = [new Multicall3Params(vault.id, "totalSupply()", "uint256")]
   const results = multicall(signatures)
-
   const vaultSharesTotalSupplyRaw = results[0].value.toBigInt()
 
   ///////

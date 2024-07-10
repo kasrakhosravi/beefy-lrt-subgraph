@@ -34,10 +34,14 @@ dataSources:
           file: ./abis/beefy/ConfigBinder.json
         - name: BeefyVaultV7
           file: ./abis/beefy/BeefyVaultV7.json
+        - name: BeefyRewardPool
+          file: ./abis/beefy/BeefyRewardPool.json
         - name: BeefyIStrategyV7
           file: ./abis/beefy/BeefyIStrategyV7.json
         - name: Multicall3
           file: ./abis/multicall/Multicall3.json
+        - name: IERC20
+          file: ./abis/IERC20/IERC20.json
         - name: PendleMarket
           file: ./abis/platform/PendleMarket.json
         - name: PendleSyToken
@@ -70,11 +74,12 @@ templates:
       apiVersion: 0.0.7 # 0xgraph's version
       language: wasm/assemblyscript
       file: ./src/mapping/vault.ts
-      entities:
+      entities: &vaultEntities
         - ClockTick
         - Investor
         - Token
         - BeefyVault
+        - BeefyRewardPool
         - BeefyStrategy
         - InvestorPosition
         - VaultBalanceBreakdown
@@ -86,6 +91,24 @@ templates:
           handler: handleInitialized
         - event: UpgradeStrat(address)
           handler: handleUpgradeStrat
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+
+  - name: BeefyRewardPool
+    kind: ethereum/contract
+    network: {{network}}
+    source:
+      abi: BeefyRewardPool
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7 # 0xgraph's version
+      language: wasm/assemblyscript
+      file: ./src/mapping/reward-pool.ts
+      entities: *vaultEntities
+      abis: *abis
+      eventHandlers:
+        - event: Initialized(uint8)
+          handler: handleInitialized
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
 

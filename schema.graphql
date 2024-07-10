@@ -85,6 +85,9 @@ type BeefyVault @entity {
   "The vault's strategy"
   strategy: BeefyStrategy!
 
+  "The vault's reward pools"
+  rewardPools: [BeefyRewardPool!]! @derivedFrom(field: "vault")
+
   "Technical field to remember if the vault was already initialized"
   isInitialized: Boolean!
 
@@ -132,6 +135,22 @@ type BeefyStrategy @entity {
 
   "Technical field to remember if the strategy was already initialized"
   isInitialized: Boolean!
+}
+
+"""
+A staking contract that expect to receive the vault shares token
+and stake it to earn more rewards.
+It also an ERC20 token that can be passed around.
+"""
+type BeefyRewardPool @entity {
+  "The staking contract address"
+  id: Bytes!
+
+  "The vault the staking contract is for"
+  vault: BeefyVault!
+
+  "This reward pool's token"
+  rcowToken: Token!
 }
 
 """
