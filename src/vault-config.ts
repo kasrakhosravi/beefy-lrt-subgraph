@@ -94,7 +94,11 @@ export function getChainVaults(): Array<VaultConfig> {
   }
 
   if (network === "kava") {
-    vaults.push(new VaultConfig("kinetix-klp", TRACK_ONLY_SHARE_AND_UNDERLYING_TOKEN_BALANCE, "0x9a207D4D2ee8175995C69c0Fb1F117Bf7CcC93cd"))
+    vaults.push(
+      new VaultConfig("kinetix-klp", TRACK_ONLY_SHARE_AND_UNDERLYING_TOKEN_BALANCE, "0x9a207D4D2ee8175995C69c0Fb1F117Bf7CcC93cd", [
+        "0x7E4bEdE523726283BdF309d49087C3305e681cE0",
+      ]),
+    )
   }
 
   if (network === "mode-mainnet") {
