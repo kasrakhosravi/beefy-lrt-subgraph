@@ -57,6 +57,16 @@ export function getChainVaults(): Array<VaultConfig> {
       ]),
     )
     vaults.push(new VaultConfig("aura-arb-rseth-weth", PLATFORM_BALANCER_AURA, "0x764e4e75e3738615CDBFAeaE0C8527b1616e1123"))
+    vaults.push(
+      new VaultConfig("uniswap-cow-arb-rseth-weth", PLATFORM_BEEFY_CLM, "0xf3D5c975de1c0Fd358a593Bcef7a41c61366127C", [
+        "0x04D463bf08dF252Cb09a87D6d41a33c535942710",
+      ]),
+    )
+    vaults.push(
+      new VaultConfig("camelot-rseth-weth", PLATFORM_BEEFY_CLM, "0xac8246F01197fB783Bf1A80960821835045Ec680", [
+        "0xD9001574E23fb909657A25494f540A9B3804b16e",
+      ]),
+    )
   }
 
   if (network === "base") {
