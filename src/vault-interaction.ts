@@ -4,7 +4,7 @@ import { getBeefyStrategy, getBeefyVault, isVaultInitialized } from "./entity/va
 import { ZERO_BD, ZERO_BI, tokenAmountToDecimal } from "./utils/decimal"
 import { getTokenAndInitIfNeeded } from "./entity/token"
 import { SHARE_TOKEN_MINT_ADDRESS } from "./config"
-import { getChainVaults, isBoostAddress } from "./vault-config"
+import { getChainVaults, isBoostAddress } from "./vault-config-asm"
 import { getInvestor } from "./entity/investor"
 import { getInvestorPosition } from "./entity/position"
 import { BeefyVault, Investor } from "../generated/schema"

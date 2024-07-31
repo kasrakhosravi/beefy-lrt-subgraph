@@ -9,6 +9,7 @@
     "test": "yarn run --silent test:lint && yarn run --silent test:unit",
     "test:unit": "graph test",
     "test:lint": "prettier . --check",
+    "check-config": "ts-node --project tsconfig.scripts.json ./bin/check-config.ts",
     "infra:start": "docker compose up -d",
     "infra:stop": "docker compose down",
     "create-local": "graph create beefyfinance/lrt --node http://127.0.0.1:8020",
@@ -19,6 +20,7 @@
     "prepare:bsc": "./bin/prepare.sh bsc",
     "prepare:ethereum": "./bin/prepare.sh ethereum",
     "prepare:linea": "./bin/prepare.sh linea",
+    "prepare:manta": "./bin/prepare.sh manta",
     "prepare:mode": "./bin/prepare.sh mode",
     "prepare:optimism": "./bin/prepare.sh optimism",
     "prepare:kava": "./bin/prepare.sh kava"

@@ -1,5 +1,5 @@
 import { BeefyVaultV7 as BeefyVaultV7Template, BeefyRewardPool as BeefyRewardPoolTemplate } from "../generated/templates"
-import { getChainVaults, buildVaultDataSourceContext } from "./vault-config"
+import { getChainVaults, buildVaultDataSourceContext } from "./vault-config-asm"
 import { ethereum, log } from "@graphprotocol/graph-ts"
 
 export function bindAllContracts(_: ethereum.Event): void {

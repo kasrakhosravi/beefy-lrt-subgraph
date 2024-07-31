@@ -1,6 +1,3 @@
-import { Address, DataSourceContext, log, dataSource } from "@graphprotocol/graph-ts"
-import { NETWORK_NAME } from "./config"
-
 export const PLATFORM_AAVE = "AAVE"
 export const PLATFORM_BALANCER_AURA = "BALANCER_AURA"
 export const PLATFORM_CURVE = "CURVE"
@@ -16,12 +13,9 @@ export const PLATFORM_BEEFY_CLM = "BEEFY_CLM"
 export const TRACK_ONLY_SHARE_TOKEN_BALANCE = "TRACK_ONLY_SHARE_TOKEN_BALANCE"
 export const TRACK_ONLY_SHARE_AND_UNDERLYING_TOKEN_BALANCE = "TRACK_ONLY_SHARE_AND_UNDERLYING_TOKEN_BALANCE"
 
-export function getChainVaults(): Array<VaultConfig> {
+export function _getChainVaults(network: string): Array<VaultConfig> {
   const vaults = new Array<VaultConfig>()
-  const network = NETWORK_NAME as string
-  log.debug("getChainVaults1: network={}", [network])
-
-  if (network === "arbitrum-one") {
+  if (network === "arbitrum-one" || network === "all") {
     // retired
     vaults.push(new VaultConfig("equilibria-arb-eeth", PLATFORM_PENDLE_EQUILIBRIA, "0x245d1c493342464ba568BCfb058C1069dFdc07B5"))
     vaults.push(new VaultConfig("equilibria-arb-rseth", PLATFORM_PENDLE_EQUILIBRIA, "0x7975d9EcCe584aDcE00efd16520853Dad66a7775"))
@@ -48,7 +42,7 @@ export function getChainVaults(): Array<VaultConfig> {
     vaults.push(new VaultConfig("equilibria-arb-eeth-27jun24", PLATFORM_PENDLE_EQUILIBRIA, "0xDDf00Bb25A13e3ECd35a343B9165448cDd2228B6"))
     vaults.push(new VaultConfig("aura-arb-ezeth-wsteth", PLATFORM_BALANCER_AURA, "0xEFAd727469e7e4e410376986AB0af8B6F9559fDc"))
     vaults.push(
-      new VaultConfig("uniswap-cow-arb-ezeth-wsteth", PLATFORM_BEEFY_CLM, "0x83368b5e04d8a2c990ef9b5fe41509fafcfba499", [
+      new VaultConfig("uniswap-cow-arb-ezeth-wsteth-rp", PLATFORM_BEEFY_CLM, "0x83368b5e04d8a2c990ef9b5fe41509fafcfba499", [
         "0xe4c1fc47aDB25506E664Af9748a4c3ee98828318",
       ]),
     )
@@ -70,7 +64,7 @@ export function getChainVaults(): Array<VaultConfig> {
     )
   }
 
-  if (network === "base") {
+  if (network === "base" || network === "all") {
     vaults.push(new VaultConfig("aerodrome-weth-bsdeth", PLATFORM_SOLIDLY, "0xB614A6E6c21202De79DceB95AE2dd4817DD7e14b"))
     vaults.push(new VaultConfig("aerodrome-ezeth-weth", PLATFORM_SOLIDLY, "0xAB7EeE0a368079D2fBfc83599eD0148a16d0Ea09"))
     vaults.push(new VaultConfig("aerodrome-ezeth-weth-s", PLATFORM_SOLIDLY, "0x90A7de0E16CA4521B1E4C3dBBA4edAA2354aB81B"))
@@ -80,7 +74,7 @@ export function getChainVaults(): Array<VaultConfig> {
     vaults.push(new VaultConfig("aerodrome-usdz-usdc", PLATFORM_SOLIDLY, "0x3b5F990364fa9BF1Db34d9d24B0Bdca6eE4bD4B1"))
   }
 
-  if (network === "mainnet") {
+  if (network === "mainnet" || network === "all") {
     vaults.push(new VaultConfig("pendle-weethk-26sep24", PLATFORM_PENDLE_EQUILIBRIA, "0xAd182D2Fa5BE2D9025fA3775c1D3111927619fed"))
     vaults.push(new VaultConfig("aura-ezeth-eth", PLATFORM_BALANCER_AURA, "0x3E1c2C604f60ef142AADAA51aa864f8438f2aaC1"))
     vaults.push(new VaultConfig("aura-weeth-reth", PLATFORM_BALANCER_AURA, "0x1153211f7E810C73cC45eE09FF9A0742fBB6b467"))
@@ -90,13 +84,18 @@ export function getChainVaults(): Array<VaultConfig> {
     )
   }
 
-  if (network === "linea") {
+  if (network === "linea" || network === "all") {
     vaults.push(new VaultConfig("mendi-linea-ezeth", PLATFORM_AAVE, "0xf711cdcDDa1C5F919c94573cC4E38b4cE2207750"))
     vaults.push(new VaultConfig("mendi-linea-weeth", PLATFORM_AAVE, "0x02B4FD89b702Fb8E2c9443A6c1e45bC40Fb6F7Dc"))
     vaults.push(new VaultConfig("mendi-linea-wrseth", PLATFORM_AAVE, "0x463d5B2F1C387036c883eA953F5A3895797FD2B9"))
     vaults.push(new VaultConfig("lynex-gamma-weeth-weth", PLATFORM_GAMMA, "0xb9A23E2569C262a92635D825142f310BEAfB0Be0"))
     vaults.push(new VaultConfig("lynex-gamma-ineth-wsteth", PLATFORM_GAMMA, "0xAA3b8C08e7Fe86E1dda8FA9FE7423561Ad316e3F"))
     vaults.push(new VaultConfig("nile-ezeth-weth", PLATFORM_SOLIDLY, "0x063091e4532eD93CE93347C6c8338dcA0832ddb0"))
+
+    // stone stuff
+    vaults.push(new VaultConfig("lynex-stone-weth", PLATFORM_LYNEX, "0x1C8cfC0cFf01D59f2e4d6F547EE227Af869EfA07"))
+    vaults.push(new VaultConfig("lynex-gamma-stone-weth", PLATFORM_GAMMA, "0x1C973f35325947f30F20fE1189605A332FD9F40F"))
+    vaults.push(new VaultConfig("lynex-ichi-stone-lynx", PLATFORM_ICHI_LYNEX, "0x5AB215b3C42f97165Ab43e7FA7609cc8F8D68817"))
 
     // mendi soul-bound reward
     vaults.push(new VaultConfig("mendi-linea-lev-wsteth", PLATFORM_MENDI_LEVERAGE, "0xBF71FbCe0d4Fc460D36fa1d13B397a3cd5c45220"))
@@ -106,7 +105,7 @@ export function getChainVaults(): Array<VaultConfig> {
     vaults.push(new VaultConfig("mendi-linea-lev-wbtc", PLATFORM_MENDI_LEVERAGE, "0x639041dD8cD48B52C12414235d97E1313cbbceff"))
   }
 
-  if (network === "optimism") {
+  if (network === "optimism" || network === "all") {
     vaults.push(new VaultConfig("velodrome-v2-weth-wrseth", PLATFORM_SOLIDLY, "0xDbE946E16c4e0De9a44065B868265Ac05c437fB6"))
     vaults.push(new VaultConfig("aura-op-weth-wrseth", PLATFORM_BALANCER_AURA, "0x2160BEDE9d5559bA559Eaf88052b46b8364eE245"))
     vaults.push(new VaultConfig("aura-op-wsteth-weeth", PLATFORM_BALANCER_AURA, "0xCF6fC7C5b95caC374400c16CBecd24CBa0cfeAD6"))
@@ -117,11 +116,11 @@ export function getChainVaults(): Array<VaultConfig> {
     )
   }
 
-  if (network === "bsc") {
+  if (network === "bsc" || network === "all") {
     vaults.push(new VaultConfig("thena-gamma-weeth-eth-narrow", PLATFORM_GAMMA, "0xcCcDB0F6eCcd5f231d4737A00C554322167d814B"))
   }
 
-  if (network === "kava") {
+  if (network === "kava" || network === "all") {
     vaults.push(
       new VaultConfig("kinetix-klp", TRACK_ONLY_SHARE_AND_UNDERLYING_TOKEN_BALANCE, "0x9a207D4D2ee8175995C69c0Fb1F117Bf7CcC93cd", [
         "0x7E4bEdE523726283BdF309d49087C3305e681cE0",
@@ -129,7 +128,15 @@ export function getChainVaults(): Array<VaultConfig> {
     )
   }
 
-  if (network === "mode-mainnet") {
+  if (network === "manta" || network === "all") {
+    vaults.push(
+      new VaultConfig("uniswap-cow-manta-weth-stone", PLATFORM_BEEFY_CLM, "0x906e60166a4b185016e53597fa12fbb1424e47d7", [
+        "0x1386A611e2B692E79Bcfa7dC84AAbB5728f08E44",
+      ]),
+    )
+  }
+
+  if (network === "mode-mainnet" || network === "all") {
     vaults.push(new VaultConfig("velodrome-mode-ezeth-eth", PLATFORM_SOLIDLY, "0x94A3725124d2E71028Ee488b88566f1fb11A90C3"))
     vaults.push(new VaultConfig("velodrome-mode-weeth-eth", PLATFORM_SOLIDLY, "0x6Dd2abBBbbf494dd2454aEd67880B9533E2b3DA1"))
   }
@@ -137,72 +144,27 @@ export function getChainVaults(): Array<VaultConfig> {
   return vaults
 }
 
-export function isBoostAddress(address: Address): boolean {
-  const vaults = getChainVaults()
-  for (let i = 0; i < vaults.length; i++) {
-    for (let j = 0; j < vaults[i].boostAddresses.length; j++) {
-      if (vaults[i].boostAddresses[j].equals(address)) {
-        return true
-      }
-    }
-  }
-
-  return false
-}
-export function isRewardPoolAddress(address: Address): boolean {
-  const vaults = getChainVaults()
-  for (let i = 0; i < vaults.length; i++) {
-    for (let j = 0; j < vaults[i].rewardPoolsAddresses.length; j++) {
-      if (vaults[i].rewardPoolsAddresses[j].equals(address)) {
-        return true
-      }
-    }
-  }
-
-  return false
-}
-
-const CONTEXT_KEY_UNDERLYING_PLATFORM = "underlyingPlatform"
-const CONTEXT_KEY_VAULT_KEY = "vaultKey"
-
-export function buildVaultDataSourceContext(vault: VaultConfig): DataSourceContext {
-  let context = new DataSourceContext()
-  context.setString(CONTEXT_KEY_UNDERLYING_PLATFORM, vault.underlyingPlatform)
-  context.setString(CONTEXT_KEY_VAULT_KEY, vault.vaultKey)
-  return context
-}
-
-export function getContextUnderlyingPlatform(): string {
-  let context = dataSource.context()
-  return context.getString(CONTEXT_KEY_UNDERLYING_PLATFORM)
-}
-
-export function getContextVaultKey(): string {
-  let context = dataSource.context()
-  return context.getString(CONTEXT_KEY_VAULT_KEY)
-}
-
-class VaultConfig {
+export class VaultConfig {
   public vaultKey: string
   public underlyingPlatform: string
-  public address: Address
-  public boostAddresses: Array<Address>
-  public rewardPoolsAddresses: Array<Address>
+  public address: string
+  public boostAddresses: Array<string>
+  public rewardPoolsAddresses: Array<string>
 
   constructor(vaultKey: string, underlyingPlatform: string, vault: string, boostsOrRewardPools: Array<string> = []) {
     this.vaultKey = vaultKey
     this.underlyingPlatform = underlyingPlatform
-    this.address = Address.fromString(vault)
-    this.boostAddresses = new Array<Address>()
-    this.rewardPoolsAddresses = new Array<Address>()
+    this.address = vault
+    this.boostAddresses = new Array<string>()
+    this.rewardPoolsAddresses = new Array<string>()
 
     if (underlyingPlatform === PLATFORM_BEEFY_CLM) {
       for (let i = 0; i < boostsOrRewardPools.length; i++) {
-        this.rewardPoolsAddresses.push(Address.fromString(boostsOrRewardPools[i]))
+        this.rewardPoolsAddresses.push(boostsOrRewardPools[i])
       }
     } else {
       for (let i = 0; i < boostsOrRewardPools.length; i++) {
-        this.boostAddresses.push(Address.fromString(boostsOrRewardPools[i]))
+        this.boostAddresses.push(boostsOrRewardPools[i])
       }
     }
   }

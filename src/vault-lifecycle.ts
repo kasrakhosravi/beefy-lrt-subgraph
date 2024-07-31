@@ -6,7 +6,8 @@ import { BeefyIStrategyV7 as BeefyIStrategyV7Template } from "../generated/templ
 import { ADDRESS_ZERO } from "./utils/address"
 import { BeefyIStrategyV7 as BeefyIStrategyV7Contract } from "../generated/templates/BeefyIStrategyV7/BeefyIStrategyV7"
 import { BeefyVault, Token } from "../generated/schema"
-import { PLATFORM_BEEFY_CLM, getContextUnderlyingPlatform, getContextVaultKey } from "./vault-config"
+import { PLATFORM_BEEFY_CLM } from "./vault-config"
+import { getContextUnderlyingPlatform, getContextVaultKey } from "./vault-config-asm"
 import { getToken, getTokenAndInitIfNeeded } from "./entity/token"
 import { getBeefyRewardPool } from "./entity/reward-pool"
 
