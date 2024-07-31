@@ -2,7 +2,7 @@
   "network": "manta-pacific-mainnet",
   "indexerHintPrune": 700000,
   "shareTokenMintAddress": "0x0000000000000000000000000000000000000000",
-  "bindConfigAddress": "0xfc69704cC3cAac545cC7577009Ea4AA04F1a61Eb",
+  "bindConfigAddress": "0x91BB303E972995EbE5f593BCddBb6F5Ef49Dbcbd",
   "bindConfigBlock": 2501033,
   "bindConfigEvent": "ProxyCreated(address)",
   "vaultInitializedEvent": "Initialized(uint8)",
