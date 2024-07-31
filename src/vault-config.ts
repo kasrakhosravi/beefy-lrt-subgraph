@@ -128,7 +128,7 @@ export function _getChainVaults(network: string): Array<VaultConfig> {
     )
   }
 
-  if (network === "manta" || network === "all") {
+  if (network === "manta-pacific-mainnet" || network === "all") {
     vaults.push(
       new VaultConfig("uniswap-cow-manta-weth-stone", PLATFORM_BEEFY_CLM, "0x906e60166a4b185016e53597fa12fbb1424e47d7", [
         "0x1386A611e2B692E79Bcfa7dC84AAbB5728f08E44",
