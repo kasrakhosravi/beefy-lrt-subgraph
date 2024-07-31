@@ -34,6 +34,7 @@ export function _getChainVaults(network: string): Array<VaultConfig> {
     vaults.push(new VaultConfig("pendle-arb-seth-rseth-26sep24", PLATFORM_PENDLE_EQUILIBRIA, "0xa47D338061c499DBF8dd93a857828762b594d543"))
     vaults.push(new VaultConfig("pendle-arb-seth-eeth-26sep24", PLATFORM_PENDLE_EQUILIBRIA, "0x188E9DF1E12BF43d7d848b2ed5Fe9FED9AAa5155"))
     vaults.push(new VaultConfig("pendle-arb-seth-ezeth-26sep24", PLATFORM_PENDLE_EQUILIBRIA, "0xaD2cd300E6fFd20f620255C2C13251FB1D76F660"))
+    vaults.push(new VaultConfig("equilibria-arb-rseth-26sep24", PLATFORM_PENDLE_EQUILIBRIA, "0x66d89d65046D8BC75E0fb14E704e50E8C7a07219"))
     vaults.push(new VaultConfig("equilibria-arb-rseth-26sep24-new", PLATFORM_PENDLE_EQUILIBRIA, "0x4897679a3E506F0bedC118250369D782F6CCA03e"))
     vaults.push(new VaultConfig("equilibria-arb-eeth-26sep24", PLATFORM_PENDLE_EQUILIBRIA, "0x4d01a46Fc5F20cA2544204EDD376BdB619BD2D2F"))
     vaults.push(new VaultConfig("equilibria-arb-ezeth-26sep24", PLATFORM_PENDLE_EQUILIBRIA, "0x218337d7DAe070e219c44783A64cA107dffc533e"))
@@ -91,6 +92,7 @@ export function _getChainVaults(network: string): Array<VaultConfig> {
     vaults.push(new VaultConfig("lynex-gamma-weeth-weth", PLATFORM_GAMMA, "0xb9A23E2569C262a92635D825142f310BEAfB0Be0"))
     vaults.push(new VaultConfig("lynex-gamma-ineth-wsteth", PLATFORM_GAMMA, "0xAA3b8C08e7Fe86E1dda8FA9FE7423561Ad316e3F"))
     vaults.push(new VaultConfig("nile-ezeth-weth", PLATFORM_SOLIDLY, "0x063091e4532eD93CE93347C6c8338dcA0832ddb0"))
+    vaults.push(new VaultConfig("lynex-gamma-ezeth-weth", PLATFORM_GAMMA, "0x35884E8C569b9f7714A35EDf056A82535A43F5AD"))
 
     // stone stuff
     vaults.push(new VaultConfig("lynex-stone-weth", PLATFORM_LYNEX, "0x1C8cfC0cFf01D59f2e4d6F547EE227Af869EfA07"))
