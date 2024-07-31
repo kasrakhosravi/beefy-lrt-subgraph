@@ -28,6 +28,7 @@ export function getChainVaults(): Array<VaultConfig> {
     vaults.push(new VaultConfig("equilibria-arb-ezeth", PLATFORM_PENDLE_EQUILIBRIA, "0x8b479C22c5B33eA4E42395dC7360231B19AF8300"))
 
     // live
+    vaults.push(new VaultConfig("pendle-arb-unieth-26dec24", PLATFORM_PENDLE_EQUILIBRIA, "0xabe6199ad847F05f1E93B005f3850793b8DF7c9c"))
     vaults.push(new VaultConfig("equilibria-arb-seth-ezeth-26sep24", PLATFORM_PENDLE_EQUILIBRIA, "0x6523aFd4658238aa9C8ABA642565b84e2C9E9012"))
     vaults.push(new VaultConfig("equilibria-arb-seth-eeth-26sep24", PLATFORM_PENDLE_EQUILIBRIA, "0x2be03278A177465220ef3C9424Acfd04ebf609b2"))
     vaults.push(new VaultConfig("equilibria-arb-seth-rseth-26sep24", PLATFORM_PENDLE_EQUILIBRIA, "0x9487044D3208Ff03343429F10307f0a23A27dfeC"))
