@@ -2,6 +2,7 @@
   "network": "kava",
   "indexerHintPrune": 1000000,
   "shareTokenMintAddress": "0x0000000000000000000000000000000000000000",
+  "burnAddress": "0x000000000000000000000000000000000000dead",
   "bindConfigAddress": "0xCD9b038F012Ecd6b2739934426dDe3D4577e1d3C",
   "bindConfigBlock": 3676191,
   "bindConfigEvent": "ProxyCreated(address)",

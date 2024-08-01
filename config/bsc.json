@@ -2,6 +2,7 @@
   "network": "bsc",
   "indexerHintPrune": 2000000,
   "shareTokenMintAddress": "0x0000000000000000000000000000000000000000",
+  "burnAddress": "0x000000000000000000000000000000000000dead",
   "bindConfigAddress": "0xe596ec590de52c09c8d1c7a1294b32f957a7c94e",
   "bindConfigBlock": 38435926,
   "bindConfigEvent": "ProxyCreated(address)",

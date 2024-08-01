@@ -2,6 +2,7 @@
   "network": "arbitrum-one",
   "indexerHintPrune": 20000000,
   "shareTokenMintAddress": "0x0000000000000000000000000000000000000000",
+  "burnAddress": "0x000000000000000000000000000000000000dead",
   "bindConfigAddress": "0x245d1c493342464ba568BCfb058C1069dFdc07B5",
   "bindConfigBlock": 179921508,
   "bindConfigEvent": "Initialized(uint8)",

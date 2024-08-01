@@ -1,10 +1,10 @@
-import { Address, log, ethereum } from "@graphprotocol/graph-ts"
+import { Address, log, ethereum, BigInt, Bytes } from "@graphprotocol/graph-ts"
 import { Transfer as TransferEvent, IERC20 as IERC20Contract } from "../generated/templates/BeefyVaultV7/IERC20"
 import { getBeefyStrategy, getBeefyVault, isVaultInitialized } from "./entity/vault"
 import { ZERO_BD, ZERO_BI, tokenAmountToDecimal } from "./utils/decimal"
 import { getTokenAndInitIfNeeded } from "./entity/token"
-import { SHARE_TOKEN_MINT_ADDRESS } from "./config"
-import { getChainVaults, isBoostAddress } from "./vault-config-asm"
+import { SHARE_TOKEN_MINT_ADDRESS, BURN_ADDRESS } from "./config"
+import { getChainVaults, isBoostAddress, isRewardPoolAddress } from "./vault-config-asm"
 import { getInvestor } from "./entity/investor"
 import { getInvestorPosition } from "./entity/position"
 import { BeefyVault, Investor } from "../generated/schema"
@@ -14,37 +14,44 @@ import { getClockTick } from "./entity/clock"
 import { HOUR } from "./utils/time"
 import { TokenBalance } from "./platform/common"
 import { Multicall3Params, multicall } from "./utils/multicall"
+import { getBeefyRewardPool } from "./entity/reward-pool"
 
 export function handleRewardPoolTransfer(event: TransferEvent): void {
   // a transfer of a reward pool token is equivalent to a transfer of the vault token
   // from the investor's perspective
-  handleVaultTransfer(event)
+  const rewardPool = getBeefyRewardPool(event.address)
+  const vault = getBeefyVault(rewardPool.vault)
+  _handleTransfer(event.block, vault, event.params.from, event.params.to, event.params.value, event.transaction.hash)
 }
 
 export function handleVaultTransfer(event: TransferEvent): void {
+  const vault = getBeefyVault(event.address)
+  _handleTransfer(event.block, vault, event.params.from, event.params.to, event.params.value, event.transaction.hash)
+}
+
+function _handleTransfer(block: ethereum.Block, vault: BeefyVault, from: Address, to: Address, value: BigInt, transactionHash: Bytes): void {
   // transfer to self
-  if (event.params.from.equals(event.params.to)) {
-    log.warning("handleVaultTransfer: transfer to self {}", [event.transaction.hash.toHexString()])
+  if (from.equals(to)) {
+    log.warning("handleVaultTransfer: transfer to self {}", [transactionHash.toHexString()])
     return
   }
 
   /// value is zero
-  if (event.params.value.equals(ZERO_BI)) {
-    log.warning("handleVaultTransfer: zero value transfer {}", [event.transaction.hash.toHexString()])
+  if (value.equals(ZERO_BI)) {
+    log.warning("handleVaultTransfer: zero value transfer {}", [transactionHash.toHexString()])
     return
   }
 
   // ignore transfers from/to boosts
-  if (isBoostAddress(event.params.from)) {
-    log.warning("handleVaultTransfer: transfer from boost {}", [event.params.from.toHexString()])
+  if (isBoostAddress(from)) {
+    log.warning("handleVaultTransfer: transfer from boost {}", [from.toHexString()])
     return
   }
-  if (isBoostAddress(event.params.to)) {
-    log.warning("handleVaultTransfer: transfer to boost {}", [event.params.to.toHexString()])
+  if (isBoostAddress(to)) {
+    log.warning("handleVaultTransfer: transfer to boost {}", [to.toHexString()])
     return
   }
 
-  let vault = getBeefyVault(event.address)
   if (!isVaultInitialized(vault)) {
     log.warning("handleVaultTransfer: vault is not initialized {}", [vault.id.toHexString()])
     return
@@ -52,21 +59,21 @@ export function handleVaultTransfer(event: TransferEvent): void {
 
   updateVaultData(vault)
 
-  if (!event.params.from.equals(SHARE_TOKEN_MINT_ADDRESS)) {
-    const investorAddress = event.params.from
+  if (!from.equals(SHARE_TOKEN_MINT_ADDRESS) && !from.equals(BURN_ADDRESS) && !isRewardPoolAddress(from)) {
+    const investorAddress = from
     const investor = getInvestor(investorAddress)
     investor.save()
     updateInvestorVaultData(vault, investor)
   }
 
-  if (!event.params.to.equals(SHARE_TOKEN_MINT_ADDRESS)) {
-    const investorAddress = event.params.to
+  if (!to.equals(SHARE_TOKEN_MINT_ADDRESS) && !to.equals(BURN_ADDRESS) && !isRewardPoolAddress(to)) {
+    const investorAddress = to
     const investor = getInvestor(investorAddress)
     investor.save()
     updateInvestorVaultData(vault, investor)
   }
 
-  updateVaultBreakDown(event.block, vault)
+  updateVaultBreakDown(block, vault)
 }
 
 export function handleStrategyHarvest(event: ethereum.Event): void {

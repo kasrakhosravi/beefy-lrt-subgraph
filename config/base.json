@@ -2,6 +2,7 @@
   "network": "base",
   "indexerHintPrune": 3000000,
   "shareTokenMintAddress": "0x0000000000000000000000000000000000000000",
+  "burnAddress": "0x000000000000000000000000000000000000dead",
   "bindConfigAddress": "0xbc4a342b0c057501e081484a2d24e576e854f823",
   "bindConfigBlock": 12723637,
   "bindConfigEvent": "ProxyCreated(address)",

@@ -2,6 +2,7 @@
   "network": "optimism",
   "indexerHintPrune": 3000000,
   "shareTokenMintAddress": "0x0000000000000000000000000000000000000000",
+  "burnAddress": "0x000000000000000000000000000000000000dead",
   "bindConfigAddress": "0xA6D3769faC465FC0415e7E9F16dcdC96B83C240B",
   "bindConfigBlock": 119276960,
   "bindConfigEvent": "ProxyCreated(address)",
