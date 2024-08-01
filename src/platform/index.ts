@@ -4,6 +4,7 @@ import {
   PLATFORM_AAVE,
   PLATFORM_BALANCER_AURA,
   PLATFORM_BEEFY_CLM,
+  PLATFORM_BEEFY_CLM_VAULT,
   PLATFORM_CURVE,
   PLATFORM_GAMMA,
   PLATFORM_ICHI_LYNEX,
@@ -27,7 +28,7 @@ import { getVaultTokenBreakdownIchiLynex } from "./ichi"
 import { getVaultTokenBreakdownLynex } from "./lynex"
 import { getVaultTokenBreakdownNile } from "./nile"
 import { getVaultTokenBreakdownMendiLending, getVaultTokenBreakdownMendiLeverage } from "./mendi"
-import { getVaultTokenBreakdownBeefyCLM } from "./beefy_clm"
+import { getVaultTokenBreakdownBeefyCLM, getVaultTokenBreakdownBeefyCLMVault } from "./beefy_clm"
 import { getUnderlyingTokenBalance } from "./underlying_only"
 
 export function getVaultTokenBreakdown(vault: BeefyVault): Array<TokenBalance> {
@@ -55,6 +56,8 @@ export function getVaultTokenBreakdown(vault: BeefyVault): Array<TokenBalance> {
     return getVaultTokenBreakdownMendiLeverage(vault)
   } else if (vault.underlyingPlatform == PLATFORM_BEEFY_CLM) {
     return getVaultTokenBreakdownBeefyCLM(vault)
+  } else if (vault.underlyingPlatform == PLATFORM_BEEFY_CLM_VAULT) {
+    return getVaultTokenBreakdownBeefyCLMVault(vault)
   } else if (vault.underlyingPlatform == TRACK_ONLY_SHARE_AND_UNDERLYING_TOKEN_BALANCE) {
     return getUnderlyingTokenBalance(vault)
   } else if (vault.underlyingPlatform == TRACK_ONLY_SHARE_TOKEN_BALANCE) {

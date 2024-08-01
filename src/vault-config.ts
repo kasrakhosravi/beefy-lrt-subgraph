@@ -10,6 +10,7 @@ export const PLATFORM_NILE = "NILE"
 export const PLATFORM_PENDLE_EQUILIBRIA = "PENDLE_EQUILIBRIA"
 export const PLATFORM_SOLIDLY = "SOLIDLY"
 export const PLATFORM_BEEFY_CLM = "BEEFY_CLM"
+export const PLATFORM_BEEFY_CLM_VAULT = "BEEFY_CLM_VAULT"
 export const TRACK_ONLY_SHARE_TOKEN_BALANCE = "TRACK_ONLY_SHARE_TOKEN_BALANCE"
 export const TRACK_ONLY_SHARE_AND_UNDERLYING_TOKEN_BALANCE = "TRACK_ONLY_SHARE_AND_UNDERLYING_TOKEN_BALANCE"
 
@@ -42,27 +43,17 @@ export function _getChainVaults(network: string): Array<VaultConfig> {
     vaults.push(new VaultConfig("equilibria-arb-rseth-27jun24", PLATFORM_PENDLE_EQUILIBRIA, "0x59D0C3f25cB3bD86E03D827C773892d247452227"))
     vaults.push(new VaultConfig("equilibria-arb-eeth-27jun24", PLATFORM_PENDLE_EQUILIBRIA, "0xDDf00Bb25A13e3ECd35a343B9165448cDd2228B6"))
     vaults.push(new VaultConfig("aura-arb-ezeth-wsteth", PLATFORM_BALANCER_AURA, "0xEFAd727469e7e4e410376986AB0af8B6F9559fDc"))
-    vaults.push(
-      new VaultConfig("uniswap-cow-arb-ezeth-wsteth-rp", PLATFORM_BEEFY_CLM, "0x83368b5e04d8a2c990ef9b5fe41509fafcfba499", [
-        "0xe4c1fc47aDB25506E664Af9748a4c3ee98828318",
-      ]),
-    )
-    vaults.push(
-      new VaultConfig("uniswap-cow-arb-rseth-wsteth", PLATFORM_BEEFY_CLM, "0x15cfBd3Db5D24360eeac802b3dde4423eb5C3C70", [
-        "0x8B0345E218B84274154071614641a501821374A6",
-      ]),
-    )
+    vaults.push(new VaultConfig("uniswap-cow-arb-ezeth-wsteth-rp", PLATFORM_BEEFY_CLM, "0x83368b5e04d8a2c990ef9b5fe41509fafcfba499", ["0xe4c1fc47aDB25506E664Af9748a4c3ee98828318"]))
+    vaults.push(new VaultConfig("uniswap-cow-arb-rseth-wsteth", PLATFORM_BEEFY_CLM, "0x15cfBd3Db5D24360eeac802b3dde4423eb5C3C70", ["0x8B0345E218B84274154071614641a501821374A6"]))
     vaults.push(new VaultConfig("aura-arb-rseth-weth", PLATFORM_BALANCER_AURA, "0x764e4e75e3738615CDBFAeaE0C8527b1616e1123"))
-    vaults.push(
-      new VaultConfig("uniswap-cow-arb-rseth-weth", PLATFORM_BEEFY_CLM, "0xf3D5c975de1c0Fd358a593Bcef7a41c61366127C", [
-        "0x04D463bf08dF252Cb09a87D6d41a33c535942710",
-      ]),
-    )
-    vaults.push(
-      new VaultConfig("camelot-rseth-weth", PLATFORM_BEEFY_CLM, "0xac8246F01197fB783Bf1A80960821835045Ec680", [
-        "0xD9001574E23fb909657A25494f540A9B3804b16e",
-      ]),
-    )
+    vaults.push(new VaultConfig("uniswap-cow-arb-rseth-weth", PLATFORM_BEEFY_CLM, "0xf3D5c975de1c0Fd358a593Bcef7a41c61366127C", ["0x04D463bf08dF252Cb09a87D6d41a33c535942710"]))
+    vaults.push(new VaultConfig("camelot-rseth-weth", PLATFORM_BEEFY_CLM, "0xac8246F01197fB783Bf1A80960821835045Ec680", ["0xD9001574E23fb909657A25494f540A9B3804b16e"]))
+    vaults.push(new VaultConfig("pancake-cow-arb-rseth-weth-vault", PLATFORM_BEEFY_CLM_VAULT, "0x70a9DC4c4c4ea1A621c174e3F438582fA7C99BFA"))
+    vaults.push(new VaultConfig("pancake-cow-arb-rseth-weth-rp", PLATFORM_BEEFY_CLM, "0x5c1f30297b7997601a2ae2957cdc95cd4783e544", ["0x3ec0e7Bf0DCDA562d67d8d7F27569AA0be080DAb"]))
+    vaults.push(new VaultConfig("ramses-cl-rseth-weth-vault", PLATFORM_BEEFY_CLM_VAULT, "0x45eAc6f86b974b0536Aa488eD8DDF3022F4C768E", ["0x338Fb7e54f4875c76cA77AA9653eB08e856e1FcD"]))
+    vaults.push(new VaultConfig("uniswap-cow-arb-rseth-weth-vault", PLATFORM_BEEFY_CLM_VAULT, "0x1Db8d743824bdaBA39b88D22b44bcEcf7179D413", ["0x7f3e9f5EFFE06169Db679658392e4Ca79fd5E594"]))
+    vaults.push(new VaultConfig("ramses-cl-rseth-weth-rp", PLATFORM_BEEFY_CLM, "0x9ebb94be20476db4a58e59c764e709b5fa35f8b0", ["0x81F15F4FA4848F7D87ceF27975AE2953bf333D7b"]))
+    vaults.push(new VaultConfig("uniswap-cow-arb-rseth-weth-rp", PLATFORM_BEEFY_CLM, "0xf3d5c975de1c0fd358a593bcef7a41c61366127c", ["0x04D463bf08dF252Cb09a87D6d41a33c535942710"]))
   }
 
   if (network === "base" || network === "all") {
@@ -80,9 +71,7 @@ export function _getChainVaults(network: string): Array<VaultConfig> {
     vaults.push(new VaultConfig("aura-ezeth-eth", PLATFORM_BALANCER_AURA, "0x3E1c2C604f60ef142AADAA51aa864f8438f2aaC1"))
     vaults.push(new VaultConfig("aura-weeth-reth", PLATFORM_BALANCER_AURA, "0x1153211f7E810C73cC45eE09FF9A0742fBB6b467"))
     vaults.push(new VaultConfig("aura-weeth-ezeth-rseth", PLATFORM_BALANCER_AURA, "0x5dA90BA82bED0AB701E6762D2bF44E08634d9776"))
-    vaults.push(
-      new VaultConfig("curve-veth", PLATFORM_CURVE, "0xAE0bFfc3110e69DA8993F11C1CBd9a6eA3d16daF", ["0x9Db900bFD1D13112dE2239418eb3D8673B6F1878"]),
-    )
+    vaults.push(new VaultConfig("curve-veth", PLATFORM_CURVE, "0xAE0bFfc3110e69DA8993F11C1CBd9a6eA3d16daF", ["0x9Db900bFD1D13112dE2239418eb3D8673B6F1878"]))
   }
 
   if (network === "linea" || network === "all") {
@@ -111,11 +100,7 @@ export function _getChainVaults(network: string): Array<VaultConfig> {
     vaults.push(new VaultConfig("velodrome-v2-weth-wrseth", PLATFORM_SOLIDLY, "0xDbE946E16c4e0De9a44065B868265Ac05c437fB6"))
     vaults.push(new VaultConfig("aura-op-weth-wrseth", PLATFORM_BALANCER_AURA, "0x2160BEDE9d5559bA559Eaf88052b46b8364eE245"))
     vaults.push(new VaultConfig("aura-op-wsteth-weeth", PLATFORM_BALANCER_AURA, "0xCF6fC7C5b95caC374400c16CBecd24CBa0cfeAD6"))
-    vaults.push(
-      new VaultConfig("uniswap-cow-op-rseth-wsteth", PLATFORM_BEEFY_CLM, "0x0f46a74b01708e78c27def7160a5c5222f9dd157", [
-        "0xF1748128a1b5c0c45728D09F6f1f60748bC03FE1",
-      ]),
-    )
+    vaults.push(new VaultConfig("uniswap-cow-op-rseth-wsteth", PLATFORM_BEEFY_CLM, "0x0f46a74b01708e78c27def7160a5c5222f9dd157", ["0xF1748128a1b5c0c45728D09F6f1f60748bC03FE1"]))
   }
 
   if (network === "bsc" || network === "all") {
@@ -123,19 +108,11 @@ export function _getChainVaults(network: string): Array<VaultConfig> {
   }
 
   if (network === "kava" || network === "all") {
-    vaults.push(
-      new VaultConfig("kinetix-klp", TRACK_ONLY_SHARE_AND_UNDERLYING_TOKEN_BALANCE, "0x9a207D4D2ee8175995C69c0Fb1F117Bf7CcC93cd", [
-        "0x7E4bEdE523726283BdF309d49087C3305e681cE0",
-      ]),
-    )
+    vaults.push(new VaultConfig("kinetix-klp", TRACK_ONLY_SHARE_AND_UNDERLYING_TOKEN_BALANCE, "0x9a207D4D2ee8175995C69c0Fb1F117Bf7CcC93cd", ["0x7E4bEdE523726283BdF309d49087C3305e681cE0"]))
   }
 
   if (network === "manta-pacific-mainnet" || network === "all") {
-    vaults.push(
-      new VaultConfig("uniswap-cow-manta-weth-stone", PLATFORM_BEEFY_CLM, "0x906e60166a4b185016e53597fa12fbb1424e47d7", [
-        "0x1386A611e2B692E79Bcfa7dC84AAbB5728f08E44",
-      ]),
-    )
+    vaults.push(new VaultConfig("uniswap-cow-manta-weth-stone", PLATFORM_BEEFY_CLM, "0x906e60166a4b185016e53597fa12fbb1424e47d7", ["0x1386A611e2B692E79Bcfa7dC84AAbB5728f08E44"]))
   }
 
   if (network === "mode-mainnet" || network === "all") {
