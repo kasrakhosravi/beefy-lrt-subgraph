@@ -7,8 +7,8 @@ valid_chains=($(ls config | sed 's/\.json//g'))
 valid_providers=("goldsky")
 
 function exit_help {
-    echo "Usage: $0 <version> <tag> <provider> <deploy_key>"
-    echo "   Example: $0 0.1.4 latest goldsky ABCDEA123"
+    echo "Usage: $0 <version> <tag> <chain> <provider> <deploy_key>"
+    echo "   Example: $0 0.1.4 latest manta goldsky ABCDEA123"
     echo "   chains: " ${valid_chains[@]}
     echo "   providers: " ${valid_providers[@]}
     exit 1
@@ -55,7 +55,13 @@ if [ -z "$tag" ]; then
     exit_help
 fi
 
-provider=$3
+chain=$3
+if [ -z "$chain" ]; then
+    echo "chain is required"
+    exit_help
+fi
+
+provider=$4
 if [ -z "$provider" ]; then
     echo "provider is required"
     exit_help
@@ -65,12 +71,10 @@ if [[ ! " ${valid_providers[@]} " =~ " ${provider} " ]]; then
     exit_help
 fi
 
-deploy_key=$4
+deploy_key=$5
 if [ -z "$deploy_key" ]; then
     echo "deploy key is required"
     exit_help
 fi
 
-for chain in ${valid_chains[@]}; do
-    tag_one $version $chain $tag $provider $deploy_key
-done
+tag_one $version $chain $tag $provider $deploy_key

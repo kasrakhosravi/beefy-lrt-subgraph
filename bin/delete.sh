@@ -4,35 +4,33 @@ set -e
 
 # config
 valid_chains=($(ls config | sed 's/\.json//g'))
-valid_providers=("goldsky")
+valid_providers=("goldsky" "0xgraph")
 
 function exit_help {
-    echo "Usage: $0 <version> <tag> <provider> <deploy_key>"
-    echo "   Example: $0 0.1.4 latest goldsky ABCDEA123"
+    echo "Usage: $0 <version> <chain> <provider> <deploy_key>"
+    echo "   Example: $0 0.1.4 goldsky ABCDEA123"
     echo "   chains: " ${valid_chains[@]}
     echo "   providers: " ${valid_providers[@]}
     exit 1
 }
 
 
-function tag_one_goldsky {
+function delete_goldsky {
     SUBGRAPH=$1
     VERSION=$2
-    TAG=$3
-    DEPLOY_KEY=$4
-    echo "Tagging $SUBGRAPH/$VERSION to $TAG"
-    goldsky subgraph tag create $SUBGRAPH/$VERSION --token $DEPLOY_KEY --tag $TAG
+    DEPLOY_KEY=$3
+    echo "deleting $SUBGRAPH to goldsky"
+    goldsky subgraph delete $SUBGRAPH/$VERSION --token $DEPLOY_KEY
 }
 
-function tag_one {
+function delete_subgraph {
     VERSION=$1
     CHAIN=$2
-    TAG=$3
-    PROVIDER=$4
-    DEPLOY_KEY=$5
+    PROVIDER=$3
+    DEPLOY_KEY=$4
     case $PROVIDER in
         "goldsky")
-            tag_one_goldsky beefy-lrt-$CHAIN $VERSION $TAG $DEPLOY_KEY
+            delete_goldsky beefy-lrt-$CHAIN $VERSION $DEPLOY_KEY
             ;;
     esac
 }
@@ -48,10 +46,9 @@ if [[ ! $version =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
     exit_help
 fi
 
-
-tag=$2
-if [ -z "$tag" ]; then
-    echo "tag is required"
+chain=$2
+if [ -z "$chain" ]; then
+    echo "chain is required"
     exit_help
 fi
 
@@ -71,6 +68,4 @@ if [ -z "$deploy_key" ]; then
     exit_help
 fi
 
-for chain in ${valid_chains[@]}; do
-    tag_one $version $chain $tag $provider $deploy_key
-done
+delete_subgraph $version $chain $provider $deploy_key
