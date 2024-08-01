@@ -35,13 +35,27 @@ const checkConfig = async () => {
     const configVaultFoundByAddress = configVaultsByAddress[apiVault.earnContractAddress.toLocaleLowerCase()]
 
     if (!configVaultFoundByAddress) {
-      console.log(`Vault ${apiVault.id} not found in config by address: ${apiVault.earnContractAddress}`)
+      console.warn(`Vault ${apiVault.id} not found in config by address: ${apiVault.earnContractAddress}`)
     } else if (!configVaultFoundById) {
-      console.log(
+      console.warn(
         `Vault with address ${apiVault.earnContractAddress} has incorrect id ${configVaultFoundByAddress.vaultKey} instead of ${apiVault.id}`,
       )
     } else {
       // OK
+    }
+  }
+
+  const duplicateConfigByAddress = configVaults.reduce(
+    (acc, v) => {
+      acc[v.address.toLocaleLowerCase()] = (acc[v.address.toLocaleLowerCase()] || 0) + 1
+      return acc
+    },
+    {} as Record<string, number>,
+  )
+  for (const [address, count] of Object.entries(duplicateConfigByAddress)) {
+    if (count > 1) {
+      console.error(`Duplicate config for address ${address}`)
+      throw new Error(`Duplicate config for address ${address}`)
     }
   }
 }

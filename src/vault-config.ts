@@ -46,7 +46,6 @@ export function _getChainVaults(network: string): Array<VaultConfig> {
     vaults.push(new VaultConfig("uniswap-cow-arb-ezeth-wsteth-rp", PLATFORM_BEEFY_CLM, "0x83368b5e04d8a2c990ef9b5fe41509fafcfba499", ["0xe4c1fc47aDB25506E664Af9748a4c3ee98828318"]))
     vaults.push(new VaultConfig("uniswap-cow-arb-rseth-wsteth", PLATFORM_BEEFY_CLM, "0x15cfBd3Db5D24360eeac802b3dde4423eb5C3C70", ["0x8B0345E218B84274154071614641a501821374A6"]))
     vaults.push(new VaultConfig("aura-arb-rseth-weth", PLATFORM_BALANCER_AURA, "0x764e4e75e3738615CDBFAeaE0C8527b1616e1123"))
-    vaults.push(new VaultConfig("uniswap-cow-arb-rseth-weth", PLATFORM_BEEFY_CLM, "0xf3D5c975de1c0Fd358a593Bcef7a41c61366127C", ["0x04D463bf08dF252Cb09a87D6d41a33c535942710"]))
     vaults.push(new VaultConfig("camelot-rseth-weth", PLATFORM_BEEFY_CLM, "0xac8246F01197fB783Bf1A80960821835045Ec680", ["0xD9001574E23fb909657A25494f540A9B3804b16e"]))
     vaults.push(new VaultConfig("pancake-cow-arb-rseth-weth-vault", PLATFORM_BEEFY_CLM_VAULT, "0x70a9DC4c4c4ea1A621c174e3F438582fA7C99BFA"))
     vaults.push(new VaultConfig("pancake-cow-arb-rseth-weth-rp", PLATFORM_BEEFY_CLM, "0x5c1f30297b7997601a2ae2957cdc95cd4783e544", ["0x3ec0e7Bf0DCDA562d67d8d7F27569AA0be080DAb"]))
