@@ -1,10 +1,11 @@
 import { Address, log, ethereum, BigInt, Bytes } from "@graphprotocol/graph-ts"
 import { Transfer as TransferEvent, IERC20 as IERC20Contract } from "../generated/templates/BeefyVaultV7/IERC20"
+import { BeefyLaunchPool as BeefyBoostContract } from "../generated/templates/BeefyVaultV7/BeefyLaunchPool"
 import { getBeefyStrategy, getBeefyVault, isVaultInitialized } from "./entity/vault"
 import { ZERO_BD, ZERO_BI, tokenAmountToDecimal } from "./utils/decimal"
 import { getTokenAndInitIfNeeded } from "./entity/token"
 import { SHARE_TOKEN_MINT_ADDRESS, BURN_ADDRESS } from "./config"
-import { getChainVaults, isBoostAddress, isRewardPoolAddress } from "./vault-config-asm"
+import { getChainVaults, isBoostAddress, isRewardPoolAddress, getVaultConfigByAddress } from "./vault-config-asm"
 import { getInvestor } from "./entity/investor"
 import { getInvestorPosition } from "./entity/position"
 import { BeefyVault, Investor } from "../generated/schema"
@@ -121,7 +122,20 @@ function updateInvestorVaultData(vault: BeefyVault, investor: Investor): Investo
   for (let i = 0; i < rewardPools.length; i++) {
     const rewardPool = rewardPools[i]
     const rewardPoolContract = IERC20Contract.bind(Address.fromBytes(rewardPool.id))
+    // This is assuming RP token are equivalent to vault token
     rawSharesBalance = rawSharesBalance.plus(rewardPoolContract.balanceOf(investorAddress))
+  }
+
+  const vaultConfig = getVaultConfigByAddress(vault.id)
+  if (vaultConfig) {
+    const boosts = vaultConfig.boostAddresses
+    for (let i = 0; i < boosts.length; i++) {
+      const boostAddress = boosts[i]
+      const boostContract = BeefyBoostContract.bind(boostAddress)
+      rawSharesBalance = rawSharesBalance.plus(boostContract.balanceOf(investorAddress))
+    }
+  } else {
+    log.error("updateInvestorVaultData: vault config not found {}", [vault.id.toHexString()])
   }
 
   // get the new investor deposit value

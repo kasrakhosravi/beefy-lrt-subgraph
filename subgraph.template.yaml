@@ -36,6 +36,8 @@ dataSources:
           file: ./abis/beefy/BeefyVaultV7.json
         - name: BeefyRewardPool
           file: ./abis/beefy/BeefyRewardPool.json
+        - name: BeefyLaunchPool
+          file: ./abis/beefy/BeefyLaunchPool.json
         - name: BeefyIStrategyV7
           file: ./abis/beefy/BeefyIStrategyV7.json
         - name: Multicall3

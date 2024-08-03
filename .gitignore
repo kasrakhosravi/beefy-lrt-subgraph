@@ -12,3 +12,5 @@ random.json
 src/random.ts
 
 tests/.latest.json
+*.log
+.DS_Store

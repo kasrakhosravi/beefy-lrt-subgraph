@@ -1,4 +1,4 @@
-import { Address, DataSourceContext, log, dataSource } from "@graphprotocol/graph-ts"
+import { Address, DataSourceContext, log, dataSource, Bytes } from "@graphprotocol/graph-ts"
 import { NETWORK_NAME } from "./config"
 import { VaultConfig, _getChainVaults } from "./vault-config"
 import { RANDOM } from "./random"
@@ -30,6 +30,17 @@ export function getChainVaults(): Array<VaultConfigAsm> {
   }
 
   return vaults
+}
+
+export function getVaultConfigByAddress(address: Bytes): VaultConfigAsm | null {
+  const vaults = getChainVaults()
+  for (let i = 0; i < vaults.length; i++) {
+    if (vaults[i].address.equals(address)) {
+      return vaults[i]
+    }
+  }
+
+  return null
 }
 
 export function isBoostAddress(address: Address): boolean {
