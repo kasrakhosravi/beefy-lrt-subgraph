@@ -138,7 +138,7 @@ export class VaultConfig {
     this.boostAddresses = new Array<string>()
     this.rewardPoolsAddresses = new Array<string>()
 
-    if (underlyingPlatform === PLATFORM_BEEFY_CLM) {
+    if (underlyingPlatform === PLATFORM_BEEFY_CLM || underlyingPlatform === PLATFORM_BEEFY_CLM_VAULT) {
       for (let i = 0; i < boostsOrRewardPools.length; i++) {
         this.rewardPoolsAddresses.push(boostsOrRewardPools[i])
       }
