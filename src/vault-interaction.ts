@@ -132,7 +132,12 @@ function updateInvestorVaultData(vault: BeefyVault, investor: Investor): Investo
     for (let i = 0; i < boosts.length; i++) {
       const boostAddress = boosts[i]
       const boostContract = BeefyBoostContract.bind(boostAddress)
-      rawSharesBalance = rawSharesBalance.plus(boostContract.balanceOf(investorAddress))
+      const boostBalanceRes = boostContract.try_balanceOf(investorAddress)
+      if (!boostBalanceRes.reverted) {
+        rawSharesBalance = rawSharesBalance.plus(boostBalanceRes.value)
+      } else {
+        log.warning("updateInvestorVaultData: boost balanceOf reverted {}", [boostAddress.toHexString()])
+      }
     }
   } else {
     log.error("updateInvestorVaultData: vault config not found {}", [vault.id.toHexString()])
