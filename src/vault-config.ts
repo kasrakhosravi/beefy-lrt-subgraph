@@ -83,6 +83,12 @@ export function _getChainVaults(network: string): Array<VaultConfig> {
     vaults.push(new VaultConfig("lynex-gamma-ineth-wsteth", PLATFORM_GAMMA, "0xAA3b8C08e7Fe86E1dda8FA9FE7423561Ad316e3F"))
     vaults.push(new VaultConfig("nile-ezeth-weth", PLATFORM_SOLIDLY, "0x063091e4532eD93CE93347C6c8338dcA0832ddb0"))
     vaults.push(new VaultConfig("lynex-gamma-ezeth-weth", PLATFORM_GAMMA, "0x35884E8C569b9f7714A35EDf056A82535A43F5AD"))
+    vaults.push(new VaultConfig("nile-cl-weeth-weth-vault", PLATFORM_BEEFY_CLM_VAULT, "0xF92B5561cd983646D7FB149492F6311DaAAA8cB4"))
+    vaults.push(new VaultConfig("nile-cl-weeth-weth-rp", PLATFORM_BEEFY_CLM, "0x4d13b56f48A6aDD1e59d03735BE79D10e89Cd824", ["0x818CFe11Df8fD790c6CAC127A247bb4439089efa"]))
+    vaults.push(new VaultConfig("nile-cl-rseth-weth-vault", PLATFORM_BEEFY_CLM_VAULT, "0x1Ea0a1a0D35f4A72156Aa19AC6322cfAA1f7DFd8"))
+    vaults.push(new VaultConfig("nile-cl-rseth-weth-rp", PLATFORM_BEEFY_CLM, "0x7c82356b425DaF36D447D24BAa6906eE15EBcf9A", ["0xEF0f0D10A93f5BDeF4aCEFaC02770eeC26302147"]))
+    vaults.push(new VaultConfig("nile-cl-ezeth-weth-vault", PLATFORM_BEEFY_CLM_VAULT, "0xA0a2734F3947C8131603aAfE246A332be7A4AEc1"))
+    vaults.push(new VaultConfig("nile-cl-ezeth-weth-rp", PLATFORM_BEEFY_CLM, "0xD4CC44a7fBc0323d3d74565B558228feCc88A329", ["0xf98793D144392d3fd9c1c52660fB8DA97b46C1ae"]))
 
     // stone stuff
     vaults.push(new VaultConfig("lynex-stone-weth", PLATFORM_LYNEX, "0x1C8cfC0cFf01D59f2e4d6F547EE227Af869EfA07"))
