@@ -127,6 +127,12 @@ export function _getChainVaults(network: string): Array<VaultConfig> {
     vaults.push(new VaultConfig("velodrome-mode-weeth-eth", PLATFORM_SOLIDLY, "0x6Dd2abBBbbf494dd2454aEd67880B9533E2b3DA1"))
   }
 
+  if (network === "sei" || network === "all") {
+    vaults.push(new VaultConfig("yei-usdt", PLATFORM_AAVE, "0xcb25214EC41Ea480068638897FcBd6F1206F5521"))
+    vaults.push(new VaultConfig("yei-usdc", PLATFORM_AAVE, "0x906e60166A4B185016e53597fA12FBB1424e47d7"))
+    vaults.push(new VaultConfig("yei-wsei", PLATFORM_AAVE, "0x9E6B9518978bb7caf2ad70778E9AEED9eDb3DB78"))
+  }
+
   return vaults
 }
 

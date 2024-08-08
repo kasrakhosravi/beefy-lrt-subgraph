@@ -23,7 +23,8 @@
     "prepare:manta": "./bin/prepare.sh manta",
     "prepare:mode": "./bin/prepare.sh mode",
     "prepare:optimism": "./bin/prepare.sh optimism",
-    "prepare:kava": "./bin/prepare.sh kava"
+    "prepare:kava": "./bin/prepare.sh kava",
+    "prepare:sei": "./bin/prepare.sh sei"
   },
   "main": "./bin/index.js",
   "bin": {
