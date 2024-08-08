@@ -1,6 +1,9 @@
 import { VaultConfig, _getChainVaults } from "../src/vault-config"
+import * as fs from "fs"
 
-const checkConfig = async () => {
+const checkConfig = async ({ chain }: { chain: string }) => {
+  console.log(`\n================================================`)
+  console.log(`\n======================== ${chain} ========================`)
   // fetch vault config from https://api.beefy.com/vaults
 
   type ApiVault = {
@@ -10,10 +13,10 @@ const checkConfig = async () => {
     earningPoints?: boolean
   }
 
-  const classicVaults: ApiVault[] = await fetch("https://api.beefy.finance/vaults").then((res) => res.json())
-  const cowVaults: ApiVault[] = await fetch("https://api.beefy.finance/cow-vaults").then((res) => res.json())
+  const classicVaults: ApiVault[] = await fetch(`https://api.beefy.finance/vaults/${chain}`).then((res) => res.json())
+  const cowVaults: ApiVault[] = await fetch(`https://api.beefy.finance/cow-vaults/${chain}`).then((res) => res.json())
   const apiVaults = classicVaults.concat(cowVaults)
-  const configVaults = _getChainVaults("all")
+  const configVaults = _getChainVaults(chain)
 
   const configVaultsByAddress = configVaults.reduce(
     (acc, v) => {
@@ -32,6 +35,7 @@ const checkConfig = async () => {
   )
 
   // === Check for missing vaults ===
+  console.log("\n========= Checking for missing vaults")
   const apiVaultsEarningPoints = apiVaults.filter((v) => v.earningPoints)
 
   for (const apiVault of apiVaultsEarningPoints) {
@@ -55,6 +59,7 @@ const checkConfig = async () => {
   }
 
   // === Check for duplicates ===
+  console.log("\n========= Checking for duplicates")
 
   const duplicateConfigByAddress = configVaults.reduce(
     (acc, v) => {
@@ -109,7 +114,7 @@ const checkConfig = async () => {
 
   for (const tokenToCover of tokensToCover) {
     const apiVaultsToCover = apiVaults.filter((v) => v.assets.map((a) => a.toLocaleLowerCase()).includes(tokenToCover))
-    console.log(`Checking token ${tokenToCover} with ${apiVaultsToCover.length} vaults`)
+    //console.log(`Checking token ${tokenToCover} with ${apiVaultsToCover.length} vaults`)
 
     for (const apiVault of apiVaultsToCover) {
       const configVaultFoundById = configVaultById[apiVault.id]
@@ -124,6 +129,19 @@ const checkConfig = async () => {
       }
     }
   }
+
+  console.log(`======================== ${chain} done ========================`)
 }
 
-checkConfig()
+const main = async () => {
+  const chains = fs
+    .readdirSync("./config")
+    .filter((f) => f.endsWith(".json"))
+    .map((f) => f.replace(".json", ""))
+
+  for (const chain of chains) {
+    await checkConfig({ chain })
+  }
+}
+
+main()
