@@ -53,6 +53,8 @@ export function _getChainVaults(network: string): Array<VaultConfig> {
     vaults.push(new VaultConfig("uniswap-cow-arb-rseth-weth-vault", PLATFORM_BEEFY_CLM_VAULT, "0x1Db8d743824bdaBA39b88D22b44bcEcf7179D413", ["0x7f3e9f5EFFE06169Db679658392e4Ca79fd5E594"]))
     vaults.push(new VaultConfig("ramses-cl-rseth-weth-rp", PLATFORM_BEEFY_CLM, "0x9ebb94be20476db4a58e59c764e709b5fa35f8b0", ["0x81F15F4FA4848F7D87ceF27975AE2953bf333D7b"]))
     vaults.push(new VaultConfig("uniswap-cow-arb-rseth-weth-rp", PLATFORM_BEEFY_CLM, "0xf3d5c975de1c0fd358a593bcef7a41c61366127c", ["0x04D463bf08dF252Cb09a87D6d41a33c535942710"]))
+    vaults.push(new VaultConfig("ramses-cl-rseth-ethx-vault", PLATFORM_BEEFY_CLM_VAULT, "0x4fCf6A05a7F1A5BA2781d7De4DB78Bd16F84F540", ["0x1f84DaF589C0b9Dea8c9a1B7463099e2DB2F589a"]))
+    vaults.push(new VaultConfig("ramses-cl-rseth-ethx-rp", PLATFORM_BEEFY_CLM, "0xBB18cb9D1F3f20dd1c3Af946b46Dd19872206DDa", ["0xf2bf40360aa066353f3b42576799141fe80e0285"]))
   }
 
   if (network === "base") {
