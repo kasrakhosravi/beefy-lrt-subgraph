@@ -63,9 +63,9 @@ if [ -z "$version" ]; then
     echo "version is required"
     exit_help
 fi
-# allow only x.y.z versions and not x.y.z-1 or x.y.z-2
-if [[ $version =~ ^[0-9]+\.[0-9]+\.[0-9]+\(-[0-9]+\)?$ ]]; then
-    echo "invalid version"
+# allow only x.y.z and x.y.z-n versions
+if [[ ! $version =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9]+)?$ ]]; then
+    echo "invalid version ""$version"""
     exit_help
 fi
 
