@@ -1,9 +1,10 @@
 import { VaultConfig, _getChainVaults } from "../src/vault-config"
 import * as fs from "fs"
 
-const checkConfig = async ({ chain }: { chain: string }) => {
+const checkConfig = async ({ apiChain: chain, subgraphChain }: { apiChain: string; subgraphChain: string }) => {
   console.log(`\n================================================`)
   console.log(`\n======================== ${chain} ========================`)
+  let hasErrors = false
   // fetch vault config from https://api.beefy.com/vaults
 
   type ApiVault = {
@@ -11,12 +12,64 @@ const checkConfig = async ({ chain }: { chain: string }) => {
     assets: string[]
     earnContractAddress: string
     earningPoints?: boolean
+    pointStructureIds?: string[]
+    platformId?: string
   }
 
-  const classicVaults: ApiVault[] = await fetch(`https://api.beefy.finance/vaults/${chain}`).then((res) => res.json())
-  const cowVaults: ApiVault[] = await fetch(`https://api.beefy.finance/cow-vaults/${chain}`).then((res) => res.json())
-  const apiVaults = classicVaults.concat(cowVaults)
-  const configVaults = _getChainVaults(chain)
+  interface ApiPointsStructure {
+    id: string
+    docs: string
+    points: {
+      id: string
+      name: string
+    }[]
+    eligibility: Array<
+      | { type: "token-holding"; tokens: string[] }
+      | { type: "vault-whitelist" }
+      | { type: "on-chain-lp"; chain: string }
+      | { type: "token-on-platform"; platform: string; tokens: string[] }
+    >
+    accounting: {
+      id: string
+      role: string
+      url?: string
+    }[]
+  }
+
+  interface ApiBoost {
+    id: string
+    poolId: string // vault id
+    tokenAddress: string // vault address
+    earnContractAddress: string // address of the boost contract
+  }
+
+  interface ApiGovVault {
+    id: string
+    version?: number
+    tokenAddress: string // clm manager address
+    earnContractAddress: string // reward pool address
+  }
+
+  const [classicVaults, cowVaults, boosts, govVaults, pointsStructures] = await Promise.all([
+    await fetch(`https://api.beefy.finance/vaults/${chain}`).then((res): Promise<ApiVault[]> => res.json()),
+    await fetch(`https://api.beefy.finance/cow-vaults/${chain}`).then((res): Promise<ApiVault[]> => res.json()),
+    await fetch(`https://api.beefy.finance/boosts/${chain}`).then((res): Promise<ApiBoost[]> => res.json()),
+    await fetch(`https://api.beefy.finance/gov-vaults/${chain}`).then((res): Promise<ApiGovVault[]> => res.json()),
+    await fetch(`https://api.beefy.finance/points-structures`).then((res): Promise<ApiPointsStructure[]> => res.json()),
+  ])
+
+  const pointsStructuresSupportedByThisSubgraph = pointsStructures.filter((p) => p.accounting.some((e) => e.id === "beefy-lrt-subgraph"))
+  const pointsStructuresById = pointsStructuresSupportedByThisSubgraph.reduce(
+    (acc, p) => {
+      acc[p.id] = p
+      return acc
+    },
+    {} as Record<string, ApiPointsStructure>,
+  )
+
+  const allApiVaults = classicVaults.concat(cowVaults)
+  const apiVaultsSupportedByThisSubgraph = allApiVaults.filter((v) => v.pointStructureIds?.some((id) => !!pointsStructuresById[id]))
+  const configVaults = _getChainVaults(subgraphChain)
 
   const configVaultsByAddress = configVaults.reduce(
     (acc, v) => {
@@ -34,33 +87,74 @@ const checkConfig = async ({ chain }: { chain: string }) => {
     {} as Record<string, VaultConfig>,
   )
 
-  // === Check for missing vaults ===
-  console.log("\n========= Checking for missing vaults")
-  const apiVaultsEarningPoints = apiVaults.filter((v) => v.earningPoints)
+  const boostsByPoolId = boosts.reduce(
+    (acc, b) => {
+      acc[b.poolId] = acc[b.poolId] || []
+      acc[b.poolId].push(b)
+      return acc
+    },
+    {} as Record<string, Array<ApiBoost>>,
+  )
+  const govVaultsByWantAddress = govVaults.reduce(
+    (acc, v) => {
+      acc[v.tokenAddress.toLocaleLowerCase()] = acc[v.tokenAddress.toLocaleLowerCase()] || []
+      acc[v.tokenAddress.toLocaleLowerCase()].push(v)
+      return acc
+    },
+    {} as Record<string, Array<ApiGovVault>>,
+  )
 
-  for (const apiVault of apiVaultsEarningPoints) {
+  console.log("\n========= Checking for vaults declared as earning points but not in the subgraph config ===")
+
+  for (const apiVault of apiVaultsSupportedByThisSubgraph) {
     const configVaultFoundById = configVaultById[apiVault.id]
     const configVaultFoundByAddress = configVaultsByAddress[apiVault.earnContractAddress.toLocaleLowerCase()]
 
     const foundInConfig = configVaultFoundById || configVaultFoundByAddress
     if (!foundInConfig) {
+      hasErrors = true
       console.error(
         `ERROR: Vault ${apiVault.id} not found in LRT subgraph config by id: ${apiVault.id} or by address: ${apiVault.earnContractAddress}`,
       )
-    }
 
-    if (foundInConfig) {
-      if (!configVaultFoundByAddress) {
-        console.warn(
-          `WARN: Vault with id ${apiVault.id} has incorrect address ${configVaultFoundById.address} instead of ${apiVault.earnContractAddress}`,
-        )
-      }
+      const boostsOrRewardPoolAddresses = [
+        ...(govVaultsByWantAddress[apiVault.earnContractAddress.toLocaleLowerCase()] || []),
+        ...(boostsByPoolId[apiVault.id] || []),
+      ]
+        .map((v) => `"${v.earnContractAddress}"`)
+        .join(", ")
+
+      console.log(
+        `code to add: vaults.push(new VaultConfig("${apiVault.id}", PLATFORM_xxxx, "${apiVault.earnContractAddress}"${
+          boostsOrRewardPoolAddresses.length > 0 ? `, [${boostsOrRewardPoolAddresses}]` : ""
+        }))`,
+      )
+    } else if (!configVaultFoundByAddress) {
+      console.warn(
+        `WARN: Vault with id ${apiVault.id} has incorrect address ${configVaultFoundById.address} instead of ${apiVault.earnContractAddress}`,
+      )
     }
   }
 
-  // === Check for duplicates ===
-  console.log("\n========= Checking for duplicates")
+  console.log("\n========= Checking for vaults in the subgraph config but not declared as earning points ===")
+  for (const configVault of configVaults) {
+    const apiVaultFoundById = allApiVaults.find((v) => v.id === configVault.vaultKey)
+    const apiVaultFoundByAddress = allApiVaults.find((v) => v.earnContractAddress.toLocaleLowerCase() === configVault.address.toLocaleLowerCase())
 
+    const apiVaultFound = apiVaultFoundById || apiVaultFoundByAddress
+    if (!apiVaultFound) {
+      //hasErrors = true
+      console.error(`WARN: Vault ${configVault.vaultKey} found in LRT subgraph config but not in api`)
+    } else if (!apiVaultFoundByAddress) {
+      console.warn(
+        `WARN: Vault with id ${configVault.vaultKey} has incorrect address ${configVault.address} instead of ${apiVaultFound.earnContractAddress}`,
+      )
+    } else if (!apiVaultFoundById) {
+      console.warn(`WARN: Vault with address ${configVault.address} has incorrect id ${configVault.vaultKey} instead of ${apiVaultFound.id}`)
+    }
+  }
+
+  console.log("\n========= Checking for duplicate vaults in configuration ===")
   const duplicateConfigByAddress = configVaults.reduce(
     (acc, v) => {
       acc[v.address.toLocaleLowerCase()] = (acc[v.address.toLocaleLowerCase()] || 0) + 1
@@ -75,62 +169,73 @@ const checkConfig = async ({ chain }: { chain: string }) => {
     }
   }
 
-  // === Check for token coverage ===
+  console.log("\n========= Checking boost and reward pools configs ===")
+  for (const configVault of configVaults) {
+    const boostsForVault = boostsByPoolId[configVault.vaultKey] || []
+    const rewardPoolsForVault = govVaultsByWantAddress[configVault.address.toLocaleLowerCase()] || []
 
-  console.log("\n========= Checking token coverage")
+    for (const boost of boostsForVault) {
+      const foundInBoosts = configVault.boostAddresses.some((b) => b.toLocaleLowerCase() === boost.earnContractAddress.toLocaleLowerCase())
+      const foundInRewardPools = configVault.rewardPoolsAddresses.some(
+        (rp) => rp.toLocaleLowerCase() === boost.earnContractAddress.toLocaleLowerCase(),
+      )
+      if (!foundInBoosts && !foundInRewardPools) {
+        hasErrors = true
+        console.error(`ERROR: Boost or RP ${boost.earnContractAddress} for vault ${configVault.vaultKey} not found in config`)
+      }
+    }
 
-  // https://github.com/beefyfinance/beefy-lrt-api/blob/main/src/config/chains.ts#L16
-  const anzen = ["USDz", "sUSDz"]
-  const bedrock = ["uniETH"]
-  const dolomite = ["dUSDC"]
-  const ethena = ["USDe"]
-  const etherfi = ["eETH", "weETH", "weETH.mode"]
-  const kelp = ["rsETH", "wrsETH"]
-  const lynex = ["inETH", "ainETH"]
-  const renzo = ["ezETH"]
-  const stakestone = ["STONE"]
-  const vector = ["vETH"]
-  const yei = ["YEI"]
+    for (const rewardPool of rewardPoolsForVault) {
+      const foundInBoosts = configVault.boostAddresses.some((b) => b.toLocaleLowerCase() === rewardPool.earnContractAddress.toLocaleLowerCase())
+      const foundInRewardPools = configVault.rewardPoolsAddresses.some(
+        (rp) => rp.toLocaleLowerCase() === rewardPool.earnContractAddress.toLocaleLowerCase(),
+      )
+      if (!foundInBoosts && !foundInRewardPools) {
+        hasErrors = true
+        console.error(`ERROR: Boost or RP ${rewardPool.earnContractAddress} for vault ${configVault.vaultKey} not found in config`)
+      }
+    }
 
-  const providers = {
-    anzen,
-    bedrock,
-    dolomite,
-    ethena,
-    etherfi,
-    kelp,
-    lynex,
-    renzo,
-    stakestone,
-    vector,
-    yei,
-  }
+    // check for duplicate boosts or reward pools in config
+    const boostCountsByAddy = configVault.boostAddresses.concat(configVault.rewardPoolsAddresses).reduce(
+      (acc, b) => {
+        acc[b.toLocaleLowerCase()] = (acc[b.toLocaleLowerCase()] || 0) + 1
+        return acc
+      },
+      {} as Record<string, number>,
+    )
+    for (const [address, count] of Object.entries(boostCountsByAddy)) {
+      if (count > 1) {
+        hasErrors = true
+        console.error(`ERROR: Duplicate boost or RP for address ${address} for vault ${configVault.vaultKey}`)
+      }
+    }
 
-  const tokensToCover = [
-    ...Object.values(providers)
-      .map((tokens) => tokens.map((t) => t.toLocaleLowerCase()))
-      .flat(),
-  ]
-
-  for (const tokenToCover of tokensToCover) {
-    const apiVaultsToCover = apiVaults.filter((v) => v.assets.map((a) => a.toLocaleLowerCase()).includes(tokenToCover))
-    //console.log(`Checking token ${tokenToCover} with ${apiVaultsToCover.length} vaults`)
-
-    for (const apiVault of apiVaultsToCover) {
-      const configVaultFoundById = configVaultById[apiVault.id]
-      const configVaultFoundByAddress = configVaultsByAddress[apiVault.earnContractAddress.toLocaleLowerCase()]
-
-      const foundInConfig = configVaultFoundById || configVaultFoundByAddress
-
-      if (!foundInConfig) {
-        console.error(
-          `ERROR: Vault ${apiVault.id} with token ${tokenToCover} not found in LRT subgraph config by id: ${apiVault.id} or by address: ${apiVault.earnContractAddress}`,
-        )
+    // check for boosts or reward pools in config that are not in the api
+    for (const boostAddress of configVault.boostAddresses) {
+      const foundInApiBoosts = boosts.some((b) => b.earnContractAddress.toLocaleLowerCase() === boostAddress.toLocaleLowerCase())
+      const foundInApiGovVaults = govVaults.some((v) => v.earnContractAddress.toLocaleLowerCase() === boostAddress.toLocaleLowerCase())
+      if (!foundInApiBoosts && !foundInApiGovVaults) {
+        hasErrors = true
+        console.error(`ERROR: Boost ${boostAddress} for vault ${configVault.vaultKey} not found in api`)
+      }
+    }
+    for (const rewardPoolAddress of configVault.rewardPoolsAddresses) {
+      const foundInApiBoosts = boosts.some((b) => b.earnContractAddress.toLocaleLowerCase() === rewardPoolAddress.toLocaleLowerCase())
+      const foundInApiGovVaults = govVaults.some((v) => v.earnContractAddress.toLocaleLowerCase() === rewardPoolAddress.toLocaleLowerCase())
+      if (!foundInApiBoosts && !foundInApiGovVaults) {
+        hasErrors = true
+        console.error(`ERROR: RP ${rewardPoolAddress} for vault ${configVault.vaultKey} not found in api`)
       }
     }
   }
+  if (!hasErrors) {
+    console.log(`\n======================== PASSED ========================`)
+  } else {
+    console.log(`\nERROR: ======================== FAILED ========================`)
+  }
 
-  console.log(`======================== ${chain} done ========================`)
+  return hasErrors
 }
 
 const main = async () => {
@@ -139,8 +244,20 @@ const main = async () => {
     .filter((f) => f.endsWith(".json"))
     .map((f) => f.replace(".json", ""))
 
+  let hasErrors = false
   for (const chain of chains) {
-    await checkConfig({ chain })
+    const content = fs.readFileSync(`./config/${chain}.json`, "utf-8")
+    const { network: subgraphChain } = JSON.parse(content)
+    const chainHasErrors = await checkConfig({ apiChain: chain, subgraphChain })
+    hasErrors = hasErrors || chainHasErrors
+  }
+
+  if (hasErrors) {
+    console.error("Errors found")
+    process.exit(1)
+  } else {
+    console.log("All checks passed")
+    process.exit(0)
   }
 }
 
