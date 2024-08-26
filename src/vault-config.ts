@@ -24,6 +24,7 @@ export function _getChainVaults(network: string): Array<VaultConfig> {
     vaults.push(new VaultConfig("camelot-usde-usdc", PLATFORM_BEEFY_CLM, "0xC9a57BAD9AAbCC6f0c22474442985b7CF1eC6786", ["0xC66F3928D2653B82367B4B7B2d3E3B43f4A1f647"]))
     vaults.push(new VaultConfig("equilibria-arb-ezeth-26sep24", PLATFORM_PENDLE_EQUILIBRIA, "0x218337d7DAe070e219c44783A64cA107dffc533e"))
     vaults.push(new VaultConfig("equilibria-arb-ezeth-27jun24", PLATFORM_PENDLE_EQUILIBRIA, "0xdccb85017a996faF5242648B46940E80DE0A36a5"))
+    vaults.push(new VaultConfig("equilibria-arb-seth-ezeth-27jun24", PLATFORM_PENDLE_EQUILIBRIA, "0xE2F1DdD8A02774827764bdeC8F84B29B50195969"))
     vaults.push(new VaultConfig("equilibria-arb-rseth-26sep24-new", PLATFORM_PENDLE_EQUILIBRIA, "0x4897679a3E506F0bedC118250369D782F6CCA03e"))
     vaults.push(new VaultConfig("equilibria-arb-rseth-26sep24", PLATFORM_PENDLE_EQUILIBRIA, "0x66d89d65046D8BC75E0fb14E704e50E8C7a07219"))
     vaults.push(new VaultConfig("equilibria-arb-rseth-27jun24", PLATFORM_PENDLE_EQUILIBRIA, "0x59D0C3f25cB3bD86E03D827C773892d247452227"))
@@ -63,7 +64,12 @@ export function _getChainVaults(network: string): Array<VaultConfig> {
     vaults.push(new VaultConfig("aerodrome-weth-wrseth", PLATFORM_SOLIDLY, "0xC5cD1A6d4918820201B8E4eeB6d2AdFD1CDF783d"))
   }
 
+  if (network === "bsc") {
+    //vaults.push(new VaultConfig("thena-gamma-weeth-eth-narrow", PLATFORM_GAMMA, "0xcCcDB0F6eCcd5f231d4737A00C554322167d814B"))
+  }
+
   if (network === "mainnet") {
+    // ethereum mainnet
     vaults.push(new VaultConfig("aura-ezeth-eth", PLATFORM_BALANCER_AURA, "0x3E1c2C604f60ef142AADAA51aa864f8438f2aaC1"))
     vaults.push(new VaultConfig("aura-rseth-weth", PLATFORM_BALANCER_AURA, "0x967f88e651db83B1A74058D7499263eA7b3066E2"))
     vaults.push(new VaultConfig("aura-weeth-ezeth-rseth", PLATFORM_BALANCER_AURA, "0x5dA90BA82bED0AB701E6762D2bF44E08634d9776"))
@@ -93,19 +99,6 @@ export function _getChainVaults(network: string): Array<VaultConfig> {
     vaults.push(new VaultConfig("nile-ezeth-weth", PLATFORM_SOLIDLY, "0x063091e4532eD93CE93347C6c8338dcA0832ddb0"))
   }
 
-  if (network === "optimism") {
-    vaults.push(new VaultConfig("aura-op-weth-wrseth", PLATFORM_BALANCER_AURA, "0x2160BEDE9d5559bA559Eaf88052b46b8364eE245"))
-    vaults.push(new VaultConfig("uniswap-cow-op-rseth-wsteth", PLATFORM_BEEFY_CLM, "0x0f46a74b01708e78c27def7160a5c5222f9dd157", ["0xF1748128a1b5c0c45728D09F6f1f60748bC03FE1"]))
-    vaults.push(new VaultConfig("uniswap-cow-op-usde-wsteth", PLATFORM_BEEFY_CLM, "0x80D438EEdb918207c2F7F7eAC31f2F8012923F76", ["0x20eaD00Cf50Df696ddF434be900fA5a0a437181E"]))
-    vaults.push(new VaultConfig("velo-cow-op-wsteth-ezeth-vault", PLATFORM_BEEFY_CLM_VAULT, "0x5578B44A1A8572b48160B67213A690FC2e75F298", ["0xB94b0ca6C316f65F0A5E46667CDA50B5EF1eA5F1"]))
-    vaults.push(new VaultConfig("velo-cow-op-wsteth-ezeth", PLATFORM_BEEFY_CLM, "0x823f2B0aa1D54c38fe149ee119c6d7845e93593d", ["0x64831F82e3543006413897C03f59518CEcae02b4"]))
-    vaults.push(new VaultConfig("velodrome-v2-weth-wrseth", PLATFORM_SOLIDLY, "0xDbE946E16c4e0De9a44065B868265Ac05c437fB6"))
-  }
-
-  if (network === "bsc") {
-    //vaults.push(new VaultConfig("thena-gamma-weeth-eth-narrow", PLATFORM_GAMMA, "0xcCcDB0F6eCcd5f231d4737A00C554322167d814B"))
-  }
-
   if (network === "kava") {
     vaults.push(new VaultConfig("kinetix-klp", TRACK_ONLY_SHARE_AND_UNDERLYING_TOKEN_BALANCE, "0x9a207D4D2ee8175995C69c0Fb1F117Bf7CcC93cd", ["0x7E4bEdE523726283BdF309d49087C3305e681cE0"]))
   }
@@ -116,6 +109,15 @@ export function _getChainVaults(network: string): Array<VaultConfig> {
 
   if (network === "mode-mainnet") {
     vaults.push(new VaultConfig("velodrome-mode-ezeth-eth", PLATFORM_SOLIDLY, "0x94A3725124d2E71028Ee488b88566f1fb11A90C3"))
+  }
+
+  if (network === "optimism") {
+    vaults.push(new VaultConfig("aura-op-weth-wrseth", PLATFORM_BALANCER_AURA, "0x2160BEDE9d5559bA559Eaf88052b46b8364eE245"))
+    vaults.push(new VaultConfig("uniswap-cow-op-rseth-wsteth", PLATFORM_BEEFY_CLM, "0x0f46a74b01708e78c27def7160a5c5222f9dd157", ["0xF1748128a1b5c0c45728D09F6f1f60748bC03FE1"]))
+    vaults.push(new VaultConfig("uniswap-cow-op-usde-wsteth", PLATFORM_BEEFY_CLM, "0x80D438EEdb918207c2F7F7eAC31f2F8012923F76", ["0x20eaD00Cf50Df696ddF434be900fA5a0a437181E"]))
+    vaults.push(new VaultConfig("velo-cow-op-wsteth-ezeth-vault", PLATFORM_BEEFY_CLM_VAULT, "0x5578B44A1A8572b48160B67213A690FC2e75F298", ["0xB94b0ca6C316f65F0A5E46667CDA50B5EF1eA5F1"]))
+    vaults.push(new VaultConfig("velo-cow-op-wsteth-ezeth", PLATFORM_BEEFY_CLM, "0x823f2B0aa1D54c38fe149ee119c6d7845e93593d", ["0x64831F82e3543006413897C03f59518CEcae02b4"]))
+    vaults.push(new VaultConfig("velodrome-v2-weth-wrseth", PLATFORM_SOLIDLY, "0xDbE946E16c4e0De9a44065B868265Ac05c437fB6"))
   }
 
   if (network === "sei") {
