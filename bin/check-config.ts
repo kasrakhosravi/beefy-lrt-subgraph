@@ -11,7 +11,6 @@ const checkConfig = async ({ apiChain: chain, subgraphChain }: { apiChain: strin
     id: string
     assets: string[]
     earnContractAddress: string
-    earningPoints?: boolean
     pointStructureIds?: string[]
     platformId?: string
   }
@@ -59,7 +58,7 @@ const checkConfig = async ({ apiChain: chain, subgraphChain }: { apiChain: strin
   ])
 
   const pointsStructuresSupportedByThisSubgraph = pointsStructures.filter((p) => p.accounting.some((e) => e.id === "beefy-lrt-subgraph"))
-  const pointsStructuresById = pointsStructuresSupportedByThisSubgraph.reduce(
+  const supportedPointsStructuresById = pointsStructuresSupportedByThisSubgraph.reduce(
     (acc, p) => {
       acc[p.id] = p
       return acc
@@ -68,7 +67,7 @@ const checkConfig = async ({ apiChain: chain, subgraphChain }: { apiChain: strin
   )
 
   const allApiVaults = classicVaults.concat(cowVaults)
-  const apiVaultsSupportedByThisSubgraph = allApiVaults.filter((v) => v.pointStructureIds?.some((id) => !!pointsStructuresById[id]))
+  const apiVaultsSupportedByThisSubgraph = allApiVaults.filter((v) => v.pointStructureIds?.some((id) => !!supportedPointsStructuresById[id]))
   const configVaults = _getChainVaults(subgraphChain)
 
   const configVaultsByAddress = configVaults.reduce(
@@ -151,6 +150,21 @@ const checkConfig = async ({ apiChain: chain, subgraphChain }: { apiChain: strin
       )
     } else if (!apiVaultFoundById) {
       console.warn(`WARN: Vault with address ${configVault.address} has incorrect id ${configVault.vaultKey} instead of ${apiVaultFound.id}`)
+    } else if (!apiVaultFound.pointStructureIds || apiVaultFound.pointStructureIds.length === 0) {
+      console.warn(`WARN: Vault ${configVault.vaultKey} is not declared as earning points in the api`)
+    } else {
+      const pointsStructuresIds = apiVaultFound.pointStructureIds
+      let needsThisSubgraph = false
+      for (const id of pointsStructuresIds) {
+        const pointsStructure = supportedPointsStructuresById[id]
+        if (pointsStructure) {
+          needsThisSubgraph = true
+        }
+      }
+
+      if (!needsThisSubgraph) {
+        console.warn(`WARN: Vault ${configVault.vaultKey} is declared as not needing this subgraph in the api but is present in this config`)
+      }
     }
   }
 
