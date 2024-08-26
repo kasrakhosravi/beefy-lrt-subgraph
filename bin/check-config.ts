@@ -253,15 +253,18 @@ const checkConfig = async ({ apiChain: chain, subgraphChain }: { apiChain: strin
 }
 
 const main = async () => {
-  const chains = fs
-    .readdirSync("./config")
-    .filter((f) => f.endsWith(".json"))
-    .map((f) => f.replace(".json", ""))
+  const chains = await fetch("https://api.beefy.finance/config")
+    .then((res) => res.json())
+    .then((res) => Object.keys(res))
 
   let hasErrors = false
   for (const chain of chains) {
-    const content = fs.readFileSync(`./config/${chain}.json`, "utf-8")
-    const { network: subgraphChain } = JSON.parse(content)
+    let subgraphChain = chain
+    if (fs.existsSync(`./config/${chain}.json`)) {
+      const content = fs.readFileSync(`./config/${chain}.json`, "utf-8")
+      const { network } = JSON.parse(content)
+      subgraphChain = network
+    }
     const chainHasErrors = await checkConfig({ apiChain: chain, subgraphChain })
     hasErrors = hasErrors || chainHasErrors
   }
