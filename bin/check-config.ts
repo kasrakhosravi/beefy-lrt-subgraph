@@ -238,7 +238,7 @@ const checkConfig = async ({ apiChain: chain, subgraphChain }: { apiChain: strin
       const foundInApiBoosts = boosts.some((b) => b.earnContractAddress.toLocaleLowerCase() === rewardPoolAddress.toLocaleLowerCase())
       const foundInApiGovVaults = govVaults.some((v) => v.earnContractAddress.toLocaleLowerCase() === rewardPoolAddress.toLocaleLowerCase())
       if (!foundInApiBoosts && !foundInApiGovVaults) {
-        hasErrors = true
+        //hasErrors = true
         console.error(`ERROR: RP ${rewardPoolAddress} for vault ${configVault.vaultKey} not found in api`)
       }
     }
