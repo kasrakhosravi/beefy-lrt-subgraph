@@ -108,6 +108,8 @@ export function _getChainVaults(network: string): Array<VaultConfig> {
   if (network === "optimism") {
     vaults.push(new VaultConfig("aura-op-weth-wrseth", PLATFORM_BALANCER_AURA, "0x2160BEDE9d5559bA559Eaf88052b46b8364eE245"))
     vaults.push(new VaultConfig("uniswap-cow-op-rseth-wsteth", PLATFORM_BEEFY_CLM, "0x0f46a74b01708e78c27def7160a5c5222f9dd157", ["0xF1748128a1b5c0c45728D09F6f1f60748bC03FE1"]))
+    vaults.push(new VaultConfig("uniswap-cow-op-wsteth-ezeth-vault", PLATFORM_BEEFY_CLM_VAULT, "0xfCb36EC9cA09522d584263A5Bee4e793146ee74f"))
+    vaults.push(new VaultConfig("uniswap-cow-op-wsteth-ezeth", PLATFORM_BEEFY_CLM, "0x87F91963005c57596dA3576B469617FDC6DEC5a8", ["0x1DD7A8C8eE981970CF4e91800c83087F69d6DdeC"]))
     vaults.push(new VaultConfig("velo-cow-op-wsteth-ezeth-vault", PLATFORM_BEEFY_CLM_VAULT, "0x5578B44A1A8572b48160B67213A690FC2e75F298", ["0xB94b0ca6C316f65F0A5E46667CDA50B5EF1eA5F1"]))
     vaults.push(new VaultConfig("velo-cow-op-wsteth-ezeth", PLATFORM_BEEFY_CLM, "0x823f2B0aa1D54c38fe149ee119c6d7845e93593d", ["0x64831F82e3543006413897C03f59518CEcae02b4"]))
     vaults.push(new VaultConfig("velodrome-v2-weth-wrseth", PLATFORM_SOLIDLY, "0xDbE946E16c4e0De9a44065B868265Ac05c437fB6"))
