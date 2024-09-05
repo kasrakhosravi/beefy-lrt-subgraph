@@ -21,6 +21,7 @@ export function _getChainVaults(network: string): Array<VaultConfig> {
     vaults.push(new VaultConfig("aura-arb-rseth-weth", PLATFORM_BALANCER_AURA, "0x764e4e75e3738615CDBFAeaE0C8527b1616e1123"))
     vaults.push(new VaultConfig("camelot-ezeth-weth", PLATFORM_BEEFY_CLM, "0x663B0d9ddB6e86cB5E1F87ebCbDafb5A53a45798", ["0xf1ff0F8793DbA18dF40E8b8aff66CE6f7a9DF945"]))
     vaults.push(new VaultConfig("camelot-rseth-weth", PLATFORM_BEEFY_CLM, "0xac8246F01197fB783Bf1A80960821835045Ec680", ["0xD9001574E23fb909657A25494f540A9B3804b16e"]))
+    vaults.push(new VaultConfig("curve-arb-dlcbtc", PLATFORM_CURVE, "0x7eD37e03D64e6d1c7e315F1faf295f1E3A4B29dF"))
     vaults.push(new VaultConfig("equilibria-arb-ezeth-26sep24", PLATFORM_PENDLE_EQUILIBRIA, "0x218337d7DAe070e219c44783A64cA107dffc533e"))
     vaults.push(new VaultConfig("equilibria-arb-ezeth-27jun24", PLATFORM_PENDLE_EQUILIBRIA, "0xdccb85017a996faF5242648B46940E80DE0A36a5"))
     vaults.push(new VaultConfig("equilibria-arb-seth-ezeth-27jun24", PLATFORM_PENDLE_EQUILIBRIA, "0xE2F1DdD8A02774827764bdeC8F84B29B50195969"))
