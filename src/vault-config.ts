@@ -82,6 +82,7 @@ export function _getChainVaults(network: string): Array<VaultConfig> {
     vaults.push(new VaultConfig("lynex-ichi-stone-lynx", PLATFORM_ICHI_LYNEX, "0x5AB215b3C42f97165Ab43e7FA7609cc8F8D68817"))
     vaults.push(new VaultConfig("lynex-stone-weth", PLATFORM_LYNEX, "0x1C8cfC0cFf01D59f2e4d6F547EE227Af869EfA07"))
     vaults.push(new VaultConfig("mendi-linea-ezeth", PLATFORM_AAVE, "0xf711cdcDDa1C5F919c94573cC4E38b4cE2207750"))
+    vaults.push(new VaultConfig("mendi-linea-wrseth", PLATFORM_AAVE, "0xb4B9D861bf734b2c695acd0117a41a6c10F51305"))
     vaults.push(new VaultConfig("mendi-linea-lev-usdc", PLATFORM_MENDI_LEVERAGE, "0x9ab545Ab024a8Da2302f5b0D016F4f5501e330d1"))
     vaults.push(new VaultConfig("mendi-linea-lev-usdt", PLATFORM_MENDI_LEVERAGE, "0xC3C757EA1429231C437736746Eb77A2344EAcb81"))
     vaults.push(new VaultConfig("mendi-linea-lev-wbtc", PLATFORM_MENDI_LEVERAGE, "0x639041dD8cD48B52C12414235d97E1313cbbceff"))
@@ -117,6 +118,7 @@ export function _getChainVaults(network: string): Array<VaultConfig> {
   }
 
   if (network === "sei") {
+    vaults.push(new VaultConfig("yei-isei", PLATFORM_AAVE, "0x65862C640CE6FbC3fb289cd93ee8F0dFFEBC2FFe"))
     vaults.push(new VaultConfig("yei-usdt", PLATFORM_AAVE, "0xcb25214EC41Ea480068638897FcBd6F1206F5521"))
     vaults.push(new VaultConfig("yei-usdc", PLATFORM_AAVE, "0x906e60166A4B185016e53597fA12FBB1424e47d7"))
     vaults.push(new VaultConfig("yei-wsei", PLATFORM_AAVE, "0x9E6B9518978bb7caf2ad70778E9AEED9eDb3DB78"))
