@@ -117,6 +117,7 @@ export function _getChainVaults(network: string): Array<VaultConfig> {
   }
 
   if (network === "sei") {
+    vaults.push(new VaultConfig("yei-isei", PLATFORM_AAVE, "0x65862C640CE6FbC3fb289cd93ee8F0dFFEBC2FFe"))
     vaults.push(new VaultConfig("yei-usdt", PLATFORM_AAVE, "0xcb25214EC41Ea480068638897FcBd6F1206F5521"))
     vaults.push(new VaultConfig("yei-usdc", PLATFORM_AAVE, "0x906e60166A4B185016e53597fA12FBB1424e47d7"))
     vaults.push(new VaultConfig("yei-wsei", PLATFORM_AAVE, "0x9E6B9518978bb7caf2ad70778E9AEED9eDb3DB78"))
