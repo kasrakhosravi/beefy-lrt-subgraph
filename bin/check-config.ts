@@ -195,7 +195,7 @@ const checkConfig = async ({ apiChain: chain, subgraphChain }: { apiChain: strin
       )
       if (!foundInBoosts && !foundInRewardPools) {
         hasErrors = true
-        console.error(`ERROR: Boost or RP ${boost.earnContractAddress} for vault ${configVault.vaultKey} not found in config`)
+        console.error(`ERROR: Boost or RP ${boost.earnContractAddress} for vault ${configVault.vaultKey} not found in config looking for boosts`)
       }
     }
 
@@ -206,7 +206,7 @@ const checkConfig = async ({ apiChain: chain, subgraphChain }: { apiChain: strin
       )
       if (!foundInBoosts && !foundInRewardPools) {
         hasErrors = true
-        console.error(`ERROR: Boost or RP ${rewardPool.earnContractAddress} for vault ${configVault.vaultKey} not found in config`)
+        console.error(`ERROR: Boost or RP ${rewardPool.earnContractAddress} for vault ${configVault.vaultKey} not found in config looking for rps`)
       }
     }
 
