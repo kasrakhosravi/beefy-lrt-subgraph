@@ -1,14 +1,14 @@
-version: "3"
+version: "3.8"  # Updated to a more recent version for better features
 services:
-  postgres:
+  postgres-graph-node:
     image: postgres:14
     ports:
       - "5432:5432"
     command: ["postgres", "-cshared_preload_libraries=pg_stat_statements", "-cmax_connections=200"]
     environment:
-      POSTGRES_USER: graph-node
-      POSTGRES_PASSWORD: let-me-in
-      POSTGRES_DB: graph-node
+      POSTGRES_USER: ${POSTGRES_GRAPH_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_GRAPH_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_GRAPH_DB}
       POSTGRES_INITDB_ARGS: "-E UTF8 --locale=C"
     volumes:
       - ./docker/data/postgres:/var/lib/postgresql/data
@@ -18,7 +18,30 @@ services:
         max-size: "5M"
         max-file: "3"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -q -d graph-node -U graph-node"]
+      test: ["CMD-SHELL", "pg_isready -q -d ${POSTGRES_GRAPH_DB} -U ${POSTGRES_GRAPH_USER}"]
+      interval: 1s
+      timeout: 5s
+      retries: 10
+
+  postgres-erpc:
+    image: postgres:14
+    ports:
+      - "5433:5432"  # Host port 5433 maps to container port 5432
+    command: ["postgres", "-cshared_preload_libraries=pg_stat_statements", "-cmax_connections=100"]
+    environment:
+      POSTGRES_USER: ${POSTGRES_ERPC_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_ERPC_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_ERPC_DB}
+      POSTGRES_INITDB_ARGS: "-E UTF8 --locale=C"
+    volumes:
+      - ./docker/data/postgres-cache:/var/lib/postgresql/data
+    logging:
+      driver: "local"
+      options:
+        max-size: "5M"
+        max-file: "3"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -q -d ${POSTGRES_ERPC_DB} -U ${POSTGRES_ERPC_USER}"]
       interval: 1s
       timeout: 5s
       retries: 10
@@ -43,13 +66,13 @@ services:
   graph-node:
     image: graphprotocol/graph-node
     ports:
-      - "8000:8000"
+      - "8000:8000" # GraphQL
       - "8001:8001"
       - "8020:8020"
       - "8030:8030"
-      - "8040:8040"
+      - "8040:8040" # Metrics
     depends_on:
-      postgres:
+      postgres-graph-node:
         condition: service_healthy
       ipfs:
         condition: service_healthy
@@ -64,5 +87,39 @@ services:
         max-file: "3"
     environment:
       ipfs: "ipfs:5001"
-      GRAPH_LOG: debug
+      GRAPH_LOG: ${LOG_LEVEL}
       GRAPH_NODE_CONFIG: /etc/graph-node/config.toml
+
+  erpc-proxy:
+    image: ghcr.io/erpc/erpc:latest
+    volumes:
+      - "${PWD}/docker/erpc/erpc.yaml:/root/erpc.yaml"
+    ports:
+      - "4000:4000"
+      - "4001:4001"
+    restart: always
+    environment:
+      # Pass private endpoints as environment variables if the application supports it
+      ERPC_PRIVATE_ENDPOINT_1: ${ERPC_PRIVATE_ENDPOINT_1}
+      ERPC_PRIVATE_ENDPOINT_2: ${ERPC_PRIVATE_ENDPOINT_2}
+      ERPC_PRIVATE_ENDPOINT_3: ${ERPC_PRIVATE_ENDPOINT_3}
+      ERPC_PRIVATE_ENDPOINT_4: ${ERPC_PRIVATE_ENDPOINT_4}
+
+  erpc-monitoring:
+    build: ./docker/erpc/monitoring
+    ports:
+      - "3000:3000" # Grafana
+      - "9090:9090" # Prometheus
+    environment:
+      - SERVICE_ENDPOINT=erpc
+      - SERVICE_PORT=4001
+    volumes:
+      - ./docker/erpc/monitoring/prometheus:/etc/prometheus
+      - ./docker/erpc/monitoring/grafana/grafana.ini:/etc/grafana/grafana.ini
+      - ./docker/erpc/monitoring/grafana/dashboards:/etc/grafana/dashboards
+      - ./docker/erpc/monitoring/prometheus_data:/prometheus
+      - ./docker/erpc/monitoring/grafana_data:/var/lib/grafana
+
+networks:
+  erpc-proxy:
+    driver: bridge

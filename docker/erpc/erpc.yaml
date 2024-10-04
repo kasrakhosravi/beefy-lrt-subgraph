@@ -1,0 +1,39 @@
+logLevel: debug
+
+database:
+  evmJsonRpcCache:
+    driver: postgresql
+    postgresql:
+      connectionUri: >-
+        postgresql://cache-user:cache-password@postgres-erpc:5432/cache-db
+      table: rpc_cache
+
+projects:
+  - id: main
+    networks:
+      - architecture: evm
+        evm:
+          chainId: 42161
+        failsafe:
+          hedge:
+            delay: 50ms
+            maxCount: 2
+    upstreams:
+      # Multichain
+      - endpoint: evm+envio://rpc.hypersync.xyz
+
+      # Arbitrum Private RPCs
+      - endpoint: ${ERPC_PRIVATE_ENDPOINT_1}
+      - endpoint: ${ERPC_PRIVATE_ENDPOINT_2}
+      - endpoint: ${ERPC_PRIVATE_ENDPOINT_3}
+      - endpoint: ${ERPC_PRIVATE_ENDPOINT_4}
+
+      # Arbitrum Public RPCs
+      - endpoint: https://rpc.ankr.com/arbitrum
+      - endpoint: https://rpc.arb1.arbitrum.gateway.fm
+      - endpoint: https://rpc.tornadoeth.cash/arbitrum
+      - endpoint: https://arb-pokt.nodies.app
+      - endpoint: https://arb1.arbitrum.io/rpc
+      - endpoint: https://arbitrum.meowrpc.com
+      - endpoint: https://1rpc.io/arb
+      - endpoint: https://arbitrum-one.publicnode.com

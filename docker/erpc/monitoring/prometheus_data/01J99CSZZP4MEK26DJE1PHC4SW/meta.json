@@ -1,0 +1,17 @@
+{
+	"ulid": "01J99CSZZP4MEK26DJE1PHC4SW",
+	"minTime": 1727955218943,
+	"maxTime": 1727956800000,
+	"stats": {
+		"numSamples": 97008,
+		"numSeries": 626,
+		"numChunks": 626
+	},
+	"compaction": {
+		"level": 1,
+		"sources": [
+			"01J99CSZZP4MEK26DJE1PHC4SW"
+		]
+	},
+	"version": 1
+}

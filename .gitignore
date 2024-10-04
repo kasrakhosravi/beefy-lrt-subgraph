@@ -16,3 +16,4 @@ tests/.latest.json
 .DS_Store
 *.py
 *.csv
+.env
