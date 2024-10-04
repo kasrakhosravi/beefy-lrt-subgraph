@@ -111,15 +111,15 @@ services:
       - "3000:3000" # Grafana
       - "9090:9090" # Prometheus
     environment:
-      - SERVICE_ENDPOINT=erpc
+      - SERVICE_ENDPOINT=erpc-proxy
       - SERVICE_PORT=4001
     volumes:
       - ./docker/erpc/monitoring/prometheus:/etc/prometheus
       - ./docker/erpc/monitoring/grafana/grafana.ini:/etc/grafana/grafana.ini
       - ./docker/erpc/monitoring/grafana/dashboards:/etc/grafana/dashboards
-      - ./docker/erpc/monitoring/prometheus_data:/prometheus
-      - ./docker/erpc/monitoring/grafana_data:/var/lib/grafana
+      - prometheus_data:/prometheus
+      - grafana_data:/var/lib/grafana
 
-networks:
-  erpc-proxy:
-    driver: bridge
+volumes:
+  prometheus_data:
+  grafana_data:
