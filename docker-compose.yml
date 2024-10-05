@@ -1,8 +1,4 @@
 version: "3.8"  # Updated to a more recent version for better features
-
-env_file:
-  - .env
-  
 services:
   postgres-graph-node:
     image: postgres:14
