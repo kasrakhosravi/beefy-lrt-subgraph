@@ -4,7 +4,7 @@
   "shareTokenMintAddress": "0x0000000000000000000000000000000000000000",
   "burnAddress": "0x000000000000000000000000000000000000dead",
   "bindConfigAddress": "0x245d1c493342464ba568BCfb058C1069dFdc07B5",
-  "bindConfigBlock": 260200000,
+  "bindConfigBlock": 179921563,
   "bindConfigEvent": "Initialized(uint8)",
   "vaultInitializedEvent": "Initialized(uint8)",
   "clockTickBlocks": 1000
