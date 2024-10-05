@@ -4,7 +4,7 @@
 
 [store]
 [store.primary]
-connection = "postgresql://graph-node:let-me-in@postgres:5432/graph-node"
+connection = "postgresql://graph-node:let-me-in@postgres-graph-node:5432/graph-node"
 pool_size = 10
 
 [deployment]
@@ -23,7 +23,7 @@ shard = "primary"
 provider = [
   # { label = "blutgang-http", url = "http://rpc-proxy-cache-arbitrum:3000", features = [ "archive" ] },
   { label = "ankr", url = "https://rpc.ankr.com/arbitrum", features = ["archive"] },
-  { label = "gatewayfm", url = "https://rpc.arb1.arbitrum.gateway.fm", features = ["archive"] },
+  # { label = "gatewayfm", url = "https://rpc.arb1.arbitrum.gateway.fm", features = ["archive"] },
   { label = "tornadoeth", url = "https://rpc.tornadoeth.cash/arbitrum", features = ["archive"] },
   { label = "nodies", url = "https://arb-pokt.nodies.app", features = [] },
   { label = "arbitrumio", url = "https://arb1.arbitrum.io/rpc", features = [] },
