@@ -24,7 +24,8 @@
     "prepare:mode": "./bin/prepare.sh mode",
     "prepare:optimism": "./bin/prepare.sh optimism",
     "prepare:kava": "./bin/prepare.sh kava",
-    "prepare:sei": "./bin/prepare.sh sei"
+    "prepare:sei": "./bin/prepare.sh sei",
+    "start": "yarn remove-local && yarn create-local && yarn prepare:start && yarn codegen && yarn build && yarn deploy-local"
   },
   "main": "./bin/index.js",
   "bin": {
