@@ -14,6 +14,7 @@ dataSources:
       address: "{{bindConfigAddress}}"
       abi: ConfigBinder
       startBlock: {{bindConfigBlock}}
+      endBlock: 180068062
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7 # 0xgraph's version
