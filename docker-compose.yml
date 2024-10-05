@@ -1,4 +1,8 @@
 version: "3.8"  # Updated to a more recent version for better features
+
+env_file:
+  - .env
+  
 services:
   postgres-graph-node:
     image: postgres:14
@@ -10,10 +14,6 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_GRAPH_PASSWORD}
       POSTGRES_DB: ${POSTGRES_GRAPH_DB}
       POSTGRES_INITDB_ARGS: "-E UTF8 --locale=C"
-      ERPC_PRIVATE_ENDPOINT_1: ${ERPC_PRIVATE_ENDPOINT_1}
-      ERPC_PRIVATE_ENDPOINT_2: ${ERPC_PRIVATE_ENDPOINT_2}
-      ERPC_PRIVATE_ENDPOINT_3: ${ERPC_PRIVATE_ENDPOINT_3}
-      ERPC_PRIVATE_ENDPOINT_4: ${ERPC_PRIVATE_ENDPOINT_4}
     volumes:
       - ./docker/data/postgres:/var/lib/postgresql/data
     logging:
