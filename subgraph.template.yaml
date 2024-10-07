@@ -65,7 +65,6 @@ dataSources:
           filter:
             kind: polling
             every: {{clockTickBlocks}}
-
 templates:
   - name: BeefyVaultV7
     kind: ethereum/contract
