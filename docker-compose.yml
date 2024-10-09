@@ -71,8 +71,6 @@ services:
       - "8020:8020"
       - "8030:8030"
       - "8040:8040" # Metrics
-    environment:
-      GRAPH_LOG: "trace"
     depends_on:
       postgres-graph-node:
         condition: service_healthy
@@ -89,7 +87,7 @@ services:
         max-file: "3"
     environment:
       ipfs: "ipfs:5001"
-      GRAPH_LOG: ${LOG_LEVEL}
+      GRAPH_LOG: trace
       GRAPH_NODE_CONFIG: /etc/graph-node/config.toml
 
   erpc-proxy:
