@@ -8,6 +8,9 @@ database:
         postgresql://cache-user:cache-password@postgres-erpc:5432/cache-db
       table: rpc_cache
 
+server:
+  maxTimeout: 180s
+
 projects:
   - id: main
     networks:
