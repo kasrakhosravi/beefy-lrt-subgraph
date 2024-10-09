@@ -13,6 +13,12 @@ server:
 
 projects:
   - id: main
+    admin:
+      auth:
+        strategies:
+          - type: secret
+            secret:
+              value: akprd-70a12b0e-2f50-4559-a386-c1cbcd55359a
     networks:
       - architecture: evm
         evm:
