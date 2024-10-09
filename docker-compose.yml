@@ -10,7 +10,6 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_GRAPH_PASSWORD}
       POSTGRES_DB: ${POSTGRES_GRAPH_DB}
       POSTGRES_INITDB_ARGS: "-E UTF8 --locale=C"
-      GRAPH_LOG: "trace"
     volumes:
       - ./docker/data/postgres:/var/lib/postgresql/data
     logging:
@@ -72,6 +71,8 @@ services:
       - "8020:8020"
       - "8030:8030"
       - "8040:8040" # Metrics
+    environment:
+      GRAPH_LOG: "trace"
     depends_on:
       postgres-graph-node:
         condition: service_healthy
