@@ -92,7 +92,7 @@ services:
       GRAPH_NODE_CONFIG: /etc/graph-node/config.toml
 
   erpc-proxy:
-    image: ghcr.io/erpc/erpc:latest
+    image: flairsdk/erpc:test
     volumes:
       - "${PWD}/docker/erpc/erpc.yaml:/root/erpc.yaml"
     ports:
